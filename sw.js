@@ -1,18 +1,26 @@
 // 📱 SERVICE WORKER POUR PWA - L'ŒIL D'OPANOMA
 // Version simple et efficace
 
-const CACHE_NAME = 'opanoma-mobile-v1';
-const ASSETS_TO_CACHE = [
-  '/',
-  '/mobile.html',
-  '/index.html',
-  '/src/style.css',
-  '/src/newsletter-mobile.css',
-  '/public/img/logo.png',
+const CACHE_NAME = 'opanoma-mobile-v2';
+const RELATIVE_ASSETS = [
+  'index.html',
+  'mobile.html',
+  'src/style.css',
+  'src/newsletter-mobile.css',
+  'public/img/logo.png',
   // Cartes essentielles pour offline
-  '/public/img/majors/00-le-mat.webp',
-  '/public/img/majors/01-le-bateleur.webp',
-  '/public/img/majors/02-la-papesse.webp'
+  'public/img/majors/00-le-mat.webp',
+  'public/img/majors/01-le-bateleur.webp',
+  'public/img/majors/02-la-papesse.webp'
+];
+
+const scopeUrl = new URL(self.registration.scope);
+const INDEX_URL = new URL('index.html', scopeUrl);
+const MOBILE_URL = new URL('mobile.html', scopeUrl);
+const ICON_URL = new URL('public/img/logo.png', scopeUrl).toString();
+const ASSETS_TO_CACHE = [
+  scopeUrl.toString(),
+  ...RELATIVE_ASSETS.map(asset => new URL(asset, scopeUrl).toString())
 ];
 
 // Installation du Service Worker
@@ -94,7 +102,7 @@ self.addEventListener('fetch', event => {
             
             // Page de fallback pour navigation hors ligne
             if (request.destination === 'document') {
-              return caches.match('/mobile.html');
+              return caches.match(MOBILE_URL.toString());
             }
             
             // Image de fallback
@@ -114,14 +122,15 @@ self.addEventListener('fetch', event => {
 // Fonction pour déterminer si une ressource doit être cachée
 function shouldCache(request) {
   const url = new URL(request.url);
-  
+  const scopePath = scopeUrl.pathname;
+
   // Cacher les assets CSS/JS/images
   if (url.pathname.match(/\.(css|js|png|jpg|jpeg|webp|svg|gif)$/)) {
     return true;
   }
-  
+
   // Cacher les pages importantes
-  if (url.pathname === '/' || url.pathname === '/mobile.html') {
+  if (url.pathname === scopePath || url.pathname === INDEX_URL.pathname || url.pathname === MOBILE_URL.pathname) {
     return true;
   }
   
@@ -140,8 +149,8 @@ self.addEventListener('push', event => {
   if (event.data) {
     const options = {
       body: event.data.text(),
-      icon: '/public/img/logo.png',
-      badge: '/public/img/logo.png',
+      icon: ICON_URL,
+      badge: ICON_URL,
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -151,12 +160,12 @@ self.addEventListener('push', event => {
         {
           action: 'explore',
           title: 'Voir ma guidance',
-          icon: '/public/img/logo.png'
+          icon: ICON_URL
         },
         {
           action: 'close',
           title: 'Fermer',
-          icon: '/public/img/logo.png'
+          icon: ICON_URL
         }
       ]
     };
@@ -170,11 +179,10 @@ self.addEventListener('push', event => {
 // Gestion des clics sur notifications
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  
   if (event.action === 'explore') {
     // Ouvrir l'app
     event.waitUntil(
-      clients.openWindow('/mobile.html')
+      clients.openWindow(MOBILE_URL.toString())
     );
   }
 });
