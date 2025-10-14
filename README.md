@@ -24,9 +24,36 @@ Si vous souhaitez publier directement la production depuis la branche `main`, vo
 5. **Mettre à jour la production**  
    Chaque `git push origin main` déclenchera un nouveau déploiement. Surveillez l’historique dans **Settings → Pages** en cas d’échec.
 
-6. **Points de vigilance**  
-   - Utilisez des chemins relatifs ou HTTPS pour toutes les ressources externes afin d’éviter les avertissements de contenu mixte.  
-   - Prévoyez un fichier `404.html` si votre site s’appuie sur des routes internes (SPA).  
+6. **Points de vigilance**
+   - Utilisez des chemins relatifs ou HTTPS pour toutes les ressources externes afin d’éviter les avertissements de contenu mixte.
+   - Prévoyez un fichier `404.html` si votre site s’appuie sur des routes internes (SPA).
    - Les mises à jour peuvent prendre quelques minutes à apparaître ; attendez l’indicateur "Published".
 
-Ces étapes permettent de publier rapidement la version hébergée de votre site directement depuis `main`, sans configuration de branche supplémentaire.
+### Résoudre les erreurs 404 sur GitHub Pages
+
+Sur GitHub Pages, le site est servi depuis `https://<organisation>.github.io/<nom-du-repo>/`. Les ressources référencées par un chemin absolu commençant par `/` (ex. `/src/style.css`, `/public/fond10.mp4`, `/opalogo.png`) sont alors cherchées à la racine `https://<organisation>.github.io/`, ce qui provoque des erreurs 404 comme :
+
+```
+resource: the server responded with a status of 404 ()
+opalogo.png:1  Failed to load resource: the server responded with a status of 404 ()
+src/style.css?v=force-reload-20251013:1  Failed to load resource: the server responded with a status of 404 ()
+public/fond10.mp4:1  Failed to load resource: the server responded with a status of 404 ()
+```
+
+Pour corriger ces erreurs :
+
+1. **Remplacer les chemins absolus par des chemins relatifs** (par exemple `src/style.css` ou `./src/style.css` à la place de `/src/style.css`).
+2. **Ou définir dynamiquement la base de vos liens** avant l’initialisation du site :
+   ```html
+   <script>
+     if (window.location.hostname.endsWith('github.io')) {
+       const base = document.createElement('base');
+       base.href = `${window.location.pathname.replace(/\/[^/]*$/, '/')}`;
+       document.head.prepend(base);
+     }
+   </script>
+   ```
+   Ce script ajuste la balise `<base>` pour que les chemins commençant par `/` pointent vers le bon sous-répertoire.
+3. **Re-déployer la branche `main`** une fois les liens corrigés (`git push origin main`).
+
+Ces étapes permettent de publier rapidement la version hébergée de votre site directement depuis `main`, sans configuration de branche supplémentaire, tout en s’assurant que les assets sont correctement servis sur GitHub Pages.
