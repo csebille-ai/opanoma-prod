@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accueil - l’Œil d’Opanoma</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-video">
+    <video class="hero-video" playsinline autoplay muted loop poster="/hero-poster.jpg">
+      <source src="/hero.mp4" type="video/mp4"/>
+    </video>
+    <div class="hero-overlay"></div>
+  </div>
+  
+  <!-- ===== HEADER uniquement ===== -->
+  <style>
+    :root{
+      --brand:#a34d57;           /* Couleur premium (Pro) */
+      --text:#eae7ef;
+      --muted:#b8b3c2;
+      --ia-start:#ff9ae0;        /* Dégradé fun (IA) */
+      --ia-end:#9ab0ff;
+      --glass: rgba(255,255,255,.06);
+      --glass-stroke: rgba(255,255,255,.25);
+    }
+    .site-header{ position:sticky; top:0; z-index:40; backdrop-filter:saturate(140%) blur(8px); background:linear-gradient(180deg, rgba(10,10,14,.82), rgba(10,10,14,.5)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .container{ max-width:1180px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:14px}
+    .brand{ display:flex; align-items:center; gap:12px; color:var(--text); text-decoration:none}
+    .brand-logo{ width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, var(--brand), #6c2230); display:grid; place-items:center; box-shadow:0 8px 30px rgba(163,77,87,.35)}
+    .brand-logo span{ font-family:"Cinzel Decorative", serif; font-size:22px; font-weight:700; letter-spacing:.5px; color:#fff }
+    .brand-text{ line-height:1.05 }
+    .brand-title{ font-weight:700; letter-spacing:.2px; font-size:16px }
+    .brand-sub{ font-size:11px; color:var(--muted) }
+
+    .nav{ display:flex; align-items:center; gap:24px }
+    .nav a{ color:var(--text); text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:400; font-size:15px; letter-spacing:0.2px; padding:8px 0; opacity:.85; transition:all 0.2s ease; position:relative }
+    .nav a:hover{ opacity:1; color:#fff }
+    .nav a::after{ content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:rgba(255,255,255,.6); transition:width 0.3s ease }
+    .nav a:hover::after{ width:100% }
+
+    .cta-wrap{ display:flex; align-items:center; gap:12px }
+    .btn-pro{ background:var(--brand); color:white; padding:10px 16px; border-radius:8px; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:500; font-size:14px; text-decoration:none; border:1px solid rgba(255,255,255,.08); transition:all 0.2s ease }
+    .btn-pro:hover{ filter:brightness(1.08); transform:translateY(-1px) }
+
+    .btn-ia{ position:relative; text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:500; font-size:14px; color:#111; padding:10px 16px; border-radius:8px; background:linear-gradient(90deg, var(--ia-start), var(--ia-end)); border:1px solid rgba(255,255,255,.2); transition:all 0.2s ease }
+    .btn-ia:hover{ transform:translateY(-1px); filter:brightness(1.05) }
+    .btn-ia small{ display:inline-flex; align-items:center; gap:6px; font-weight:500; margin-left:8px; color:#222; background:rgba(255,255,255,.6); padding:2px 6px; border-radius:999px; font-size:11px }
+    .fun-dot{ width:6px; height:6px; border-radius:50%; background:#17c964; box-shadow:0 0 0 4px rgba(23,201,100,.15)}
+
+    .tip{ position:absolute; top:110%; right:0; transform:translateY(8px); background:var(--glass); color:var(--text); border:1px solid var(--glass-stroke); padding:10px 12px; border-radius:12px; font-size:12px; width:max-content; max-width:260px; box-shadow:0 10px 30px rgba(0,0,0,.35); opacity:0; visibility:hidden; transition:.2s ease; backdrop-filter: blur(8px) }
+    .btn-ia:hover .tip, .btn-ia:focus .tip{ opacity:1; visibility:visible; transform:translateY(0)}
+
+    .divider{ width:1px; height:28px; background:rgba(255,255,255,.12) }
+
+    .burger{ display:none; width:44px; height:44px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:#fff }
+    @media (max-width:980px){
+      .nav{ display:none }
+      .burger{ display:grid; place-items:center }
+      .container{ padding:12px 16px }
+      .brand-sub{ display:none }
+    }
+  </style>
+
+  <header class="site-header" role="banner" aria-label="Navigation principale">
+    <div class="container">
+      <a class="brand" href="#accueil" aria-label="Accueil Opanoma">
+        <div class="brand-logo" aria-hidden="true"><span>O</span></div>
+        <div class="brand-text">
+          <div class="brand-title">l'Œil d'Opanoma</div>
+          <div class="brand-sub">Guidance professionnelle authentique</div>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Menu professionnel">
+        <a href="#consultations">Consultations</a>
+        <a href="#pendule">Pendule & Tarot</a>
+        <a href="#temoignages">Témoignages</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="cta-wrap">
+        <a class="btn-pro" href="#reservation" onclick="scrollToReservation(); return false;" aria-label="Réserver une séance réelle">Réserver</a>
+        <div class="divider" aria-hidden="true"></div>
+        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Ouvrir le tirage IA (divertissement)">
+          ✨ Tirage IA
+          <small><span class="fun-dot"></span> fun</small>
+          <span class="tip" role="note">Tirage généré automatiquement par IA — <strong>divertissement uniquement</strong>.</span>
+        </a>
+        <button class="burger" aria-label="Ouvrir le menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M3 6H21M3 12H21M3 18H21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bouton caché pour compatibilité avec le script existant -->
+  <button class="header-btn-ia" style="display: none;">Tirage par IA</button>
+
+  <main>
+    <h2 class="manon-title">L'Œil d'Opanoma</h2>
+    <div class="manon-subtitle">la voix de l’intuition</div>
+    <p class="manon-desc">
+      Découvrez l’univers de Manon, voyante passionnée, à votre écoute pour vous guider avec bienveillance et intuition.
+    </p>
+    <button class="btn-en-savoir-plus" id="btn-bio">En savoir plus</button>
+    <div class="manon-bio" id="manon-bio" style="display:none;">
+      <div class="manon-bio-content">
+        <p>
+          Manon est née avec une sensibilité particulière au monde invisible. Dès son plus jeune âge, elle ressent les énergies et perçoit des signes là où d’autres ne voient que le quotidien.<br><br>
+          Adolescente, elle découvre le tarot et le pendule, qui deviennent rapidement ses outils de prédilection pour explorer l’inconnu et guider ses proches.<br><br>
+          Après des études en psychologie, Manon décide de se consacrer pleinement à la voyance, convaincue que l’intuition est un formidable allié pour avancer dans la vie.
+        </p>
+      </div>
+    </div>
+
+    <!-- Nouveau cadre discret Consultation -->
+    <section class="offres-tarifs-section">
+      <h3 class="offres-tarifs-title">Consultation</h3>
+      <div class="offres-tarifs-grid">
+        <div class="offre-tarif-card" data-offre="Question Unique">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Question Unique</div>
+            <div class="offre-prix">15&nbsp;€</div>
+            <ul class="offre-details">
+              <li>Réponse rapide <span class="offre-temps">(&lt; 15 min)</span></li>
+              <li>Uniquement par téléphone</li>
+              <li>L'intégrale en PDF <span class="offre-option">+5&nbsp;€</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Guidance 30 min">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Guidance 30 min</div>
+            <div class="offre-prix">30&nbsp;€</div>
+            <ul class="offre-details">
+              <li>Clarification + tirage</li>
+              <li>Uniquement par téléphone</li>
+              <li>L'intégrale en PDF <span class="offre-option">+5&nbsp;€</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Guidance 60 min">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Guidance 60 min</div>
+            <div class="offre-prix">60&nbsp;€ <span class="offre-temps">(60 min)</span></div>
+            <ul class="offre-details">
+              <li>Exploration approfondie</li>
+              <li>Uniquement par téléphone</li>
+              <li>L'intégrale en PDF <span class="offre-option">+10&nbsp;€</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Soin énergétique (présentiel)">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Soin énergétique (présentiel)</div>
+            <div class="offre-prix">60&nbsp;€ <span class="offre-temps">(60 min)</span></div>
+            <ul class="offre-details">
+              <li>À domicile (zone à préciser)</li>
+              <li>Rendez-vous sur demande</li>
+            </ul>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Pendule à distance">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Pendule à distance</div>
+            <div class="offre-prix">30&nbsp;€</div>
+            <ul class="offre-details">
+              <li>Énergétique à distance</li>
+              <li>Compte-rendu bref</li>
+              <li>Livraison sous 24&nbsp;h</li>
+            </ul>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Déblocage (pendule)">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Déblocage (pendule)</div>
+            <div class="offre-prix">30&nbsp;€</div>
+            <ul class="offre-details">
+              <li>Travail ciblé</li>
+              <li>À distance</li>
+              <li>Livraison sous 24&nbsp;h</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <h3 class="newsletter-title">Newsletter</h3>
+      <p class="newsletter-desc">
+        Inscrivez-vous à la newsletter : chaque semaine, recevez une carte tirée spécialement pour vous et l’explication du tirage, directement dans votre boîte mail.
+      </p>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Votre email" required>
+        <button type="submit" class="newsletter-btn">Je m’abonne</button>
+      </form>
+    </section>
+
+    <section class="reservation-section" id="reservation">
+      <h3 class="reservation-title">Réserver une séance</h3>
+      <p class="reservation-desc">
+        Choisissez votre créneau et réservez votre séance avec Manon.<br>
+        Vous recevrez une confirmation par email après validation.
+      </p>
+      <form class="reservation-form">
+        <div class="reservation-fields">
+          <input type="text" class="reservation-input" placeholder="Votre nom" required>
+          <input type="email" class="reservation-input" placeholder="Votre email" required>
+        </div>
+        <div class="reservation-fields">
+          <input type="date" class="reservation-input" required>
+          <input type="time" class="reservation-input" required>
+        </div>
+        <select class="reservation-input" id="offre-select" required>
+          <option value="" disabled selected>Choisissez une offre</option>
+          <option>Question Unique</option>
+          <option>Guidance 30 min</option>
+          <option>Guidance 60 min</option>
+          <option>Soin énergétique (présentiel)</option>
+          <option>Pendule à distance</option>
+          <option>Déblocage (pendule)</option>
+        </select>
+        <!-- Remplace dans la section réservation -->
+        <a href="https://cal.com/ton-nom-utilisateur" target="_blank" class="reservation-btn" style="display:inline-block;text-decoration:none;">
+          Réserver
+        </a>
+      </form>
+      <div id="reservation-confirmation" style="display:none; color:#fff; font-family:'Quicksand',sans-serif; text-align:center; margin-top:1.5em; font-size:1.2rem;">
+        Merci pour votre réservation ! Vous recevrez une confirmation par email.
+      </div>
+    </section>
+  </main>
+  <script>
+let typeWriterTimeout = null;
+
+// Attendre que le DOM soit chargé
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM chargé");
+  
+  // Bouton "En savoir plus"
+  const btnBio = document.getElementById('btn-bio');
+  console.log("Bouton bio trouvé:", btnBio);
+  if (btnBio) {
+    btnBio.addEventListener('click', function() {
+      console.log("Bouton 'En savoir plus' cliqué");
+      var bio = document.getElementById('manon-bio');
+      console.log("Element bio trouvé:", bio);
+      console.log("Display actuel:", bio.style.display);
+      bio.style.display = (bio.style.display === 'none' || bio.style.display === '') ? 'block' : 'none';
+      console.log("Nouveau display:", bio.style.display);
+      this.textContent = bio.style.display === 'block' ? 'Fermer' : 'En savoir plus';
+      console.log("Texte du bouton changé en:", this.textContent);
+    });
+  }
+});
+
+document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card) {
+  card.addEventListener('click', function() {
+    // Sélectionne l'offre dans le select
+    var offre = this.getAttribute('data-offre');
+    var select = document.getElementById('offre-select');
+    if (select) {
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text === offre) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+    // Scroll vers la section réservation
+    var reservation = document.getElementById('reservation');
+    if (reservation) {
+      reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      select.focus();
+    }
+  });
+});
+
+// Avertissement si le formulaire de réservation n'est pas complet
+document.querySelector('.reservation-form').addEventListener('submit', function(e) {
+  var inputs = this.querySelectorAll('.reservation-input');
+  var allFilled = true;
+  inputs.forEach(function(input) {
+    if (!input.value) allFilled = false;
+  });
+  if (!allFilled) {
+    e.preventDefault();
+    alert('Merci de remplir tous les champs pour réserver votre séance.');
+  } else {
+    e.preventDefault();
+    document.getElementById('reservation-confirmation').style.display = 'block';
+    this.style.display = 'none';
+  }
+});
+
+document.querySelector('.header-btn-ia').addEventListener('click', function(e) {
+  e.preventDefault();
+  // Crée le fond sombre
+  let overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(30,30,40,0.75)';
+  overlay.style.zIndex = 9999;
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+
+  // Crée la popup
+  let popup = document.createElement('div');
+  popup.className = 'tarot-popup'; // Ajoute la classe pour le CSS mobile
+  popup.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+  popup.style.backdropFilter = 'blur(10px)';
+  popup.style.border = '1.5px solid rgba(255,255,255,0.45)';
+  popup.style.borderRadius = '2em';
+  popup.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.18)';
+  popup.style.padding = '1.5em 1.5em 1.5em 1.5em'; // Réduit le padding
+  popup.style.maxWidth = '350px'; // Réduit la largeur max
+  popup.style.width = '85vw'; // Réduit la largeur mobile
+  popup.style.position = 'relative';
+  popup.style.textAlign = 'center';
+
+  // Titre du header
+  let titre = document.createElement('div');
+  titre.className = 'popup-title'; // Ajoute la classe pour le CSS mobile
+  titre.style.fontFamily = "'Revalia', cursive";
+  titre.style.fontSize = '2rem';
+  titre.style.letterSpacing = '2px';
+  titre.style.background = 'linear-gradient(90deg, #1a237e 0%, #e75480 100%)';
+  titre.style.webkitBackgroundClip = 'text';
+  titre.style.webkitTextFillColor = 'transparent';
+  titre.style.backgroundClip = 'text';
+  titre.style.textFillColor = 'transparent';
+  titre.style.marginBottom = '1.2em';
+
+  // Bouton fermer
+  let closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '1em';
+  closeBtn.style.right = '1.2em';
+  closeBtn.style.background = 'none';
+  closeBtn.style.border = 'none';
+  closeBtn.style.fontSize = '1.5em';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#e75480';
+  closeBtn.setAttribute('aria-label', 'Fermer');
+
+  closeBtn.onclick = () => {
+    // Arrêt de la synthèse vocale au cas où
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    
+    // Restaurer le scroll (version simple pour ce popup)
+    document.body.style.overflow = '';
+    
+    document.body.removeChild(overlay);
+  };
+
+  // Ajoute les éléments
+  popup.appendChild(closeBtn);
+  popup.appendChild(titre);
+
+  // Ajout des 3 lignes sous le titre
+  let ligne1 = document.createElement('div');
+  ligne1.textContent = '1. Choisir le thème';
+  ligne1.style.fontFamily = "'Quicksand', sans-serif";
+  ligne1.style.fontSize = '1.1rem';
+  ligne1.style.marginBottom = '0.7em';
+  ligne1.style.color = '#1a237e';
+
+  let ligne2 = document.createElement('div');
+  ligne2.textContent = '2. Poser une question (optionnel)';
+  ligne2.style.fontFamily = "'Quicksand', sans-serif";
+  ligne2.style.fontSize = '1.1rem';
+  ligne2.style.marginBottom = '0.7em';
+  ligne2.style.color = '#e75480';
+
+  let ligne3 = document.createElement('div');
+  ligne3.textContent = '3. Choisir le tirage';
+  ligne3.style.fontFamily = "'Quicksand', sans-serif";
+  ligne3.style.fontSize = '1.1rem';
+  ligne3.style.marginBottom = '1.2em';
+  ligne3.style.color = '#ff9800';
+
+  popup.appendChild(ligne1);
+  popup.appendChild(ligne2);
+  popup.appendChild(ligne3);
+
+  // Cadre "thème" avec boutons
+  let themeBox = document.createElement('div');
+  themeBox.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e3e6f3 60%, #ffe3ec 100%)';
+  themeBox.style.backdropFilter = 'blur(2px)';
+  themeBox.style.borderRadius = '1em';
+  themeBox.style.boxShadow = '0 2px 12px rgba(30,30,40,0.08)';
+  themeBox.style.padding = '1.2em 0.5em 1em 0.5em';
+  themeBox.style.margin = '0 auto 1.5em auto';
+  themeBox.style.display = 'flex';
+  themeBox.style.justifyContent = 'center';
+  themeBox.style.gap = '1em';
+  themeBox.style.maxWidth = '340px';
+
+  const themes = [
+    { label: "Santé", color: "#1a237e" },
+    { label: "Amour", color: "#e75480" },
+    { label: "Argent", color: "#ff9800" },
+    { label: "Travail", color: "#009688" }
+  ];
+
+  themes.forEach(theme => {
+    let btn = document.createElement('button');
+    btn.className = 'theme-button'; // Ajoute la classe pour le CSS mobile
+    btn.textContent = theme.label;
+    btn.style.fontFamily = "'Quicksand', sans-serif";
+    btn.style.fontSize = '0.98rem';
+    btn.style.padding = '0.4em 1em';
+    btn.style.borderRadius = '22px';
+    btn.style.border = 'none';
+    btn.style.background = theme.color;
+    btn.style.color = '#fff';
+    btn.style.fontWeight = '700';
+    btn.style.cursor = 'pointer';
+    btn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+    btn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+    btn.style.opacity = '0.93';
+    btn.style.maxWidth = '180px'; // Limite la largeur
+    btn.style.whiteSpace = 'normal'; // Permet le retour à la ligne si besoin
+    btn.onmouseover = () => btn.style.transform = 'scale(1.08)';
+    btn.onmouseout = () => btn.style.transform = 'none';
+
+    btn.addEventListener('click', function() {
+      // Supprime un éventuel cadre déjà ouvert
+      let old = popup.querySelector('.ia-theme-question-box');
+      if (old) old.remove();
+
+      // Crée le cadre sous les boutons
+      let questionBox = document.createElement('div');
+      questionBox.className = 'ia-theme-question-box';
+      questionBox.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e3e6f3 60%, #ffe3ec 100%)';
+      questionBox.style.backdropFilter = 'blur(2px)';
+      questionBox.style.borderRadius = '1em';
+      questionBox.style.boxShadow = '0 2px 12px rgba(30,30,40,0.10)';
+      questionBox.style.padding = '1.2em 1em 1em 1em';
+      questionBox.style.margin = '1em auto 0 auto';
+      questionBox.style.maxWidth = '340px';
+      questionBox.style.textAlign = 'center';
+
+      // Titre thème choisi
+      let themeTitle = document.createElement('div');
+      themeTitle.textContent = `Thème choisi : ${theme.label}`;
+      themeTitle.style.fontFamily = "'Revalia', cursive";
+      themeTitle.style.fontSize = '1.1rem';
+      themeTitle.style.color = theme.color;
+      themeTitle.style.marginBottom = '0.7em';
+
+      // Zone question
+      let questionInput = document.createElement('textarea');
+      questionInput.placeholder = "Posez votre question (optionnel)";
+      questionInput.style.width = '90%';
+      questionInput.style.minHeight = '60px';
+      questionInput.style.borderRadius = '0.7em';
+      questionInput.style.border = '1px solid #e75480';
+      questionInput.style.padding = '0.7em';
+      questionInput.style.fontFamily = "'Quicksand', sans-serif";
+      questionInput.style.fontSize = '1rem';
+      questionInput.style.marginBottom = '1em';
+      questionInput.style.resize = 'vertical';
+
+      // Boutons valider / pas de question
+      let btnsDiv = document.createElement('div');
+      btnsDiv.style.display = 'flex';
+      btnsDiv.style.justifyContent = 'center';
+      btnsDiv.style.gap = '1em';
+      btnsDiv.style.marginTop = '0.7em';
+
+      let validerBtn = document.createElement('button');
+      validerBtn.textContent = 'Valider';
+      validerBtn.style.fontFamily = "'Quicksand', sans-serif";
+      validerBtn.style.fontSize = '1rem';
+      validerBtn.style.padding = '0.5em 1.3em';
+      validerBtn.style.borderRadius = '22px';
+      validerBtn.style.border = 'none';
+      validerBtn.style.background = theme.color;
+      validerBtn.style.color = '#fff';
+      validerBtn.style.fontWeight = '700';
+      validerBtn.style.cursor = 'pointer';
+      validerBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+      validerBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+      validerBtn.style.opacity = '0.93';
+
+      let pasQuestionBtn = document.createElement('button');
+      pasQuestionBtn.textContent = 'Pas de question';
+      pasQuestionBtn.style.fontFamily = "'Quicksand', sans-serif";
+      pasQuestionBtn.style.fontSize = '1rem';
+      pasQuestionBtn.style.padding = '0.5em 1.3em';
+      pasQuestionBtn.style.borderRadius = '22px';
+      pasQuestionBtn.style.border = 'none';
+      pasQuestionBtn.style.background = '#bdbdbd';
+      pasQuestionBtn.style.color = '#222';
+      pasQuestionBtn.style.fontWeight = '700';
+      pasQuestionBtn.style.cursor = 'pointer';
+      pasQuestionBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+      pasQuestionBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+      pasQuestionBtn.style.opacity = '0.93';
+
+      btnsDiv.appendChild(validerBtn);
+      btnsDiv.appendChild(pasQuestionBtn);
+
+      questionBox.appendChild(themeTitle);
+      questionBox.appendChild(questionInput);
+      questionBox.appendChild(btnsDiv);
+
+      // Ajoute le cadre sous le themeBox
+      themeBox.after(questionBox);
+
+      // Fonction pour ouvrir le cadre tirage
+      function openTirageBox() {
+        // Supprime un éventuel cadre tirage déjà ouvert
+        let oldTirage = popup.querySelector('.ia-tirage-box');
+        if (oldTirage) oldTirage.remove();
+
+        // Crée le cadre tirage
+        let tirageBox = document.createElement('div');
+        tirageBox.className = 'ia-tirage-box';
+        tirageBox.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e3e6f3 60%, #ffe3ec 100%)';
+        tirageBox.style.backdropFilter = 'blur(2px)';
+        tirageBox.style.borderRadius = '1em';
+        tirageBox.style.boxShadow = '0 2px 12px rgba(30,30,40,0.10)';
+        tirageBox.style.padding = '1.2em 1em 1em 1em';
+        tirageBox.style.margin = '1em auto 0 auto';
+        tirageBox.style.maxWidth = '340px';
+        tirageBox.style.textAlign = 'center';
+
+        // Titre
+        let tirageTitle = document.createElement('div');
+        tirageTitle.textContent = 'Choisir le tirage';
+        tirageTitle.style.fontFamily = "'Revalia', cursive";
+        tirageTitle.style.fontSize = '1.1rem';
+        tirageTitle.style.color = '#1a237e';
+        tirageTitle.style.marginBottom = '0.7em';
+
+        // Boutons tirage
+        let tirageBtnsDiv = document.createElement('div');
+        tirageBtnsDiv.style.display = 'flex';
+        tirageBtnsDiv.style.justifyContent = 'center';
+        tirageBtnsDiv.style.gap = '1em';
+        tirageBtnsDiv.style.marginTop = '0.7em';
+
+        let btn3 = document.createElement('button');
+        btn3.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
+        btn3.textContent = '3 cartes';
+        btn3.style.fontFamily = "'Quicksand', sans-serif";
+        btn3.style.fontSize = '1rem';
+        btn3.style.padding = '0.5em 1.3em';
+        btn3.style.borderRadius = '22px';
+        btn3.style.border = 'none';
+        btn3.style.background = '#e75480';
+        btn3.style.color = '#fff';
+        btn3.style.fontWeight = '700';
+        btn3.style.cursor = 'pointer';
+        btn3.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+        btn3.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+        btn3.style.opacity = '0.93';
+
+        btn3.style.position = 'relative';
+
+        // Création de la bulle d'aide personnalisée
+        function createTooltip(text) {
+          const tooltip = document.createElement('div');
+          tooltip.textContent = text;
+          tooltip.style.position = 'absolute';
+          tooltip.style.bottom = '110%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translateX(-50%)';
+          tooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+          tooltip.style.color = '#1a237e';
+          tooltip.style.padding = '0.7em 1.1em';
+          tooltip.style.borderRadius = '1em';
+          tooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+          tooltip.style.fontFamily = "'Quicksand', sans-serif";
+          tooltip.style.fontSize = '0.98rem';
+          tooltip.style.whiteSpace = 'pre-line';
+          tooltip.style.opacity = '0';
+          tooltip.style.pointerEvents = 'none';
+          tooltip.style.transition = 'opacity 0.18s';
+          tooltip.style.zIndex = '10001';
+          tooltip.style.fontWeight = '600';
+          tooltip.style.textAlign = 'center';
+          tooltip.style.textShadow = '0 2px 8px rgba(30,30,40,0.10)';
+          return tooltip;
+        }
+
+        // Ajoute la bulle d'aide au survol du bouton 3 cartes
+        btn3.addEventListener('mouseenter', function() {
+          const tip = createTooltip("Tirage 3 cartes :\nPassé, présent, futur.\nVision synthétique et rapide.");
+          btn3._tooltip = tip;
+          btn3.appendChild(tip);
+          setTimeout(() => { tip.style.opacity = '1'; }, 10);
+        });
+        btn3.addEventListener('mouseleave', function() {
+          if (btn3._tooltip) {
+            btn3._tooltip.style.opacity = '0';
+            setTimeout(() => {
+              if (btn3._tooltip && btn3.contains(btn3._tooltip)) btn3.removeChild(btn3._tooltip);
+              btn3._tooltip = null;
+            }, 180);
+          }
+        });
+
+        let btn5 = document.createElement('button');
+        btn5.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
+        btn5.textContent = '5 cartes';
+        btn5.style.fontFamily = "'Quicksand', sans-serif";
+        btn5.style.fontSize = '1rem';
+        btn5.style.padding = '0.5em 1.3em';
+        btn5.style.borderRadius = '22px';
+        btn5.style.border = 'none';
+        btn5.style.background = '#ff9800';
+        btn5.style.color = '#fff';
+        btn5.style.fontWeight = '700';
+        btn5.style.cursor = 'pointer';
+        btn5.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+        btn5.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+        btn5.style.opacity = '0.93';
+
+        btn5.style.position = 'relative';
+
+        // Ajoute la bulle d'aide au survol du bouton 5 cartes
+        btn5.addEventListener('mouseenter', function() {
+          const tip = createTooltip("Tirage 5 cartes :\nInfluences, obstacles, conseils, évolution.\nPour une analyse approfondie.");
+          btn5._tooltip = tip;
+          btn5.appendChild(tip);
+          setTimeout(() => { tip.style.opacity = '1'; }, 10);
+        });
+        btn5.addEventListener('mouseleave', function() {
+          if (btn5._tooltip) {
+            btn5._tooltip.style.opacity = '0';
+            setTimeout(() => {
+              if (btn5._tooltip && btn5.contains(btn5._tooltip)) btn5.removeChild(btn5._tooltip);
+              btn5._tooltip = null;
+            }, 180);
+          }
+        });
+
+        tirageBtnsDiv.appendChild(btn3);
+        tirageBtnsDiv.appendChild(btn5);
+
+        tirageBox.appendChild(tirageTitle);
+        tirageBox.appendChild(tirageBtnsDiv);
+
+        // Ajoute le cadre tirage sous le cadre question
+        questionBox.after(tirageBox);
+
+        function showChoixCartesBox(nbCartes) {
+          // Crée le nouveau cadre (plus grand)
+          let choixBox = document.createElement('div');
+          choixBox.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+          choixBox.style.backdropFilter = 'blur(10px)';
+          choixBox.style.border = '1.5px solid rgba(255,255,255,0.45)';
+          choixBox.style.borderRadius = '2em';
+          choixBox.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.18)';
+          choixBox.style.padding = '2.5em 2em 2em 2em';
+          choixBox.style.maxWidth = '900px';
+          choixBox.style.width = '96vw';
+          choixBox.style.position = 'relative';
+          choixBox.style.textAlign = 'center';
+          choixBox.style.opacity = '0';
+          choixBox.style.transition = 'opacity 0.7s';
+
+          // Titre dynamique selon le nombre de cartes
+          let titreChoix = document.createElement('div');
+          titreChoix.textContent = nbCartes === 3
+            ? 'Choisissez vos 3 cartes'
+            : nbCartes === 5
+              ? 'Choisissez vos 5 cartes'
+              : 'Choisissez vos cartes';
+          titreChoix.style.fontFamily = "'Revalia', cursive";
+          titreChoix.style.fontSize = '2.3rem';
+          titreChoix.style.letterSpacing = '2px';
+          titreChoix.style.background = 'linear-gradient(90deg, #1a237e 0%, #e75480 100%)';
+          titreChoix.style.webkitBackgroundClip = 'text';
+          titreChoix.style.webkitTextFillColor = 'transparent';
+          titreChoix.style.backgroundClip = 'text';
+          titreChoix.style.textFillColor = 'transparent';
+          titreChoix.style.marginBottom = '1.2em';
+
+          // Bouton fermer
+          let closeBtn2 = document.createElement('button');
+          closeBtn2.textContent = '✕';
+          closeBtn2.style.position = 'absolute';
+          closeBtn2.style.top = '1em';
+          closeBtn2.style.right = '1.2em';
+          closeBtn2.style.background = 'none';
+          closeBtn2.style.border = 'none';
+          closeBtn2.style.fontSize = '1.5em';
+          closeBtn2.style.cursor = 'pointer';
+          closeBtn2.style.color = '#e75480';
+          closeBtn2.setAttribute('aria-label', 'Fermer');
+          closeBtn2.onclick = () => {
+            if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          };
+
+          choixBox.appendChild(closeBtn2);
+          choixBox.appendChild(titreChoix);
+
+          // Grille de 22 cadres avec la carte verso (4 cartes sur 6 lignes)
+          let cardsGrid = document.createElement('div');
+          cardsGrid.className = 'cards-selection-grid'; // Ajoute la classe pour le CSS mobile
+          cardsGrid.style.display = 'grid';
+          cardsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)'; // 4 colonnes comme demandé
+          cardsGrid.style.gap = '1.2em';
+          cardsGrid.style.justifyItems = 'center';
+          cardsGrid.style.margin = '1.5em 0 0 0';
+          cardsGrid.style.position = 'relative';
+
+          // Tableau des noms de fichiers des 22 arcanes majeurs dans l'ordre
+          const faces = [
+            "00-le-mat",
+            "01-le-bateleur",
+            "02-la-papesse",
+            "03-limperatrice",
+            "04-lempereur",
+            "05-le-pape",
+            "06-lamoureux",
+            "07-le-chariot",
+            "08-la-justice",
+            "09-lhermite",
+            "10-la-roue-de-fortune",
+            "11-la-force",
+            "12-le-pendu",
+            "13-larcane-sans-nom",
+            "14-temperance",
+            "15-le-diable",
+            "16-la-maison-dieu",
+            "17-letoile",
+            "18-la-lune",
+            "19-le-soleil",
+            "20-le-jugement",
+            "21-le-monde"
+          ];
+          // Mélange aléatoirement le tableau
+          for (let i = faces.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [faces[i], faces[j]] = [faces[j], faces[i]];
+          }
+
+          let selectedCount = 0;
+          let selectedCards = [];
+
+          for (let i = 0; i < 22; i++) {
+            let cardFrame = document.createElement('div');
+            cardFrame.className = 'card-selection-frame'; // Ajoute la classe pour le CSS mobile
+            cardFrame.style.width = '90px';
+            cardFrame.style.height = '144px';
+            cardFrame.style.borderRadius = '1em';
+            // Fond très subtil pour effet verre, mais pas blanc
+            cardFrame.style.background = 'linear-gradient(135deg, rgba(227,230,243,0.18) 0%, rgba(255,227,236,0.13) 100%)';
+            cardFrame.style.backdropFilter = 'blur(4px)';
+            cardFrame.style.border = 'none'; // aucune bordure
+            cardFrame.style.boxShadow = '0 8px 32px 0 rgba(231, 84, 128, 0.13), 0 2px 12px 0 rgba(26,35,126,0.10)';
+            cardFrame.style.display = 'flex';
+            cardFrame.style.alignItems = 'center';
+            cardFrame.style.justifyContent = 'center';
+            cardFrame.style.cursor = 'pointer';
+            cardFrame.style.transition = 'transform 0.15s, box-shadow 0.15s';
+            cardFrame.style.position = 'relative';
+            cardFrame.style.overflow = 'hidden';
+            // Ajoute un léger padding pour éviter que l'image touche le bord
+            cardFrame.style.padding = '2px';
+
+            // Ajoute la carte verso
+            let img = document.createElement('img');
+            img.className = 'card-image'; // Ajoute la classe pour le CSS mobile
+            img.src = './img/majors/verso.webp'; // Chemin corrigé
+            img.alt = 'Carte tarot verso';
+            img.style.width = '95%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            img.style.pointerEvents = 'none';
+            img.style.transition = 'transform 0.5s';
+
+            // Ajoute la carte face (cachée au départ)
+            let imgFace = document.createElement('img');
+            imgFace.className = 'card-image'; // Ajoute la classe pour le CSS mobile
+            imgFace.src = `/opanoma-vite-test/img/majors/${faces[i]}.webp`;
+            imgFace.alt = `Carte tarot ${faces[i]}`;
+            imgFace.style.width = '95%';
+            imgFace.style.height = 'auto';
+            imgFace.style.display = 'none';
+            imgFace.style.position = 'absolute';
+            imgFace.style.top = '0';
+            imgFace.style.left = '0';
+            imgFace.style.transition = 'transform 0.5s';
+
+            cardFrame.appendChild(img);
+            cardFrame.appendChild(imgFace);
+
+            cardFrame.setAttribute('data-card', faces[i]);
+
+            // Effet au survol
+            cardFrame.addEventListener('mouseenter', function() {
+              cardFrame.style.transform = 'scale(1.10)';
+              cardFrame.style.boxShadow = '0 16px 40px 0 #e7548099, 0 2px 12px 0 #1a237e22';
+            });
+            cardFrame.addEventListener('mouseleave', function() {
+              cardFrame.style.transform = 'none';
+              cardFrame.style.boxShadow = '0 8px 32px 0 rgba(231, 84, 128, 0.13), 0 2px 12px 0 rgba(26,35,126,0.10)';
+            });
+
+            // Retourne la carte au clic (une seule fois, et seulement si quota non atteint)
+            cardFrame.addEventListener('click', function() {
+              console.log("Carte cliquée. selectedCount:", selectedCount, "nbCartes:", nbCartes);
+              if (img.style.display !== 'none' && selectedCount < nbCartes) {
+                console.log("Carte valide, retournement...");
+                img.style.display = 'none';
+                imgFace.style.display = 'block';
+                imgFace.style.transform = 'rotateY(0deg)';
+                selectedCount++;
+                selectedCards.push(faces[i]);
+                console.log("selectedCount maintenant:", selectedCount, "selectedCards:", selectedCards);
+
+                // Quand le quota est atteint, efface et affiche l'interprétation
+                if (selectedCount >= nbCartes) {
+                  console.log("QUOTA ATTEINT ! Passage à l'interprétation...");
+                  // Désactive les autres cartes
+                  cardsGrid.querySelectorAll('div').forEach(function(frame) {
+                    if (frame.querySelector('img').style.display !== 'none') {
+                      frame.style.pointerEvents = 'none';
+                      frame.style.opacity = '0.5';
+                    }
+                  });
+                  // Laisse 1 seconde pour voir les cartes tirées
+                  setTimeout(() => {
+                    choixBox.style.transition = 'opacity 0.7s';
+                    choixBox.style.opacity = '0';
+                    setTimeout(() => {
+                      if (choixBox && choixBox.parentNode) choixBox.parentNode.removeChild(choixBox);
+                      console.log("=== APPEL showInterpretationBox ===");
+                      console.log("selectedCards:", selectedCards.slice(0, nbCartes));
+                      showInterpretationBox(selectedCards.slice(0, nbCartes), overlay);
+                    }, 700);
+                  }, 1000);
+                }
+              }
+            });
+
+            cardsGrid.appendChild(cardFrame);
+          }
+
+          choixBox.appendChild(cardsGrid);
+
+          overlay.appendChild(choixBox);
+          setTimeout(() => { choixBox.style.opacity = '1'; }, 30);
+        }
+
+        btn3.addEventListener('click', function() {
+          btn3.disabled = true;
+          btn5.disabled = true;
+          setTimeout(function() {
+            popup.style.transition = 'opacity 0.7s';
+            popup.style.opacity = '0';
+            setTimeout(() => {
+              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
+              showChoixCartesBox(3);
+            }, 700);
+          }, 600);
+        });
+        btn5.addEventListener('click', function() {
+          btn3.disabled = true;
+          btn5.disabled = true;
+          setTimeout(function() {
+            popup.style.transition = 'opacity 0.7s';
+            popup.style.opacity = '0';
+            setTimeout(() => {
+              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
+              showChoixCartesBox(5);
+            }, 700);
+          }, 600);
+        });
+      }
+
+      validerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openTirageBox();
+      });
+      pasQuestionBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openTirageBox();
+      });
+    });
+
+    themeBox.appendChild(btn);
+  });
+
+  popup.appendChild(themeBox);
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+});
+
+function showInterpretationBox(cards, overlay) {
+  console.log("=== showInterpretationBox appelée ===");
+  console.log("Cards:", cards);
+  console.log("Overlay:", overlay);
+  
+  let interpBox = document.createElement('div');
+  interpBox.className = 'interpretation-popup'; // Ajoute la classe pour le CSS mobile
+  interpBox.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+  interpBox.style.backdropFilter = 'blur(10px)';
+  interpBox.style.border = '1.5px solid rgba(255,255,255,0.35)';
+  interpBox.style.borderRadius = '2em';
+  interpBox.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.18)';
+  interpBox.style.padding = '2.5em 2em 2em 2em';
+  interpBox.style.maxWidth = '900px';
+  interpBox.style.width = '96vw';
+  interpBox.style.maxHeight = '85vh'; // AJOUT: hauteur max
+  interpBox.style.overflowY = 'auto'; // AJOUT: scroll vertical
+  interpBox.style.position = 'relative';
+  interpBox.style.textAlign = 'center';
+  interpBox.style.opacity = '0';
+  interpBox.style.transition = 'opacity 0.7s';
+
+  // Empêcher le scroll de la page d'arrière-plan
+  function preventBackgroundScroll(e) {
+    // Permettre le scroll DANS interpBox
+    if (interpBox.contains(e.target)) {
+      return; // Laisser passer le scroll dans le popup
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+
+  // Fonction pour nettoyer le verrouillage du scroll
+  function cleanupScrollLock() {
+    document.body.style.overflow = '';
+    document.removeEventListener('wheel', preventBackgroundScroll);
+    document.removeEventListener('touchmove', preventBackgroundScroll);
+  }
+
+  // Verrouiller le scroll de la page
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('wheel', preventBackgroundScroll, { passive: false });
+  document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+
+  // Bouton mute/unmute (créé ici, jamais ailleurs)
+  let soundBtn = document.createElement('button');
+  soundBtn.id = 'sound-toggle-btn';
+  soundBtn.title = 'Couper le son';
+  soundBtn.innerHTML = '<svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><rect x="20" y="10" width="2" height="8" rx="1" fill="#1a237e "/></svg>';
+  soundBtn.style.position = 'absolute';
+  
+  // Position responsive : à gauche du bouton "Encore" sur mobile
+  const screenWidth = window.innerWidth;
+  if (screenWidth <= 768) {
+    soundBtn.style.left = '-55px'; // À gauche du bouton "Encore" sur mobile
+    soundBtn.style.top = '50%';
+  } else {
+    soundBtn.style.left = '-12px'; // Position originale sur desktop
+    soundBtn.style.top = '150%';
+  }
+  
+  soundBtn.style.transform = 'translateY(-50%)';
+  soundBtn.style.margin = '0';
+  soundBtn.style.zIndex = '10';
+  soundBtn.style.background = 'linear-gradient(120deg, #ffd700 0%, #ff8c00 100%)'; // Orange doré
+  soundBtn.style.border = '2px solid #ff8c00'; // Bordure orange
+  soundBtn.style.borderRadius = '50%';
+  soundBtn.style.width = '44px';
+  soundBtn.style.height = '44px';
+  soundBtn.style.display = 'none';
+  soundBtn.style.alignItems = 'center';
+  soundBtn.style.justifyContent = 'center';
+  soundBtn.style.boxShadow = '0 2px 12px rgba(30,30,40,0.13)';
+  soundBtn.style.cursor = 'pointer';
+  soundBtn.style.transition = 'background 0.2s, border 0.2s';
+
+  let soundOn = true;
+  soundBtn.onclick = function() {
+    soundOn = !soundOn;
+    if (soundOn) {
+      soundBtn.title = 'Couper le son';
+      soundBtn.innerHTML = '<svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><rect x="20" y="10" width="2" height="8" rx="1" fill="#1a237e "/></svg>';
+    } else {
+      soundBtn.title = 'Remettre le son';
+      soundBtn.innerHTML = '<svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><line x1="20" y1="10" x2="22" y2="18" stroke="#1a237e " stroke-width="2"/><line x1="22" y1="10" x2="20" y2="18" stroke="#1a237e" stroke-width="2"/></svg>';
+      window.speechSynthesis.cancel();
+      if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    }
+  };
+  interpBox.appendChild(soundBtn);
+
+  // Titre
+  let titreInterp = document.createElement('div');
+  titreInterp.textContent = 'Interprétation du tirage';
+  titreInterp.style.fontFamily = "'Revalia', cursive";
+  titreInterp.style.fontSize = '2.3rem';
+  titreInterp.style.letterSpacing = '2px';
+  titreInterp.style.background = 'linear-gradient(90deg, #1a237e 0%, #e75480 100%)';
+  titreInterp.style.webkitBackgroundClip = 'text';
+  titreInterp.style.webkitTextFillColor = 'transparent';
+  titreInterp.style.backgroundClip = 'text';
+  titreInterp.style.textFillColor = 'transparent';
+  titreInterp.style.marginBottom = '1.2em';
+
+  // Bouton fermer
+  let closeBtn3 = document.createElement('button');
+  closeBtn3.textContent = '✕';
+  closeBtn3.style.position = 'absolute';
+  closeBtn3.style.top = '1em';
+  closeBtn3.style.right = '1.2em';
+  closeBtn3.style.background = 'none';
+  closeBtn3.style.border = 'none';
+  closeBtn3.style.fontSize = '1.5em';
+  closeBtn3.style.cursor = 'pointer';
+  closeBtn3.style.color = '#e75480';
+  closeBtn3.setAttribute('aria-label', 'Fermer');
+  closeBtn3.onclick = () => {
+    // Arrêt de la synthèse vocale et du typewriter
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    
+    // Masquer le bouton son
+    if (soundBtn) {
+      soundBtn.style.visibility = 'hidden';
+      soundBtn.style.opacity = '0';
+    }
+    
+    // Restaurer le scroll avant de fermer
+    if (typeof cleanupScrollLock === 'function') {
+      cleanupScrollLock();
+    } else {
+      // Fallback si cleanupScrollLock n'est pas définie
+      document.body.style.overflow = '';
+      document.removeEventListener('wheel', preventBackgroundScroll);
+      document.removeEventListener('touchmove', preventBackgroundScroll);
+    }
+    
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  };
+
+  interpBox.appendChild(closeBtn3);
+  interpBox.appendChild(titreInterp);
+
+  // Grille des cartes tirées
+  let interpGrid = document.createElement('div');
+  interpGrid.className = 'cards-container'; // Ajoute la classe pour le CSS mobile
+  
+  if (cards.length === 5) {
+    // Layout en croix compact pour 5 cartes avec espacement
+    interpGrid.style.display = 'block';
+    interpGrid.style.position = 'relative';
+    
+    // Dimensions adaptatives du conteneur
+    const screenWidth = window.innerWidth;
+    let containerWidth, containerHeight;
+    
+    if (screenWidth <= 480) {
+      containerWidth = '240px'; // +20px plus large
+      containerHeight = '180px'; // Réduit pour éliminer le scroll
+    } else if (screenWidth <= 768) {
+      containerWidth = '300px'; // +30px plus large
+      containerHeight = '220px'; // Réduit pour éliminer le scroll
+    } else {
+      containerWidth = '380px'; // +40px plus large
+      containerHeight = '260px'; // Réduit pour éliminer le scroll
+    }
+    
+    interpGrid.style.width = containerWidth;
+    interpGrid.style.height = containerHeight;
+    interpGrid.style.margin = '2.5em auto 0 auto';
+  } else {
+    // Layout horizontal pour 3 cartes
+    interpGrid.style.display = 'flex';
+    interpGrid.style.justifyContent = 'center';
+    interpGrid.style.gap = '0.6em';
+    interpGrid.style.margin = '2.5em 0 0 0';
+    interpGrid.style.flexWrap = 'nowrap';
+    interpGrid.style.alignItems = 'flex-start';
+  }
+  
+  interpGrid.style.maxWidth = '100%';
+  interpGrid.style.overflowX = 'hidden';
+
+  cards.forEach((cardName, index) => {
+    let cardBig = document.createElement('div');
+    cardBig.style.display = 'flex';
+    cardBig.style.flexDirection = 'column';
+    cardBig.style.alignItems = 'center';
+    cardBig.style.margin = '0';
+    cardBig.style.padding = '0'; // Enlever tout padding
+    cardBig.style.border = 'none'; // Enlever toute bordure
+
+    let imgBig = document.createElement('img');
+    imgBig.className = 'card-big'; // Ajoute la classe pour le CSS mobile
+    imgBig.src = `./img/majors/${cardName}.webp`; // Chemin corrigé
+    imgBig.alt = `Carte ${cardName}`;
+    
+    // Calcul adaptatif des tailles selon l'écran et le nombre de cartes
+    const screenWidth = window.innerWidth;
+    let cardWidth;
+    
+    if (screenWidth <= 480) {
+      // Très petits écrans
+      cardWidth = cards.length === 5 ? '70px' : '85px';
+    } else if (screenWidth <= 768) {
+      // Tablettes  
+      cardWidth = cards.length === 5 ? '90px' : '110px';
+    } else {
+      // Desktop
+      cardWidth = cards.length === 5 ? '120px' : '180px';
+    }
+    
+    imgBig.style.width = cardWidth;
+    imgBig.style.height = 'auto';
+    imgBig.style.borderRadius = '1em';
+    imgBig.style.boxShadow = '0 8px 32px #e7548044';
+    imgBig.style.marginBottom = '1em';
+    imgBig.style.border = 'none'; // Enlever toute bordure
+    imgBig.style.padding = '0';   // Enlever tout padding
+    imgBig.style.background = 'transparent'; // Fond transparent
+
+    // Positionnement en croix compact pour 5 cartes avec espacement
+    if (cards.length === 5) {
+      cardBig.style.position = 'absolute';
+      
+      // Debug : s'assurer que le conteneur est bien configuré
+      interpGrid.style.position = 'relative';
+      interpGrid.style.overflow = 'visible';
+      
+      // Calcul des dimensions et espacements selon l'écran
+      let cardWidth, gap, verticalGap;
+      
+      if (screenWidth <= 480) {
+        cardWidth = 70;
+        gap = 10; // Espace horizontal entre cartes
+        verticalGap = 80; // Espace vertical entre lignes
+      } else if (screenWidth <= 768) {
+        gap = 15;
+        cardWidth = 90;
+        verticalGap = 100;
+      } else {
+        cardWidth = 120;
+        gap = 20;
+        verticalGap = 130;
+      }
+      
+      switch (index) {
+        case 0: // Première carte - haut gauche - dans le cadre
+          cardBig.style.left = '0px';
+          cardBig.style.top = '0px'; // Remise dans le cadre
+          break;
+        case 1: // Deuxième carte - haut droite - dans le cadre
+          cardBig.style.right = '0px';
+          cardBig.style.top = '0px'; // Remise dans le cadre
+          break;
+        case 2: // Troisième carte - centre (entre les deux niveaux)
+          cardBig.style.left = '50%';
+          cardBig.style.top = `${verticalGap * 0.5}px`; // Milieu entre haut et bas
+          cardBig.style.transform = 'translateX(-50%)';
+          cardBig.style.zIndex = '10'; // Au-dessus pour éviter les conflits visuels
+          break;
+        case 3: // Quatrième carte - bas gauche - descendue encore plus
+          cardBig.style.left = '0px';
+          cardBig.style.top = `${verticalGap + 45}px`; // Descendue de 45px supplémentaires
+          break;
+        case 4: // Cinquième carte - bas droite - descendue encore plus
+          cardBig.style.right = '0px';
+          cardBig.style.top = `${verticalGap + 45}px`; // Descendue de 45px supplémentaires
+          break;
+      }
+    }
+
+    cardBig.appendChild(imgBig);
+    interpGrid.appendChild(cardBig);
+  });
+
+  interpGrid.style.position = 'relative'; // Important pour le positionnement absolu du bouton
+interpGrid.appendChild(soundBtn);       // Ajoute le bouton dans la grille des cartes
+  interpBox.appendChild(interpGrid);
+
+  // Cadre pour l'interprétation IA
+  let iaInterpretBox = document.createElement('div');
+  iaInterpretBox.id = 'ia-interpretation';
+  iaInterpretBox.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+  iaInterpretBox.style.backdropFilter = 'blur(6px)';
+  iaInterpretBox.style.border = '1.5px solid rgba(255,255,255,0.35)';
+  iaInterpretBox.style.borderRadius = '1.2em';
+  iaInterpretBox.style.boxShadow = '0 2px 12px rgba(30,30,40,0.10)';
+  iaInterpretBox.style.padding = '2em 1.5em 1.5em 1.5em';
+  iaInterpretBox.style.margin = '2.5em auto 0 auto';
+  iaInterpretBox.style.maxWidth = '700px';
+  iaInterpretBox.style.fontFamily = "'Quicksand', sans-serif";
+  iaInterpretBox.style.fontSize = '1.15rem';
+  iaInterpretBox.style.color = '#1a237e';
+  iaInterpretBox.style.textAlign = 'left';
+  iaInterpretBox.style.height = '10em';
+  iaInterpretBox.style.overflow = 'hidden';
+  iaInterpretBox.style.display = 'flex';
+  iaInterpretBox.style.flexDirection = 'column';
+  iaInterpretBox.style.justifyContent = 'flex-end';
+  iaInterpretBox.textContent = "L'interprétation personnalisée de votre tirage par Madame IA.RMA apparaîtra ici...";
+
+  interpBox.appendChild(iaInterpretBox);
+
+  // Affiche la popup
+  overlay.appendChild(interpBox);
+  setTimeout(() => { interpBox.style.opacity = '1'; }, 30);
+
+  // Appel API IA avec le prompt personnalisé
+  let theme = window.selectedTheme || "Général";
+  let question = window.selectedQuestion || "";
+
+  iaInterpretBox.textContent = "Interprétation en cours...";
+
+  // === CRÉATION DES BOUTONS AVANT L'APPEL API ===
+  console.log("Création des boutons d'action...");
+  let iconBar = document.createElement('div');
+  iconBar.className = 'action-buttons'; // Ajoute la classe pour le CSS mobile
+  iconBar.style.display = 'flex';
+  iconBar.style.justifyContent = 'center';
+  iconBar.style.alignItems = 'center';
+  iconBar.style.gap = '2em';
+  iconBar.style.margin = '2.5em 0 0 0';
+  console.log("iconBar créé:", iconBar);
+
+  // Style commun
+  function styleIconBtn(btn) {
+    btn.style.background = 'linear-gradient(120deg, #fff 0%, #1a237e 100%)';
+    btn.style.border = '2px solid #1a237e';
+    btn.style.borderRadius = '50%';
+    btn.style.width = '44px';
+    btn.style.height = '44px';
+    btn.style.display = 'flex';
+    btn.style.alignItems = 'center';
+    btn.style.justifyContent = 'center';
+    btn.style.boxShadow = '0 2px 12px rgba(30,30,40,0.13)';
+    btn.style.cursor = 'pointer';
+    btn.style.transition = 'background 0.2s, border 0.2s';
+    btn.style.padding = '0';
+  }
+
+  // 1. Encore (refresh)
+  let encoreBtn = document.createElement('button');
+  encoreBtn.className = 'action-button'; // Ajoute la classe pour le CSS mobile
+  encoreBtn.title = "Nouveau tirage";
+  styleIconBtn(encoreBtn);
+  encoreBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/><path d="M20 14a6 6 0 1 1-2.2-4.6" stroke="#1a237e" stroke-width="2" fill="none" stroke-linecap="round"/><polyline points="18,8 22,8 22,12" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  encoreBtn.onclick = function() {
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    
+    // Restaurer le scroll avant de fermer
+    if (typeof cleanupScrollLock === 'function') {
+      cleanupScrollLock();
+    } else {
+      document.body.style.overflow = '';
+      document.removeEventListener('wheel', preventBackgroundScroll);
+      document.removeEventListener('touchmove', preventBackgroundScroll);
+    }
+    
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    
+    // Déclencher un nouveau tirage
+    setTimeout(() => {
+      document.querySelector('.header-btn-ia').click();
+    }, 100);
+  };
+
+  // 2. Mail
+  let mailBtn = document.createElement('button');
+  mailBtn.className = 'action-button'; // Ajoute la classe pour le CSS mobile
+  mailBtn.title = "Recevoir mon tirage par mail";
+  styleIconBtn(mailBtn);
+  mailBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/><rect x="7" y="10" width="14" height="8" rx="2" fill="none" stroke="#1a237e" stroke-width="2"/><polyline points="7,10 14,16 21,10" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  mailBtn.onclick = function() {
+    alert("Bouton Mail cliqué ! (fonctionnalité à implémenter)");
+  };
+
+  // 3. Home
+  let homeBtn = document.createElement('button');
+  homeBtn.className = 'action-button'; // Ajoute la classe pour le CSS mobile
+  homeBtn.title = "Retour à l'accueil";
+  styleIconBtn(homeBtn);
+  homeBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/><path d="M8 16V12l6-5 6 5v4a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="none" stroke="#1a237e" stroke-width="2" stroke-linejoin="round"/><rect x="12" y="16" width="4" height="4" fill="none" stroke="#1a237e" stroke-width="2"/></svg>`;
+  homeBtn.onclick = function() {
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    window.location.href = '/#';
+  };
+
+  // Ajouter les boutons à la barre
+  console.log("Ajout des boutons à iconBar...");
+  iconBar.appendChild(encoreBtn);
+  iconBar.appendChild(mailBtn);
+  iconBar.appendChild(homeBtn);
+  console.log("Boutons ajoutés. iconBar contient:", iconBar.children.length, "éléments");
+
+  console.log("Ajout d'iconBar à interpBox...");
+  interpBox.appendChild(iconBar);
+  console.log("iconBar ajouté à interpBox");
+
+  callAIInterpretationAPI(cards, theme, question, function(data) {
+    let txt = data.result || "";
+
+    // Supprime les numéros de cartes entre parenthèses
+    txt = txt.replace(/\s*\(\d{1,2}\)/g, "");
+
+    // Découpe en paragraphes sur deux retours à la ligne
+    let paragraphs = txt.split(/\n\s*\n/);
+    let paraIndex = 0;
+    let charIndex = 0;
+
+    iaInterpretBox.textContent = "";
+
+    function speakPhrase(phrase) {
+      if (!phrase.trim()) return;
+      let utter = new SpeechSynthesisUtterance(phrase.trim());
+      utter.lang = 'fr-FR';
+      utter.rate = 1.05;
+      utter.volume = 1;
+      if (soundOn) {
+        if (soundBtn.style.display === 'none') soundBtn.style.display = 'flex';
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function typeWriterParagraph() {
+      if (paraIndex < paragraphs.length) {
+        let para = paragraphs[paraIndex];
+        let p = document.createElement('p');
+        p.style.margin = '0 0 1em 0';
+        p.style.padding = '0';
+        p.style.display = 'inline';
+        iaInterpretBox.appendChild(p);
+
+        let phraseBuffer = "";
+
+        function typeWriterChar() {
+          if (charIndex < para.length) {
+            let char = para[charIndex];
+            p.textContent += char;
+            phraseBuffer += char;
+            iaInterpretBox.scrollTop = iaInterpretBox.scrollHeight;
+
+            // Si fin de phrase, on lit la phrase immédiatement
+            if (/[.!?…]/.test(char)) {
+              let phraseToSpeak = phraseBuffer.trim();
+              if (phraseToSpeak.length > 2) {
+                speakPhrase(phraseToSpeak);
+              }
+              phraseBuffer = "";
+            }
+
+            charIndex++;
+            typeWriterTimeout = setTimeout(typeWriterChar, 18);
+          } else {
+            // À la fin du paragraphe, s'il reste une phrase non lue
+            let lastPhrase = phraseBuffer.trim();
+            if (lastPhrase.length > 2) {
+              speakPhrase(lastPhrase);
+            }
+            p.style.display = 'block';
+            paraIndex++;
+            charIndex = 0;
+            setTimeout(typeWriterParagraph, 200);
+          }
+        }
+        typeWriterChar();
+      } else {
+        // Quand tout est écrit, active le scroll
+        iaInterpretBox.style.overflowY = 'auto';
+        iaInterpretBox.style.cursor = 'grab';
+      }
+    }
+    typeWriterParagraph();
+  });
+}
+
+function callAIInterpretationAPI(cards, theme, question, callback) {
+iconBar.style.display = 'flex';
+iconBar.style.justifyContent = 'center';
+iconBar.style.alignItems = 'center';
+iconBar.style.gap = '2em';
+iconBar.style.margin = '2.5em 0 0 0';
+iconBar.style.background = 'rgba(26,35,126,0.1)'; // Debug: fond visible
+iconBar.style.padding = '20px 0'; // Debug: padding visible
+iconBar.style.borderRadius = '10px'; // Debug: coins arrondis
+console.log("iconBar créé:", iconBar);
+
+// Style commun
+function styleIconBtn(btn) {
+  btn.style.background = 'linear-gradient(120deg, #fff 0%, #1a237e 100%)';
+  btn.style.border = '2px solid #1a237e';
+  btn.style.borderRadius = '50%';
+  btn.style.width = '44px';
+  btn.style.height = '44px';
+  btn.style.display = 'flex';
+  btn.style.alignItems = 'center';
+  btn.style.justifyContent = 'center';
+  btn.style.boxShadow = '0 2px 12px rgba(30,30,40,0.13)';
+  btn.style.cursor = 'pointer';
+  btn.style.transition = 'background 0.2s, border 0.2s';
+  btn.style.padding = '0';
+}
+
+// 1. Encore (refresh)
+let encoreBtn = document.createElement('button');
+encoreBtn.title = "Nouveau tirage";
+styleIconBtn(encoreBtn);
+encoreBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <path d="M20 14a6 6 0 1 1-2.2-4.6" stroke="#1a237e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <polyline points="18,8 22,8 22,12" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+encoreBtn.onclick = function() {
+  window.speechSynthesis.cancel();
+  if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+  
+  // Restaurer le scroll avant de fermer
+  if (typeof cleanupScrollLock === 'function') {
+    cleanupScrollLock();
+  } else {
+    // Fallback si cleanupScrollLock n'est pas définie
+    document.body.style.overflow = '';
+    document.removeEventListener('wheel', preventBackgroundScroll);
+    document.removeEventListener('touchmove', preventBackgroundScroll);
+  }
+  
+  if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  document.querySelector('.header-btn-ia').click();
+};
+
+// Tooltip stylé au survol
+let encoreTooltip = document.createElement('div');
+encoreTooltip.textContent = "nouveau tirage";
+encoreTooltip.style.position = 'absolute';
+encoreTooltip.style.left = '50%';
+encoreTooltip.style.top = '120%';
+encoreTooltip.style.transform = 'translateX(-50%)';
+encoreTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+encoreTooltip.style.color = '#1a237e';
+encoreTooltip.style.padding = '0.5em 1.2em';
+encoreTooltip.style.borderRadius = '1em';
+encoreTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+encoreTooltip.style.fontFamily = "'Quicksand', sans-serif";
+encoreTooltip.style.fontSize = '0.98rem';
+encoreTooltip.style.fontWeight = '600';
+encoreTooltip.style.textAlign = 'center';
+encoreTooltip.style.whiteSpace = 'nowrap';
+encoreTooltip.style.opacity = '0';
+encoreTooltip.style.pointerEvents = 'none';
+encoreTooltip.style.transition = 'opacity 0.18s';
+encoreTooltip.style.zIndex = '10001';
+
+// Positionne le bouton en relatif pour le tooltip
+encoreBtn.style.position = 'relative';
+
+encoreBtn.appendChild(encoreTooltip);
+
+encoreBtn.addEventListener('mouseenter', function() {
+  encoreTooltip.style.opacity = '1';
+});
+encoreBtn.addEventListener('mouseleave', function() {
+  encoreTooltip.style.opacity = '0';
+});
+
+// 2. Mail (enveloppe)
+let mailBtn = document.createElement('button');
+mailBtn.title = "Recevoir mon tirage par mail";
+styleIconBtn(mailBtn);
+mailBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <rect x="7" y="10" width="14" height="8" rx="2" fill="none" stroke="#1a237e" stroke-width="2"/>
+  <polyline points="7,10 14,16 21,10" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+mailBtn.onclick = function() {
+  // Vérifie si le formulaire existe déjà
+  if (interpBox.querySelector('.mail-form-popup')) return;
+
+  let mailForm = document.createElement('form');
+  mailForm.className = 'mail-form-popup';
+  mailForm.style.marginTop = '1.5em';
+  mailForm.style.display = 'flex';
+  mailForm.style.justifyContent = 'center';
+  mailForm.style.alignItems = 'center';
+  mailForm.style.gap = '1em';
+
+  let mailInput = document.createElement('input');
+  mailInput.type = 'email';
+  mailInput.placeholder = 'Votre email';
+  mailInput.required = true;
+  mailInput.style.padding = '0.5em 1em';
+  mailInput.style.borderRadius = '18px';
+  mailInput.style.border = '1px solid #1a237e';
+  mailInput.style.fontSize = '1rem';
+
+  let mailSend = document.createElement('button');
+  mailSend.type = 'submit';
+  mailSend.textContent = 'Envoyer';
+  mailSend.style.background = '#1a237e';
+  mailSend.style.color = '#fff';
+  mailSend.style.border = 'none';
+  mailSend.style.borderRadius = '18px';
+  mailSend.style.padding = '0.5em 1.5em';
+  mailSend.style.fontSize = '1rem';
+  mailSend.style.cursor = 'pointer';
+
+  mailForm.appendChild(mailInput);
+  mailForm.appendChild(mailSend);
+
+  // Ajoute le formulaire juste sous la barre d'icônes
+  interpBox.appendChild(mailForm);
+
+  mailForm.onsubmit = function(e) {
+    e.preventDefault();
+    mailSend.disabled = true;
+    mailSend.textContent = "Envoi...";
+    fetch('/api/send-tirage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: mailInput.value,
+        cartes: cards,
+        interpretation: document.getElementById('ia-interpretation').textContent
+      })
+    })
+    .then(r => {
+      mailSend.textContent = "Envoyé !";
+      mailSend.style.background = "#009688";
+      mailInput.disabled = true;
+      setTimeout(() => {
+        mailForm.innerHTML = "<div style='color:#1a237e;font-weight:600;margin-top:1em;font-family:\"Revalia\",cursive;font-size:1.2em;width:100%;text-align:center;'>Votre tirage a bien été envoyé !</div>";
+      }, 1200);
+    })
+    .catch(() => {
+      mailSend.textContent = "Erreur";
+      mailSend.style.background = "#e75480";
+      mailSend.disabled = false;
+    });
+  };
+};
+
+// Tooltip stylé au survol pour le bouton mail
+let mailTooltip = document.createElement('div');
+mailTooltip.textContent = "votre tirage par mail";
+mailTooltip.style.position = 'absolute';
+mailTooltip.style.left = '50%';
+mailTooltip.style.top = '120%';
+mailTooltip.style.transform = 'translateX(-50%)';
+mailTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+mailTooltip.style.color = '#1a237e';
+mailTooltip.style.padding = '0.5em 1.2em';
+mailTooltip.style.borderRadius = '1em';
+mailTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+mailTooltip.style.fontFamily = "'Quicksand', sans-serif";
+mailTooltip.style.fontSize = '0.98rem';
+mailTooltip.style.fontWeight = '600';
+mailTooltip.style.textAlign = 'center';
+mailTooltip.style.whiteSpace = 'nowrap';
+mailTooltip.style.opacity = '0';
+mailTooltip.style.pointerEvents = 'none';
+mailTooltip.style.transition = 'opacity 0.18s';
+mailTooltip.style.zIndex = '10001';
+
+mailBtn.style.position = 'relative';
+mailBtn.appendChild(mailTooltip);
+
+mailBtn.addEventListener('mouseenter', function() {
+  mailTooltip.style.opacity = '1';
+});
+mailBtn.addEventListener('mouseleave', function() {
+  mailTooltip.style.opacity = '0';
+});
+
+// 3. Retour Opanoma (maison)
+let homeBtn = document.createElement('button');
+homeBtn.title = "Retour à l'accueil Opanoma";
+styleIconBtn(homeBtn);
+homeBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <path d="M8 16V12l6-5 6 5v4a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="none" stroke="#1a237e" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="12" y="16" width="4" height="4" fill="none" stroke="#1a237e" stroke-width="2"/>
+</svg>
+`;
+homeBtn.onclick = function() {
+  window.speechSynthesis.cancel();
+  if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+  window.location.href = '/#';
+};
+
+// Tooltip stylé au survol pour le bouton retour
+let homeTooltip = document.createElement('div');
+homeTooltip.textContent = "retour au site";
+homeTooltip.style.position = 'absolute';
+homeTooltip.style.left = '50%';
+homeTooltip.style.top = '120%';
+homeTooltip.style.transform = 'translateX(-50%)';
+homeTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+homeTooltip.style.color = '#1a237e';
+homeTooltip.style.padding = '0.5em 1.2em';
+homeTooltip.style.borderRadius = '1em';
+homeTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+homeTooltip.style.fontFamily = "'Quicksand', sans-serif";
+homeTooltip.style.fontSize = '0.98rem';
+homeTooltip.style.fontWeight = '600';
+homeTooltip.style.textAlign = 'center';
+homeTooltip.style.whiteSpace = 'nowrap';
+homeTooltip.style.opacity = '0';
+homeTooltip.style.pointerEvents = 'none';
+homeTooltip.style.transition = 'opacity 0.18s';
+homeTooltip.style.zIndex = '10001';
+
+homeBtn.style.position = 'relative';
+homeBtn.appendChild(homeTooltip);
+
+homeBtn.addEventListener('mouseenter', function() {
+  homeTooltip.style.opacity = '1';
+});
+homeBtn.addEventListener('mouseleave', function() {
+  homeTooltip.style.opacity = '0';
+});
+
+// Ajoute les boutons à la barre
+console.log("Ajout des boutons à iconBar...");
+iconBar.appendChild(encoreBtn);
+iconBar.appendChild(mailBtn);
+iconBar.appendChild(homeBtn);
+console.log("Boutons ajoutés. iconBar contient:", iconBar.children.length, "éléments");
+
+console.log("Ajout d'iconBar à interpBox...");
+interpBox.appendChild(iconBar);
+console.log("iconBar ajouté à interpBox");
+
+} // <--- AJOUTE CETTE ACCOLADE pour fermer showInterpretationBox
+
+function callAIInterpretationAPI(cards, theme, question, callback) {
+  fetch('http://localhost:3000/api/open-proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      cartes: cards,
+      theme: theme,
+      question: question
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    callback(data);
+  })
+  .catch(err => {
+    callback({ result: "Erreur lors de l'appel à l'API. Veuillez réessayer plus tard." });
+  });
+}
+
+// Fonction pour scroll vers réservation
+function scrollToReservation() {
+  const reservation = document.getElementById('reservation');
+  if (reservation) {
+    reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Fonction pour déclencher le tirage IA
+function triggerTirageIA() {
+  const btnIA = document.querySelector('.header-btn-ia');
+  if (btnIA) {
+    btnIA.click();
+  } else {
+    // Fallback si le bouton n'existe pas encore
+    console.log('Bouton IA non trouvé, tentative alternative...');
+  }
+}
+
+// Connexion des boutons du header
+document.addEventListener('DOMContentLoaded', function() {
+  // Bouton "Réserver" -> scroll vers section reservation
+  const btnReserver = document.querySelector('.btn-pro');
+  if (btnReserver) {
+    btnReserver.addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToReservation();
+    });
+  }
+
+  // Bouton "Tirage IA" -> ouvre le popup de choix
+  const btnTirageIA = document.querySelector('.btn-ia');
+  if (btnTirageIA) {
+    btnTirageIA.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (typeof openTirageBox === 'function') {
+        openTirageBox();
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

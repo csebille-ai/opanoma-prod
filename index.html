@@ -1,0 +1,4304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accueil - l’Œil d’Opanoma</title>
+  <link rel="stylesheet" href="/src/style.css?v=force-reload-20251013" />
+  <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- STYLES INLINE POUR FORCER LE LAYOUT DÉ 5 CARTES DESKTOP -->
+  <style>
+    /* Layout dé n°5 pour desktop (5 cartes) - FORCE CACHE BYPASS */
+    @media (min-width: 769px) {
+      .interpretation-popup .cards-container[style*="relative"] {
+        width: 500px !important;
+        height: 320px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
+        gap: 20px !important;
+        align-items: center !important;
+        justify-items: center !important;
+        padding: 20px !important;
+        margin: 2em auto 0 auto !important;
+        position: relative !important;
+      }
+
+      /* Positionnement spécifique des cartes comme un dé n°5 */
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+      }
+
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+      }
+
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        grid-row-end: 3 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        transform: scale(1.1) !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        z-index: 10 !important;
+      }
+
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4) {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+      }
+
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5) {
+        grid-column: 3 !important;
+        grid-row: 2 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+      }
+
+      /* Taille des cartes pour le layout dé */
+      .interpretation-popup .cards-container[style*="relative"] .card-image {
+        width: 80px !important;
+        height: auto !important;
+        max-width: 80px !important;
+        transform-origin: center !important;
+      }
+
+      /* Carte centrale plus mise en valeur */
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3) {
+        width: 90px !important;
+        max-width: 90px !important;
+        box-shadow: 0 8px 25px rgba(231, 84, 128, 0.4) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-video">
+    <video class="hero-video" playsinline autoplay muted loop poster="/hero-poster.jpg">
+      <source src="/public/fond10.mp4" type="video/mp4"/>
+    </video>
+    <div class="hero-overlay"></div>
+  </div>
+  
+  <!-- ===== HEADER uniquement ===== -->
+  <style>
+    /* === MEDIA QUERIES ORGANISÉES === */
+    /* Mobile très petit (max 375px) */
+    @media (max-width: 375px) {
+      .main-header {
+        padding: 0.8em 0.5em;
+        gap: 0.5em;
+        min-height: auto;
+      }
+      .header-left .header-logo {
+        height: 42px;
+        max-width: 130px;
+      }
+      .header-center {
+        gap: 0.5em;
+      }
+      .header-ia {
+        margin: 0 0.3em;
+      }
+      .main-header .header-btn-ia {
+        font-size: 0.55rem;
+        padding: 0.22em 0.45em;
+        letter-spacing: 0.1px;
+        margin: 0 0.03em;
+        min-width: auto;
+        max-width: 60px;
+        width: auto;
+        background: #FF6B35;
+        border: 1px solid #FF6B35;
+        border-radius: 10px;
+        box-shadow: none;
+        text-shadow: none;
+        transform: none;
+      }
+      .main-header .header-btn-ia:hover,
+      .main-header .header-btn-ia:focus {
+        background: #FF6B35;
+        border-color: #FF6B35;
+        transform: none;
+        box-shadow: none;
+      }
+      .manon-title {
+        margin-top: 50px;
+      }
+    }
+
+    /* Tablette et mobile moyen (376px à 980px) */
+    @media (max-width: 980px) and (min-width: 376px) {
+      .main-header {
+        padding: 0.8em 1em;
+        gap: 0.7em;
+      }
+      .header-left .header-logo {
+        height: 48px;
+        max-width: 150px;
+      }
+      .header-center {
+        gap: 0.7em;
+      }
+      .header-ia {
+        margin: 0 0.6em;
+      }
+      .main-header .header-btn-ia {
+        font-size: 0.7rem;
+        padding: 0.3em 0.7em;
+        max-width: 80px;
+        border-radius: 12px;
+      }
+      .manon-title {
+        margin-top: 60px;
+      }
+    }
+
+    /* Desktop (min 981px) */
+    @media (min-width: 981px) {
+      .main-header {
+        padding: 1.2em 2em;
+        gap: 1.2em;
+      }
+      .header-left .header-logo {
+        height: 60px;
+        max-width: 180px;
+      }
+      .header-center {
+        gap: 1.2em;
+      }
+      .header-ia {
+        margin: 0 1em;
+      }
+      .main-header .header-btn-ia {
+        font-size: 1rem;
+        padding: 0.5em 1.2em;
+        max-width: 120px;
+        border-radius: 16px;
+      }
+      .manon-title {
+        margin-top: 140px;
+      }
+    }
+    
+    :root{
+      --brand:#a34d57;           /* Couleur premium (Pro) */
+      --text:#eae7ef;
+      --muted:#b8b3c2;
+      --ia-start:#ff9ae0;        /* Dégradé fun (IA) */
+      --ia-end:#9ab0ff;
+      --glass: rgba(255,255,255,.06);
+      --glass-stroke: rgba(255,255,255,.25);
+    }
+    .site-header{ position:sticky; top:0; z-index:40; backdrop-filter:saturate(140%) blur(8px); background:linear-gradient(180deg, rgba(10,10,14,.82), rgba(10,10,14,.5)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .container{ max-width:1180px; margin:0 auto; padding:12px 22px; display:flex; align-items:center; justify-content:space-between; gap:14px}
+    .brand{ display:flex; align-items:center; gap:12px; color:var(--text); text-decoration:none}
+    .brand-logo{ width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, var(--brand), #6c2230); display:grid; place-items:center; box-shadow:0 8px 30px rgba(163,77,87,.35)}
+    .brand-logo span{ font-family:"Josefin Sans", sans-serif; font-size:22px; font-weight:700; letter-spacing:.5px; color:#fff }
+    .brand-logo-img{ width:60px; height:60px; border-radius:12px; object-fit:contain; background:transparent; box-shadow:0 8px 30px rgba(163,77,87,.35); mix-blend-mode:screen; filter:contrast(1.1) brightness(1.1) }
+    .brand-text{ line-height:1.05 }
+    .brand-title{ font-family:"Josefin Sans", sans-serif; font-weight:700; letter-spacing:.2px; font-size:16px }
+    .brand-sub{ font-size:11px; color:var(--muted) }
+
+    .nav{ display:flex; align-items:center; gap:24px }
+    .nav a{ color:var(--text); text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:400; font-size:15px; letter-spacing:0.2px; padding:8px 0; opacity:.85; transition:all 0.2s ease; position:relative }
+    .nav a:hover{ opacity:1; color:#fff }
+    .nav a::after{ content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:rgba(255,255,255,.6); transition:width 0.3s ease }
+    .nav a:hover::after{ width:100% }
+    .nav a.highlight{ font-weight:500; color:#fff; opacity:1; background:rgba(255,255,255,.1); padding:8px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.2) }
+    .nav a.highlight:hover{ background:rgba(255,255,255,.15); transform:translateY(-1px) }
+
+    .cta-wrap{ display:flex; align-items:center; gap:12px }
+    
+    .social-icons{ display:flex; align-items:center; gap:8px; margin-right:8px }
+    .social-icon{ display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.08); color:#fff; text-decoration:none; transition:all 0.3s ease; border:1px solid rgba(255,255,255,.15) }
+    .social-icon:hover{ background:rgba(255,255,255,.15); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.2) }
+    .social-icon svg{ width:16px; height:16px; fill:currentColor }
+    
+    /* Effet de soleil pour le texte "En savoir plus" */
+    .manon-bio-content {
+      position: relative;
+    }
+    
+    .text-sunshine-effect p {
+      background: linear-gradient(90deg, 
+        currentColor 0%, 
+        currentColor 40%,
+        rgba(255, 215, 0, 0.8) 50%, 
+        currentColor 60%,
+        currentColor 100%);
+      background-size: 300% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: text-shine-sweep 8s ease-in-out infinite;
+    }
+    
+    @keyframes text-shine-sweep {
+      0% {
+        background-position: -300% 0;
+      }
+      50% {
+        background-position: 0% 0;
+      }
+      100% {
+        background-position: 300% 0;
+      }
+    }
+    
+    /* Styles pour la vidéo de fond des popups */
+    .popup-video-background {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      z-index: -1 !important;
+      opacity: 0.8 !important;
+    }
+    
+    .popup-video-overlay {
+      display: none !important;
+    }
+    
+    /* Style pour l'overlay de la page d'accueil */
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+    
+    /* Amélioration de la lisibilité sur fond clair */
+    .manon-title {
+      font-family: "Josefin Sans", sans-serif !important;
+      font-size: 4rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.3px !important;
+      background: linear-gradient(45deg, 
+        #ff0066 0%,
+        #ff3300 25%, 
+        #ff6600 50%,
+        #ff9900 75%,
+        #ffcc00 100%) !important;
+      background-clip: text !important;
+      -webkit-background-clip: text !important;
+      color: transparent !important;
+      text-shadow: 
+        0 0 40px rgba(255, 0, 102, 0.8),
+        0 0 60px rgba(255, 51, 0, 0.6),
+        0 0 10px rgba(0, 191, 255, 0.3),
+        0 0 20px rgba(0, 191, 255, 0.2) !important;
+      filter: 
+        drop-shadow(0 0 8px rgba(0, 191, 255, 0.4))
+        brightness(1.3)
+        saturate(1.4) !important;
+    }
+    
+    .manon-subtitle {
+      color: #ffffff !important;
+      font-weight: 400 !important;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .manon-desc {
+      color: #ffffff !important;
+      font-weight: 400 !important;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Boutons plus contrastés */
+    .btn-en-savoir-plus {
+      background: rgba(231, 84, 128, 0.9) !important;
+      border: 2px solid rgba(231, 84, 128, 1) !important;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(231, 84, 128, 0.4) !important;
+    }
+    
+    /* Cadres de consultation plus visibles */
+    .offre-tarif-card {
+      background: rgba(0, 0, 0, 0.25) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      backdrop-filter: blur(8px) !important;
+    }
+    
+    .offre-titre {
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
+    }
+    
+    .offre-description {
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Section Témoignages */
+    .temoignages-section{ margin-top:2em; padding:2em 1em; background:rgba(0,0,0,.25); border-radius:16px; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(15px); display:none; box-shadow: 0 8px 25px rgba(0,0,0,.3) }
+    .temoignages-title{ color:#fff; font-family:"Quicksand",sans-serif; font-size:1.8rem; font-weight:600; text-align:center; margin-bottom:1.5em }
+    .temoignages-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5em; max-width:1200px; margin:0 auto }
+    .temoignage-card{ background:rgba(255,255,255,.05); border-radius:12px; padding:1.5em; border:1px solid rgba(255,255,255,.1); transition:all 0.3s ease }
+    .temoignage-card:hover{ background:rgba(255,255,255,.08); transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.2) }
+    .temoignage-header{ display:flex; align-items:center; gap:12px; margin-bottom:1em }
+    .temoignage-avatar{ width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; font-size:14px }
+    .temoignage-info h4{ color:#fff; font-family:"Inter",sans-serif; font-size:14px; font-weight:500; margin:0 }
+    .temoignage-info .platform{ color:rgba(255,255,255,.6); font-size:12px; margin:2px 0 0 0; display:flex; align-items:center; gap:4px }
+    .temoignage-stars{ color:#fbbf24; font-size:14px; margin-bottom:0.5em }
+    .temoignage-text{ color:rgba(255,255,255,.9); font-family:"Inter",sans-serif; font-size:13px; line-height:1.6; font-style:italic }
+    .platform-icon{ width:12px; height:12px; fill:currentColor }
+    
+    /* Section FAQ */
+    .faq-section{ margin-top:2em; padding:2em 1em; background:rgba(0,0,0,.25); border-radius:16px; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(15px); display:none; box-shadow: 0 8px 25px rgba(0,0,0,.3) }
+    .faq-title{ color:#fff; font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif; font-size:1.8rem; font-weight:600; text-align:center; margin-bottom:1.5em }
+    .faq-container{ max-width:800px; margin:0 auto }
+    .faq-item{ margin-bottom:1em; border:1px solid rgba(255,255,255,.1); border-radius:12px; background:rgba(255,255,255,.03); overflow:hidden; transition:all 0.3s ease }
+    .faq-item.active{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.2) }
+    .faq-question{ padding:1.5em; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.3s ease }
+    .faq-question:hover{ background:rgba(255,255,255,.05) }
+    .faq-question h3{ color:#fff; font-family:"Inter",sans-serif; font-size:16px; font-weight:500; margin:0; flex:1; line-height:1.4 }
+    .faq-icon{ width:20px; height:20px; color:rgba(255,255,255,.7); transition:transform 0.3s ease; flex-shrink:0; margin-left:1em }
+    .faq-item.active .faq-icon{ transform:rotate(180deg) }
+    .faq-answer{ padding:0 1.5em; max-height:0; overflow:hidden; transition:all 0.4s ease; background:rgba(255,255,255,.02) }
+    .faq-item.active .faq-answer{ padding:0 1.5em 1.5em; max-height:500px }
+    .faq-answer p{ color:rgba(255,255,255,.85); font-family:"Inter",sans-serif; font-size:14px; line-height:1.6; margin:0; padding-top:1em }
+    .faq-categories{ display:flex; justify-content:center; gap:1em; margin-bottom:2em; flex-wrap:wrap }
+    .faq-category{ padding:8px 16px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:20px; color:rgba(255,255,255,.7); font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif; font-weight:400; font-size:13px; letter-spacing:0.2px; cursor:pointer; transition:all 0.3s ease }
+    .faq-category.active, .faq-category:hover{ background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.3); font-weight:500 }
+    
+    /* Effet de focus sur section Consultation */
+    .consultation-focus{ animation:consultationPulse 2s ease-in-out; position:relative; overflow:hidden }
+    .consultation-focus::before{ content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,255,255,.05)); border:2px solid rgba(255,255,255,.3); border-radius:16px; z-index:1; pointer-events:none; animation:focusBorder 2s ease-in-out }
+    .consultation-focus::after{ content:''; position:absolute; top:50%; left:50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%); transform:translate(-50%, -50%); z-index:2; pointer-events:none; animation:focusGlow 2s ease-in-out }
+    
+    @keyframes consultationPulse {
+      0% { transform:scale(1); }
+      25% { transform:scale(1.02); }
+      50% { transform:scale(1.01); }
+      100% { transform:scale(1); }
+    }
+    
+    @keyframes focusBorder {
+      0% { opacity:0; transform:scale(0.95); }
+      50% { opacity:1; transform:scale(1); }
+      100% { opacity:0; transform:scale(1.05); }
+    }
+    
+    @keyframes focusGlow {
+      0% { opacity:0; transform:translate(-50%, -50%) scale(0.5); }
+      50% { opacity:0.6; transform:translate(-50%, -50%) scale(1); }
+      100% { opacity:0; transform:translate(-50%, -50%) scale(1.5); }
+    }
+    
+    .btn-ia{ position:relative; text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:500; font-size:13px; color:#fff; padding:8px 14px; border-radius:8px; background:rgba(231, 84, 128, 0.9); border:2px solid rgba(231, 84, 128, 1); transition:all 0.2s ease; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(231, 84, 128, 0.4) }
+    .btn-ia:hover{ transform:translateY(-1px); filter:brightness(1.05) }
+    .btn-ia small{ display:inline-flex; align-items:center; gap:6px; font-weight:500; margin-left:8px; color:#222; background:rgba(255,255,255,.6); padding:2px 6px; border-radius:999px; font-size:11px }
+    .fun-dot{ width:6px; height:6px; border-radius:50%; background:#17c964; box-shadow:0 0 0 4px rgba(23,201,100,.15)}
+
+    .tip{ position:absolute; top:110%; right:0; transform:translateY(8px); background:var(--glass); color:var(--text); border:1px solid var(--glass-stroke); padding:10px 12px; border-radius:12px; font-size:12px; width:max-content; max-width:260px; box-shadow:0 10px 30px rgba(0,0,0,.35); opacity:0; visibility:hidden; transition:.2s ease; backdrop-filter: blur(8px) }
+    .btn-ia:hover .tip, .btn-ia:focus .tip{ opacity:1; visibility:visible; transform:translateY(0)}
+
+    .divider{ width:1px; height:28px; background:rgba(255,255,255,.12) }
+
+    .burger{ display:none; width:44px; height:44px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:#fff }
+    
+    .offre-btn{ 
+      background:var(--brand); 
+      color:white; 
+      border:none; 
+      padding:6px 12px; 
+      border-radius:6px; 
+      font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; 
+      font-weight:500; 
+      font-size:12px; 
+      cursor:pointer; 
+      transition:all 0.2s ease; 
+      margin-top:8px; 
+      width:auto;
+      max-width:80px;
+      align-self:center;
+    }
+    .offre-btn:hover{ 
+      filter:brightness(1.08); 
+      transform:translateY(-1px); 
+    }
+    
+    .tarot-detail-section {
+      margin: 1.5em auto 2em auto;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(8px) saturate(1.2);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 1.5em;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      padding: 1.8em 1.5em 2em 1.5em;
+      text-align: center;
+    }
+    
+    .pendule-detail-section {
+      margin: 1.5em auto 2em auto;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(8px) saturate(1.2);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 1.5em;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      padding: 1.8em 1.5em 2em 1.5em;
+      text-align: center;
+    }
+    
+    .alignement-detail-section {
+      margin: 1.5em auto 2em auto;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(8px) saturate(1.2);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 1.5em;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      padding: 1.8em 1.5em 2em 1.5em;
+      text-align: center;
+    }
+    
+    .tarot-description {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.1rem;
+      color: #f8f9fa;
+      line-height: 1.6;
+      margin: 1.5em auto 2.5em auto;
+      max-width: 800px;
+      opacity: 0.95;
+    }
+    
+    .offre-btn-small {
+      background: var(--brand);
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      opacity: 0.8;
+    }
+    
+    .offre-btn-small:hover {
+      opacity: 1;
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    
+    .offre-tarif-content {
+      position: relative;
+      height: 100%;
+      padding-bottom: 35px;
+    }
+    
+    /* === MENU MOBILE === */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100vh;
+      z-index: 50;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mobile-menu.active {
+      right: 0;
+    }
+    
+    .mobile-menu-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+    
+    .mobile-menu-content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 85%;
+      max-width: 380px;
+      height: 100vh;
+      background: linear-gradient(180deg, rgba(26, 35, 126, 0.95), rgba(16, 24, 80, 0.98));
+      backdrop-filter: blur(20px) saturate(1.4);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      overflow-y: auto;
+      padding: 0;
+    }
+    
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .mobile-menu-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .mobile-brand-logo {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: transparent;
+      mix-blend-mode: screen;
+      filter: contrast(1.1) brightness(1.1);
+    }
+    
+    .mobile-brand-text {
+      line-height: 1.1;
+    }
+    
+    .mobile-brand-title {
+      font-family: "Josefin Sans", sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+    
+    .mobile-brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    
+    .mobile-menu-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    
+    .mobile-menu-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
+    
+    .mobile-nav {
+      padding: 30px 0 20px 0;
+    }
+    
+    .mobile-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      color: #fff;
+      text-decoration: none;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      opacity: 0.9;
+    }
+    
+    .mobile-nav-item:hover {
+      background: rgba(255, 107, 53, 0.1);
+      opacity: 1;
+      transform: translateX(8px);
+    }
+    
+    .mobile-nav-item.highlight {
+      background: rgba(255, 107, 53, 0.15);
+      border-left: 4px solid #FF6B35;
+      opacity: 1;
+      font-weight: 600;
+    }
+    
+    .mobile-nav-item svg {
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+    
+    .mobile-nav-item:hover svg {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+    
+    .mobile-actions {
+      padding: 30px 24px 40px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+    
+    .mobile-btn-ia {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--ia-start), var(--ia-end));
+      color: #fff;
+      text-decoration: none;
+      border-radius: 14px;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+    }
+    
+    .mobile-btn-ia:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.1);
+    }
+    
+    .mobile-btn-ia small {
+      display: block;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    
+    .mobile-social {
+      text-align: center;
+    }
+    
+    .mobile-social-label {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .mobile-social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    
+    .mobile-social-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    .mobile-social-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .mobile-social-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    @media (max-width:980px){
+      .nav{ display:none }
+      .burger{ display:grid; place-items:center }
+      .container{ padding:12px 16px }
+      .brand-sub{ display:none }
+      
+      /* Optimisation du bouton Tirage IA en mobile */
+      .btn-ia{ 
+        padding: 6px 10px !important; 
+        font-size: 12px !important;
+        white-space: nowrap;
+      }
+      .btn-ia small{ 
+        margin-left: 6px !important;
+        padding: 1px 4px !important;
+        font-size: 10px !important;
+      }
+      .social-icons{ 
+        display: none; 
+      }
+      .cta-wrap{ 
+        gap: 8px !important; 
+      }
+      
+      /* CORRECTION POPUP D'INTERPRÉTATION POUR MOBILE MOYENS */
+      div[style*="position: fixed"][style*="z-index: 9999"] {
+        padding: 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      
+      .interpretation-popup {
+        max-width: calc(100vw - 30px) !important;
+        width: calc(100vw - 30px) !important;
+        margin: 0 !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        box-sizing: border-box !important;
+      }
+      
+      /* TITRE ET CARTES OPTIMISÉS POUR MOBILE MOYEN */
+      .interpretation-popup div[style*="font-family: 'Revalia'"] {
+        font-size: 1.6rem !important;
+        margin-bottom: 0.8em !important;
+        line-height: 1.2 !important;
+      }
+      
+      .interpretation-popup .cards-container {
+        margin-top: 1em !important;
+        margin-bottom: 1.2em !important;
+      }
+      
+      /* CADRE TEXTE FIXE MOBILE MOYEN */
+      .interpretation-popup #ia-interpretation {
+        height: 18em !important;
+        max-height: 18em !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        scroll-behavior: smooth !important;
+      }
+      
+      /* TAILLE DES CARTES MOBILE MOYEN */
+      .interpretation-popup .card-big {
+        max-width: 95px !important;
+        width: 95px !important;
+      }
+    }
+
+    /* === EFFET PARALLAXE - BACKGROUND ET HEADER FIXES === */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a237e 0%, #000051 50%, #1a237e 100%) fixed !important;
+      background-attachment: fixed !important;
+      min-height: 100vh;
+    }
+    
+    /* Header sticky renforcé pour l'effet parallaxe */
+    .site-header {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 50 !important;
+      backdrop-filter: saturate(140%) blur(12px) !important;
+    }
+    
+    /* Contenu principal avec marge pour header fixe */
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Marge spécifique pour le main pour passer sous le header fixe */
+    main {
+      margin-top: 80px;
+    }
+    
+    /* Espacement du titre principal (marge-top) géré uniquement par media queries */
+    .manon-title {
+      margin-top: 120px;
+      animation: none !important;
+      transition: none !important;
+    }
+    @media (min-width: 981px) {
+      .manon-title {
+        margin-top: 140px;
+      }
+    }
+    @media (max-width: 980px) and (min-width: 481px) {
+      .manon-title {
+        margin-top: 60px;
+      }
+    }
+    @media (max-width: 480px) {
+      .manon-title {
+        margin-top: 50px;
+      }
+    }
+      
+      /* CORRECTION POPUP D'INTERPRÉTATION MOBILE - CENTRAGE PARFAIT */
+      div[style*="position: fixed"][style*="z-index: 9999"] {
+        padding: 20px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      
+      .interpretation-popup {
+        max-width: calc(100vw - 40px) !important;
+        width: calc(100vw - 40px) !important;
+        margin: 0 !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        transform: none !important;
+        position: static !important;
+        box-sizing: border-box !important;
+        padding: 1em 0.8em !important;
+      }
+      
+      /* OPTIMISATION TITRE ET CARTES MOBILE */
+      .interpretation-popup div[style*="font-family: 'Revalia'"] {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.6em !important;
+        line-height: 1.2 !important;
+      }
+      
+      .interpretation-popup .cards-container {
+        margin-top: 0.8em !important;
+        margin-bottom: 1em !important;
+      }
+      
+      /* CADRE TEXTE FIXE MOBILE */
+      .interpretation-popup #ia-interpretation {
+        height: 15em !important;
+        max-height: 15em !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        scroll-behavior: smooth !important;
+      }
+      
+      /* TAILLE DES CARTES MOBILE - TRÈS PETITS ÉCRANS */
+      .interpretation-popup .card-big {
+        max-width: 78px !important;
+        width: 78px !important;
+      }
+    }
+    
+    /* ===== LAYOUT DÉ N°5 POUR DESKTOP - ULTRA FORCE CACHE BYPASS 2025-10-13 ===== */
+    @media (min-width: 769px) {
+      /* FORCER LE LAYOUT EN GRILLE POUR 5 CARTES DESKTOP - SPÉCIFICITÉ ULTRA MAXIMALE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"],
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"],
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"],
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"],
+      html body .interpretation-popup .cards-container[style*="relative"],
+      body .interpretation-popup .cards-container[style*="relative"],
+      .interpretation-popup .cards-container[style*="relative"] {
+        width: 480px !important;
+        height: 360px !important;
+        display: grid !important;
+        grid-template-columns: 100px 140px 100px !important;
+        grid-template-rows: 100px 160px !important;
+        gap: 60px 40px !important;
+        align-items: center !important;
+        justify-items: center !important;
+        padding: 30px 20px 40px 20px !important;
+        margin: -0.5em auto 0 auto !important;
+        position: relative !important;
+        background: transparent !important;
+        border-radius: 15px !important;
+        justify-content: center !important;
+        transform: translateY(0px) !important; /* Annule le translateY précédent */
+      }
+
+      /* CARTE 1 - DROITE CENTRE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        grid-row-end: 3 !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateX(20px) !important;
+        justify-self: center !important;
+        align-self: center !important;
+        margin: 0 !important;
+      }
+
+      /* CARTE 2 - HAUT CENTRE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateY(-30px) !important;
+        justify-self: center !important;
+        align-self: start !important;
+        margin: 0 !important;
+      }
+
+      /* CARTE 3 - CENTRE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3) {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        grid-row-end: 3 !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: scale(1.1) !important;
+        z-index: 10 !important;
+        justify-self: center !important;
+        align-self: center !important;
+        box-shadow: 0 12px 35px rgba(231, 84, 128, 0.4) !important;
+        border-radius: 12px !important;
+        margin: 0 !important;
+      }
+
+      /* CARTE 4 - GAUCHE CENTRE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        grid-row-end: 3 !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateX(-20px) !important;
+        justify-self: center !important;
+        align-self: center !important;
+        margin: 0 !important;
+      }
+
+      /* CARTE 5 - BAS CENTRE */
+      html body div.popup-overlay div.interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      html body .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      body div.popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      .popup-overlay .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5) {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateY(30px) !important;
+        justify-self: center !important;
+        align-self: center !important;
+        margin: 0 !important;
+      }
+
+      /* TAILLE DES CARTES */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image,
+      .interpretation-popup .cards-container[style*="relative"] .card-image {
+        width: 75px !important;
+        height: auto !important;
+        max-width: 75px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+        transition: all 0.3s ease !important;
+      }
+
+      /* CARTE CENTRALE PLUS GRANDE ET MISE EN VALEUR */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3),
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3) {
+        width: 90px !important;
+        max-width: 90px !important;
+      }
+
+      /* EFFET HOVER SUR LES CARTES DU DÉ */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:hover {
+        box-shadow: 0 15px 40px rgba(231, 84, 128, 0.3) !important;
+      }
+
+      /* CARTE CENTRALE HOVER */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3):hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3):hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(3):hover {
+        transform: scale(1.2) !important;
+      }
+
+      /* CARTES DU HAUT HOVER */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1):hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1):hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(1):hover,
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2):hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2):hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(2):hover {
+        transform: translateY(-20px) scale(1.05) !important;
+      }
+
+      /* CARTES DU BAS HOVER */
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4):hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4):hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4):hover,
+      html body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5):hover,
+      body .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5):hover,
+      .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5):hover {
+        transform: translateY(10px) scale(1.05) !important;
+      }
+    }
+
+    /* ===== NEWSLETTER & RESERVATION MOBILE OPTIMIZATION ===== */
+    @media (max-width: 980px) {
+      /* Header mobile - Ajustements pour éviter débordement */
+      .site-header .container {
+        padding: 8px 12px !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      
+      .brand {
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      
+      .brand-logo-img {
+        height: 28px !important;
+        width: auto !important;
+        flex-shrink: 0 !important;
+      }
+      
+      .brand-text {
+        min-width: 0 !important;
+        flex: 1 !important;
+      }
+      
+      .brand-title {
+        font-size: 14px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      
+      .brand-sub {
+        font-size: 9px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      
+      /* Navigation desktop cachée en mobile */
+      .nav {
+        display: none !important;
+      }
+      
+      .social-icons {
+        display: none !important;
+      }
+      
+      .cta-wrap {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+      }
+      
+      .btn-ia {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
+        white-space: nowrap !important;
+        min-width: auto !important;
+        max-width: 60px !important;
+      }
+      
+      .burger {
+        flex-shrink: 0 !important;
+        width: 32px !important;
+        height: 32px !important;
+        padding: 6px !important;
+      }
+
+      /* Newsletter section mobile - COMPACT */
+      .newsletter-section {
+        padding: 15px 10px !important;
+        margin: 15px 8px !important;
+        max-width: calc(100vw - 16px) !important;
+      }
+
+      .newsletter-title {
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .newsletter-desc {
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 10px !important;
+      }
+
+      .newsletter-form {
+        gap: 8px !important;
+        flex-direction: column !important;
+      }
+
+      .newsletter-input {
+        width: 100% !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        min-height: 35px !important;
+        box-sizing: border-box !important;
+      }
+
+      .newsletter-btn {
+        width: 100% !important;
+        padding: 8px 15px !important;
+        font-size: 12px !important;
+        min-height: 35px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Reservation section mobile - COMPACT */
+      .reservation-section {
+        padding: 15px 10px !important;
+        margin: 15px 8px !important;
+        max-width: calc(100vw - 16px) !important;
+      }
+
+      .reservation-title {
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .reservation-desc {
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 12px !important;
+      }
+
+      .reservation-form {
+        gap: 8px !important;
+      }
+
+      .reservation-fields {
+        gap: 8px !important;
+        flex-direction: column !important;
+      }
+
+      .reservation-input, #offre-select {
+        width: 100% !important;
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        min-height: 35px !important;
+        box-sizing: border-box !important;
+      }
+
+      .reservation-btn {
+        width: 100% !important;
+        padding: 10px 15px !important;
+        font-size: 13px !important;
+        min-height: 40px !important;
+        margin-top: 5px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Mobile responsive adjustments for form containers */
+      .newsletter-form, .reservation-form {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+  </style>
+
+  <header class="site-header" role="banner" aria-label="Navigation principale">
+    <div class="container">
+      <a class="brand" href="#accueil" aria-label="Accueil Opanoma">
+        <img src="/public/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="brand-logo-img" />
+        <div class="brand-text">
+          <div class="brand-title">l'Œil d'Opanoma</div>
+          <div class="brand-sub">Guidance professionnelle authentique</div>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Menu professionnel">
+        <a href="#consultations" class="highlight">Consultations</a>
+        <a href="#temoignages">Témoignages</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="cta-wrap">
+        <div class="social-icons">
+          <a href="https://instagram.com/votre-compte" target="_blank" class="social-icon" aria-label="Suivez-nous sur Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a href="https://facebook.com/votre-page" target="_blank" class="social-icon" aria-label="Suivez-nous sur Facebook">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          <a href="https://loeildopanoma.etsy.com" target="_blank" class="social-icon" aria-label="Visitez notre boutique Etsy">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.16 11.264V8.466h-.402c-.186 0-.315.135-.315.315 0 .045.015.09.03.12l-2.745.93c-.09-.375-.135-.78-.135-1.2C5.593 5.757 7.8 3.55 10.674 3.55c2.19 0 4.074 1.35 4.859 3.375H24v1.8h-7.965c.045.255.06.525.06.795 0 2.86-2.22 5.205-5.115 5.205-1.05 0-2.01-.315-2.82-.855v3.075c0 .855.69 1.545 1.545 1.545h.96v1.8H1.545C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h8.13c.855 0 1.545.69 1.545 1.545v.825h-1.8V4.32c0-.186-.135-.315-.315-.315H2.16c-.18 0-.315.135-.315.315v13.425c0 .18.135.315.315.315h5.955c.18 0 .315-.135.315-.315V15.72h1.8v2.025c0 .855-.69 1.545-1.545 1.545h-6.9C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h17.91c.855 0 1.545.69 1.545 1.545v2.7h-1.8V4.32c0-.186-.135-.315-.315-.315H9.475c-.18 0-.315.135-.315.315v6.944z"/>
+            </svg>
+          </a>
+        </div>
+        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Ouvrir le tirage IA (divertissement)">
+          Tirage IA
+          <small><span class="fun-dot"></span> fun</small>
+          <span class="tip" role="note">Tirage généré automatiquement par IA — <strong>divertissement uniquement</strong>.</span>
+        </a>
+        <button class="burger" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M3 6H21M3 12H21M3 18H21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu Mobile -->
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-brand">
+            <img src="/public/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="mobile-brand-logo" />
+            <div class="mobile-brand-text">
+              <div class="mobile-brand-title">l'Œil d'Opanoma</div>
+              <div class="mobile-brand-sub">Guidance professionnelle</div>
+            </div>
+          </div>
+          <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fermer le menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="mobile-nav" aria-label="Navigation mobile">
+          <a href="#consultations" class="mobile-nav-item highlight" onclick="closeMobileMenu()">
+            <span>Consultations</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="#temoignages" class="mobile-nav-item" onclick="closeMobileMenu()">
+            <span>Témoignages</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="#faq" class="mobile-nav-item" onclick="closeMobileMenu()">
+            <span>FAQ</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </a>
+        </nav>
+
+        <div class="mobile-actions">
+          <a class="mobile-btn-ia" href="#" onclick="triggerTirageIA(); closeMobileMenu(); return false;">
+            <span>✨ Tirage IA</span>
+            <small>divertissement</small>
+          </a>
+          
+          <div class="mobile-social">
+            <span class="mobile-social-label">Suivez-nous :</span>
+            <div class="mobile-social-icons">
+              <a href="https://instagram.com/votre-compte" target="_blank" class="mobile-social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="https://facebook.com/votre-page" target="_blank" class="mobile-social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="https://loeildopanoma.etsy.com" target="_blank" class="mobile-social-icon" aria-label="Etsy">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.16 11.264V8.466h-.402c-.186 0-.315.135-.315.315 0 .045.015.09.03.12l-2.745.93c-.09-.375-.135-.78-.135-1.2C5.593 5.757 7.8 3.55 10.674 3.55c2.19 0 4.074 1.35 4.859 3.375H24v1.8h-7.965c.045.255.06.525.06.795 0 2.86-2.22 5.205-5.115 5.205-1.05 0-2.01-.315-2.82-.855v3.075c0 .855.69 1.545 1.545 1.545h.96v1.8H1.545C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h8.13c.855 0 1.545.69 1.545 1.545v.825h-1.8V4.32c0-.186-.135-.315-.315-.315H2.16c-.18 0-.315.135-.315.315v13.425c0 .18.135.315.315.315h5.955c.18 0 .315-.135.315-.315V15.72h1.8v2.025c0 .855-.69 1.545-1.545 1.545h-6.9C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h17.91c.855 0 1.545.69 1.545 1.545v2.7h-1.8V4.32c0-.186-.135-.315-.315-.315H9.475c-.18 0-.315.135-.315.315v6.944z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bouton caché pour compatibilité avec le script existant -->
+  <button class="header-btn-ia" style="display: none;">Tirage par IA</button>
+
+  <main>
+    <h2 class="manon-title">L'Œil d'Opanoma</h2>
+    <div class="manon-subtitle">la voix de l’intuition</div>
+    <p class="manon-desc">
+      Découvrez l’univers de Manon, voyante passionnée, à votre écoute pour vous guider avec bienveillance et intuition.
+    </p>
+    <button class="btn-en-savoir-plus" id="btn-bio">En savoir plus</button>
+    <div class="manon-bio" id="manon-bio" style="display:none;">
+      <div class="manon-bio-content">
+        <p>
+          Manon est née avec une sensibilité particulière au monde invisible. Dès son plus jeune âge, elle ressent les énergies et perçoit des signes là où d’autres ne voient que le quotidien.<br><br>
+          Adolescente, elle découvre le tarot et le pendule, qui deviennent rapidement ses outils de prédilection pour explorer l’inconnu et guider ses proches.<br><br>
+          Après des études en psychologie, Manon décide de se consacrer pleinement aux arts divinatoires, convaincue que l’intuition est un formidable allié pour avancer dans la vie.
+        </p>
+      </div>
+    </div>
+
+    <!-- Nouveau cadre discret Consultation -->
+    <section class="offres-tarifs-section" id="consultations-section">
+      <h3 class="offres-tarifs-title">Consultation</h3>
+      <div class="offres-tarifs-grid">
+        <div class="offre-tarif-card" data-offre="Tarot">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Tarot</div>
+            <p class="offre-description">Plongez dans la symbolique des arcanes pour révéler ce qui se joue en profondeur.</p>
+            <p class="offre-description">Chaque tirage devient un miroir de vos choix et de vos possibles.</p>
+            <p class="offre-description">Un outil puissant pour éclairer vos décisions avec clarté.</p>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Pendule">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Pendule</div>
+            <p class="offre-description">Obtenez des réponses claires grâce à la radiesthésie.</p>
+            <p class="offre-description">Une méthode ancestrale pour explorer vos questions et trouver des réponses précises.</p>
+            <p class="offre-description">Des guidances concrètes pour éclairer vos choix avec assurance.</p>
+          </div>
+        </div>
+        <div class="offre-tarif-card" data-offre="Alignement">
+          <div class="offre-tarif-content">
+            <div class="offre-titre">Alignement</div>
+            <p class="offre-description">Retrouvez un axe clair pour vos décisions, au-delà du doute et de la confusion.</p>
+            <p class="offre-description">Réapprenez à équilibrer vos émotions et vos choix de vie au quotidien.</p>
+            <p class="offre-description">Avancez avec confiance grâce à des rituels et un accompagnement aligné.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section détaillée Tarot (cachée par défaut) -->
+    <section class="tarot-detail-section" id="tarot-detail" style="display: none;">
+      <h3 class="offres-tarifs-title">Tarot</h3>
+      <p class="tarot-description">
+        Lors d'une séance, nous commençons par clarifier ensemble ta question ou ton intention.<br>
+        Le tirage des arcanes met en lumière les énergies, symboles et dynamiques à l'œuvre dans ta situation.<br>
+        L'objectif n'est pas de prédire mais de t'aider à comprendre tes options, à élargir ton regard et à avancer avec plus de confiance et de clarté.
+      </p>
+      <div class="offres-tarifs-grid">
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Tirage Express</div>
+              <p class="offre-description">Réponse rapide et ciblée pour une question précise.</p>
+              <p class="offre-description">Idéal pour éclairer une décision immédiate.</p>
+              <p class="offre-description">3 cartes, interprétation directe et pratique.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">15 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">25€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Téléphone</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Tirage Express">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Exploration Complète</div>
+              <p class="offre-description">Analyse approfondie de votre situation globale.</p>
+              <p class="offre-description">Exploration des différents aspects et influences.</p>
+              <p class="offre-description">7 cartes pour une vision d'ensemble claire.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">45 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">65€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Visio/Tel</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Exploration Complète">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Chemin de Vie</div>
+              <p class="offre-description">Guidance pour votre évolution personnelle.</p>
+              <p class="offre-description">Compréhension des cycles et transformations.</p>
+              <p class="offre-description">Tirage sur mesure avec accompagnement personnalisé.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">75 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">95€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Suivi</span>
+                <span class="sous-cadre-value">Inclus 7j</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Chemin de Vie">Réserver</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section détaillée Pendule (cachée par défaut) -->
+    <section class="pendule-detail-section" id="pendule-detail" style="display: none;">
+      <h3 class="offres-tarifs-title">Pendule</h3>
+      <p class="tarot-description">
+        La séance commence par définir ensemble tes questions et les domaines à explorer.<br>
+        Le pendule révèle des informations précises et des réponses concrètes à tes interrogations.<br>
+        L'objectif est de t'apporter clarté et orientation pour tes décisions importantes.
+      </p>
+      <div class="offres-tarifs-grid">
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Questions Flash</div>
+              <p class="offre-description">Réponses Oui/Non immédiates par pendule.</p>
+              <p class="offre-description">Questions urgentes clarifiées rapidement.</p>
+              <p class="offre-description">Guidance directe pour débloquer une situation.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">15 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">25€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Téléphone</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Questions Flash">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Recherche Pendulaire</div>
+              <p class="offre-description">Investigation approfondie sur vos préoccupations.</p>
+              <p class="offre-description">Exploration de plusieurs options et chemins possibles.</p>
+              <p class="offre-description">Cartographie complète de votre situation actuelle.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">45 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">65€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Visio/Tel</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Recherche Pendulaire">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Bilan Énergétique</div>
+              <p class="offre-description">Analyse complète de vos énergies et blocages.</p>
+              <p class="offre-description">Diagnostic pendulaire de votre situation globale.</p>
+              <p class="offre-description">Plan d'action personnalisé avec suivi inclus.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">60 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">95€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Suivi</span>
+                <span class="sous-cadre-value">Inclus 21j</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Bilan Énergétique">Réserver</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section détaillée Alignement (cachée par défaut) -->
+    <section class="alignement-detail-section" id="alignement-detail" style="display: none;">
+      <h3 class="offres-tarifs-title">Alignement</h3>
+      <p class="tarot-description">
+        On explore ensemble ce qui te freine et ce qui peut te remettre sur ton axe.<br>
+        Des exercices simples et des rituels personnalisés t'aident à rééquilibrer émotions et décisions.<br>
+        L'objectif est de retrouver clarté, sérénité et cohérence dans ton quotidien.
+      </p>
+      <div class="offres-tarifs-grid">
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Équilibrage Express</div>
+              <p class="offre-description">Rééquilibrage énergétique ciblé et efficace.</p>
+              <p class="offre-description">Techniques rapides pour retrouver l'harmonie.</p>
+              <p class="offre-description">Idéal pour les déséquilibres ponctuels.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">30 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">45€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Visio/Tel</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Équilibrage Express">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Harmonisation Complète</div>
+              <p class="offre-description">Travail approfondi sur tous vos centres énergétiques.</p>
+              <p class="offre-description">Libération des blocages et recentrage global.</p>
+              <p class="offre-description">Protocole personnalisé selon vos besoins.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">65 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">85€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Support</span>
+                <span class="sous-cadre-value">Visio/Tel</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Harmonisation Complète">Réserver</button>
+          </div>
+        </div>
+        <div class="offre-tarif-card">
+          <div class="offre-tarif-content">
+            <div class="offre-description-wrapper">
+              <div class="offre-titre">Transformation Profonde</div>
+              <p class="offre-description">Accompagnement pour une transformation durable.</p>
+              <p class="offre-description">Rituels et pratiques pour maintenir l'alignement.</p>
+              <p class="offre-description">Suivi personnalisé pour ancrer les changements.</p>
+            </div>
+            
+            <div class="sous-cadres-wrapper">
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Durée</span>
+                <span class="sous-cadre-value">90 min</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Prix</span>
+                <span class="sous-cadre-value">120€</span>
+              </div>
+              <div class="sous-cadre">
+                <span class="sous-cadre-label">Suivi</span>
+                <span class="sous-cadre-value">Inclus 21j</span>
+              </div>
+            </div>
+            
+            <button class="offre-btn-small" data-offre="Transformation Profonde">Réserver</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <h3 class="newsletter-title">Newsletter</h3>
+      <p class="newsletter-desc">
+        Inscrivez-vous à la newsletter : chaque semaine, recevez une carte tirée spécialement pour vous et l’explication du tirage, directement dans votre boîte mail.
+      </p>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Votre email" required>
+        <button type="submit" class="newsletter-btn">Je m’abonne</button>
+      </form>
+    </section>
+
+    <section class="reservation-section" id="reservation">
+      <h3 class="reservation-title">Réserver une séance</h3>
+      <p class="reservation-desc">
+        Choisissez votre créneau et réservez votre séance avec Manon.<br>
+        Vous recevrez une confirmation par email après validation.
+      </p>
+      <form class="reservation-form">
+        <div class="reservation-fields">
+          <input type="text" class="reservation-input" id="client-name" placeholder="Votre nom" required>
+          <input type="email" class="reservation-input" id="client-email" placeholder="Votre email" required>
+        </div>
+        <div class="reservation-fields">
+          <input type="date" class="reservation-input" id="reservation-date" required>
+          <input type="time" class="reservation-input" id="reservation-time" required>
+        </div>
+        <select class="reservation-input" id="offre-select" required>
+          <option value="" disabled selected>Choisissez une offre</option>
+          <optgroup label="Tarot">
+            <option value="Tirage Express">Tirage Express</option>
+            <option value="Exploration Complète">Exploration Complète</option>
+            <option value="Chemin de Vie">Chemin de Vie</option>
+          </optgroup>
+          <optgroup label="Pendule">
+            <option value="Questions Flash">Questions Flash</option>
+            <option value="Recherche Pendulaire">Recherche Pendulaire</option>
+            <option value="Bilan Énergétique">Bilan Énergétique</option>
+          </optgroup>
+          <optgroup label="Alignement">
+            <option value="Équilibrage Express">Équilibrage Express</option>
+            <option value="Harmonisation Complète">Harmonisation Complète</option>
+            <option value="Transformation Profonde">Transformation Profonde</option>
+          </optgroup>
+        </select>
+        <!-- Bouton de réservation intelligent -->
+        <button type="button" class="reservation-btn" id="submit-reservation">
+          Réserver
+        </button>
+      </form>
+      <div id="reservation-confirmation" style="display:none; color:#fff; font-family:'Quicksand',sans-serif; text-align:center; margin-top:1.5em; font-size:1.2rem;">
+        Merci pour votre réservation ! Vous recevrez une confirmation par email.
+      </div>
+    </section>
+
+    <!-- Section Témoignages (cachée par défaut) -->
+    <section class="temoignages-section" id="temoignages-section">
+      <h3 class="temoignages-title">Témoignages Clients</h3>
+      <div class="temoignages-grid">
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">M</div>
+            <div class="temoignage-info">
+              <h4>Marie L.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "Séance incroyable avec Manon ! Ses prédictions se sont réalisées et j'ai enfin trouvé la clarté que je cherchais. Je recommande vivement !"
+          </div>
+        </div>
+
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">J</div>
+            <div class="temoignage-info">
+              <h4>Julie R.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "Le pendule de Manon m'a aidée à prendre une décision importante. Son approche bienveillante et professionnelle m'a mise en confiance."
+          </div>
+        </div>
+
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">S</div>
+            <div class="temoignage-info">
+              <h4>Sophie M.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M9.16 11.264V8.466h-.402c-.186 0-.315.135-.315.315 0 .045.015.09.03.12l-2.745.93c-.09-.375-.135-.78-.135-1.2C5.593 5.757 7.8 3.55 10.674 3.55c2.19 0 4.074 1.35 4.859 3.375H24v1.8h-7.965c.045.255.06.525.06.795 0 2.86-2.22 5.205-5.115 5.205-1.05 0-2.01-.315-2.82-.855v3.075c0 .855.69 1.545 1.545 1.545h.96v1.8H1.545C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h8.13c.855 0 1.545.69 1.545 1.545v.825h-1.8V4.32c0-.186-.135-.315-.315-.315H2.16c-.18 0-.315.135-.315.315v13.425c0 .18.135.315.315.315h5.955c.18 0 .315-.135.315-.315V15.72h1.8v2.025c0 .855-.69 1.545-1.545 1.545h-6.9C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h17.91c.855 0 1.545.69 1.545 1.545v2.7h-1.8V4.32c0-.186-.135-.315-.315-.315H9.475c-.18 0-.315.135-.315.315v6.944z"/>
+                </svg>
+                Etsy
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "Tirage de tarot très précis ! Manon a su cerner ma situation avec justesse. Une vraie professionnelle de la guidance spirituelle."
+          </div>
+        </div>
+
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">A</div>
+            <div class="temoignage-info">
+              <h4>Alice B.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "L'alignement énergétique m'a transformée ! Je me sens plus équilibrée et centrée. Merci Manon pour cette belle expérience."
+          </div>
+        </div>
+
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">P</div>
+            <div class="temoignage-info">
+              <h4>Pierre D.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "Questions flash très efficaces ! En 15 minutes, j'ai eu des réponses claires à mes préoccupations. Service rapide et de qualité."
+          </div>
+        </div>
+
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            <div class="temoignage-avatar">L</div>
+            <div class="temoignage-info">
+              <h4>Laure C.</h4>
+              <div class="platform">
+                <svg class="platform-icon" viewBox="0 0 24 24">
+                  <path d="M9.16 11.264V8.466h-.402c-.186 0-.315.135-.315.315 0 .045.015.09.03.12l-2.745.93c-.09-.375-.135-.78-.135-1.2C5.593 5.757 7.8 3.55 10.674 3.55c2.19 0 4.074 1.35 4.859 3.375H24v1.8h-7.965c.045.255.06.525.06.795 0 2.86-2.22 5.205-5.115 5.205-1.05 0-2.01-.315-2.82-.855v3.075c0 .855.69 1.545 1.545 1.545h.96v1.8H1.545C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h8.13c.855 0 1.545.69 1.545 1.545v.825h-1.8V4.32c0-.186-.135-.315-.315-.315H2.16c-.18 0-.315.135-.315.315v13.425c0 .18.135.315.315.315h5.955c.18 0 .315-.135.315-.315V15.72h1.8v2.025c0 .855-.69 1.545-1.545 1.545h-6.9C.69 19.29 0 18.6 0 17.745V4.02C0 3.165.69 2.475 1.545 2.475h17.91c.855 0 1.545.69 1.545 1.545v2.7h-1.8V4.32c0-.186-.135-.315-.315-.315H9.475c-.18 0-.315.135-.315.315v6.944z"/>
+                </svg>
+                Etsy
+              </div>
+            </div>
+          </div>
+          <div class="temoignage-stars">★★★★★</div>
+          <div class="temoignage-text">
+            "Bilan énergétique complet très révélateur. Manon m'a donné des clés précieuses pour avancer sereinement dans ma vie."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section FAQ (cachée par défaut) -->
+    <section class="faq-section" id="faq-section">
+      <h3 class="faq-title">Questions Fréquentes</h3>
+      
+      <div class="faq-categories">
+        <span class="faq-category active" data-category="all">Tout</span>
+        <span class="faq-category" data-category="services">Services</span>
+        <span class="faq-category" data-category="tarifs">Tarifs</span>
+        <span class="faq-category" data-category="pratique">Pratique</span>
+      </div>
+
+      <div class="faq-container">
+        <div class="faq-item" data-category="services">
+          <div class="faq-question">
+            <h3>Quelle est la différence entre un tirage de tarot et une séance de pendule ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Le tarot utilise des cartes symboliques pour explorer les situations complexes, les émotions et les perspectives d'avenir. Le pendule, quant à lui, fournit des réponses directes (oui/non) et permet de clarifier des questions précises rapidement. Les deux approches sont complémentaires selon vos besoins.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="services">
+          <div class="faq-question">
+            <h3>Qu'est-ce qu'une séance d'alignement énergétique ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>L'alignement énergétique vise à rééquilibrer vos énergies internes et à harmoniser vos émotions avec vos objectifs de vie. Cette approche combine techniques de centrage, conseils personnalisés et rituels adaptés pour vous aider à retrouver clarté et sérénité au quotidien.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="pratique">
+          <div class="faq-question">
+            <h3>Comment se déroule une consultation à distance ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Les consultations à distance se font par téléphone ou visioconférence selon votre préférence. La connexion énergétique n'est pas affectée par la distance. Vous recevez la même qualité de guidance qu'en présentiel, avec l'avantage du confort de votre domicile.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="tarifs">
+          <div class="faq-question">
+            <h3>Les tarifs incluent-ils un suivi après la séance ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Certaines formules incluent un suivi (indiqué dans la description). Pour les autres, vous pouvez me recontacter dans les 48h suivant votre séance pour des questions de clarification sans frais supplémentaires. Un suivi plus approfondi peut être réservé séparément.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="pratique">
+          <div class="faq-question">
+            <h3>Dois-je préparer quelque chose avant ma séance ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Il est recommandé de réfléchir à vos questions principales et à ce que vous souhaitez éclaircir. Prévoyez un moment calme, sans interruption. Pour les séances à distance, assurez-vous d'avoir une bonne connexion. Aucune préparation spéciale n'est nécessaire.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="services">
+          <div class="faq-question">
+            <h3>À quelle fréquence puis-je consulter ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Il n'y a pas de règle stricte. Certains clients consultent mensuellement, d'autres lors de périodes importantes ou de questionnements spécifiques. Je recommande d'espacer les séances d'au moins 2-3 semaines pour laisser le temps aux énergies de s'installer.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="tarifs">
+          <div class="faq-question">
+            <h3>Quels sont les moyens de paiement acceptés ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>J'accepte les paiements par carte bancaire, virement SEPA, PayPal et espèces (pour les séances en présentiel). Le paiement se fait généralement avant la séance pour les consultations à distance, et peut se faire après pour les rendez-vous en cabinet.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="pratique">
+          <div class="faq-question">
+            <h3>Que faire si je dois annuler mon rendez-vous ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Vous pouvez annuler ou reporter votre rendez-vous jusqu'à 24h à l'avance sans frais. En cas d'annulation de dernière minute ou d'absence, 50% du tarif reste dû. Pour les urgences, nous étudierons ensemble la meilleure solution.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="services">
+          <div class="faq-question">
+            <h3>Vos services remplacent-ils un suivi médical ou psychologique ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Non, mes services de guidance spirituelle sont complémentaires et ne remplacent en aucun cas un suivi médical, psychologique ou psychiatrique. En cas de détresse importante, je vous orienterai vers les professionnels de santé appropriés.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="pratique">
+          <div class="faq-question">
+            <h3>Gardez-vous la confidentialité de nos échanges ?</h3>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Absolument. Tous nos échanges sont strictement confidentiels. Je suis tenue au secret professionnel et ne divulgue aucune information personnelle. Vos données sont protégées selon le RGPD et utilisées uniquement dans le cadre de notre relation professionnelle.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Script d'animations pour les cartes -->
+  <script src="/src/card-animations.js"></script>
+  
+  <!-- SCRIPT FORCE RELOAD CSS POUR BYPASS CACHE -->
+  <script>
+    // Force le rechargement du CSS pour contourner le cache
+    const linkElement = document.querySelector('link[href*="style.css"]');
+    if (linkElement) {
+      const newLink = linkElement.cloneNode(true);
+      newLink.href = '/src/style.css?v=' + Date.now() + '-reposition';
+      linkElement.parentNode.insertBefore(newLink, linkElement.nextSibling);
+      setTimeout(() => linkElement.remove(), 100);
+    }
+    
+    // FORCE DIRECTE : Layout des cartes seulement
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ne touche QUE au layout des cartes en dé
+      function forceCardLayout() {
+        const containers = document.querySelectorAll('.interpretation-popup .cards-container[style*="relative"]');
+        containers.forEach(container => {
+          // Reset position
+          container.style.setProperty('transform', 'translateY(0px)', 'important');
+        });
+      }
+      
+      // Applique immédiatement
+      forceCardLayout();
+      
+      // Surveille les nouvelles popups
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1 && (
+                node.classList?.contains('interpretation-popup') || 
+                node.querySelector?.('.interpretation-popup')
+            )) {
+              setTimeout(forceCardLayout, 50);
+            }
+          });
+        });
+      });
+      
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+    
+    // Force également un reflow du DOM
+    setTimeout(() => {
+      document.body.style.display = 'none';
+      document.body.offsetHeight; // Force reflow
+      document.body.style.display = '';
+    }, 200);
+  </script>
+  
+  <!-- Nettoyage : la marge du titre principal est désormais gérée uniquement par CSS (media queries) -->
+  
+  <!-- SCRIPT MENU MOBILE -->
+  <script>
+    // Fonctions pour le menu mobile
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu) {
+        mobileMenu.classList.toggle('active');
+        
+        // Empêcher le scroll du body quand le menu est ouvert
+        if (mobileMenu.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      }
+    }
+    
+    function closeMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu) {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Fermer le menu en appuyant sur Echap
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    });
+    
+    // Fermer le menu lors du redimensionnement vers desktop
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 980) {
+        closeMobileMenu();
+      }
+    });
+  </script>
+  
+  <script>
+let typeWriterTimeout = null;
+
+// Attendre que le DOM soit chargé
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // Bouton "En savoir plus"
+  const btnBio = document.getElementById('btn-bio');
+  if (btnBio) {
+    btnBio.addEventListener('click', function() {
+      var bio = document.getElementById('manon-bio');
+      var bioContent = bio.querySelector('.manon-bio-content');
+      
+      if (bio.style.display === 'none' || bio.style.display === '') {
+        // Ouvrir le texte
+        bio.style.display = 'block';
+        this.textContent = 'Fermer';
+        
+        // Appliquer l'effet de soleil sur les lettres uniquement
+        setTimeout(() => {
+          bioContent.classList.add('text-sunshine-effect');
+        }, 100);
+        
+      } else {
+        // Fermer le texte et arrêter les effets
+        bio.style.display = 'none';
+        this.textContent = 'En savoir plus';
+        
+        // Retirer l'effet
+        bioContent.classList.remove('text-sunshine-effect');
+      }
+      
+    });
+  }
+  
+  // Fonction pour REMISE À ZÉRO COMPLÈTE - Retour à l'état d'accueil
+  function fermerTousLesCadres() {
+    // Fermer la bio
+    const bio = document.getElementById('manon-bio');
+    if (bio) {
+      bio.style.display = 'none';
+      const bioContent = bio.querySelector('.manon-bio-content');
+      if (bioContent) {
+        bioContent.classList.remove('text-sunshine-effect');
+      }
+    }
+    
+    // Fermer les détails des consultations
+    const detailIds = ['tarot-detail', 'pendule-detail', 'alignement-detail'];
+    detailIds.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.style.display = 'none';
+      }
+    });
+    
+    // Fermer les témoignages
+    const temoignages = document.querySelector('.temoignages-section');
+    if (temoignages) {
+      temoignages.style.display = 'none';
+    }
+    
+    // Fermer la FAQ
+    const faq = document.querySelector('.faq-section');
+    if (faq) {
+      faq.style.display = 'none';
+    }
+    
+    // Remettre le texte du bouton "En savoir plus" à l'état initial
+    const btnBio = document.getElementById('btn-bio');
+    if (btnBio) {
+      btnBio.textContent = 'En savoir plus';
+    }
+    
+    // RETOUR AU SOMMET DE LA PAGE - État d'accueil
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+  }
+  
+  // Comportement "RETOUR À L'ACCUEIL" pour tout le bloc brand (logo + textes)
+  const brandBlock = document.querySelector('.brand');
+  
+  if (brandBlock) {
+    // Supprimer le href par défaut pour contrôler le comportement
+    brandBlock.removeAttribute('href');
+    
+    brandBlock.addEventListener('click', function(e) {
+      e.preventDefault(); // Empêcher le comportement par défaut du lien
+      
+      // REMISE À ZÉRO TOTALE
+      fermerTousLesCadres();
+      
+      // Message visuel optionnel pour l'utilisateur
+    });
+    
+    // Style visuel pour indiquer que c'est cliquable
+    brandBlock.style.cursor = 'pointer';
+    brandBlock.style.transition = 'all 0.2s ease';
+    
+    // Effet hover pour le feedback visuel
+    brandBlock.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-1px)';
+      this.style.filter = 'brightness(1.1)';
+    });
+    
+    brandBlock.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.filter = 'brightness(1)';
+    });
+  }
+  
+  // Initialiser les animations après un court délai
+  setTimeout(() => {
+    // Animer automatiquement les grilles de cartes visibles
+    const cardGrids = document.querySelectorAll('.cards-selection-grid');
+    cardGrids.forEach((grid, index) => {
+      setTimeout(() => {
+        if (window.animateCardGrid) {
+          window.animateCardGrid(`#${grid.id}` || `.cards-selection-grid:nth-child(${index + 1})`);
+        }
+      }, index * 500);
+    });
+  }, 1000);
+});
+
+document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card) {
+  card.addEventListener('click', function() {
+    var offre = this.getAttribute('data-offre');
+    
+    // Si c'est la carte Tarot, affiche la section détaillée
+    if (offre === 'Tarot') {
+      var tarotDetail = document.getElementById('tarot-detail');
+      if (tarotDetail) {
+        if (tarotDetail.style.display === 'none' || tarotDetail.style.display === '') {
+          // Masquer les autres sections d'abord
+          document.getElementById('pendule-detail').style.display = 'none';
+          document.getElementById('alignement-detail').style.display = 'none';
+          
+          tarotDetail.style.display = 'block';
+          tarotDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          tarotDetail.style.display = 'none';
+        }
+      }
+      return;
+    }
+    
+    // Si c'est la carte Pendule, affiche la section détaillée
+    if (offre === 'Pendule') {
+      var penduleDetail = document.getElementById('pendule-detail');
+      if (penduleDetail) {
+        if (penduleDetail.style.display === 'none' || penduleDetail.style.display === '') {
+          // Masquer les autres sections d'abord
+          document.getElementById('tarot-detail').style.display = 'none';
+          document.getElementById('alignement-detail').style.display = 'none';
+          
+          penduleDetail.style.display = 'block';
+          penduleDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          penduleDetail.style.display = 'none';
+        }
+      }
+      return;
+    }
+    
+    // Si c'est la carte Alignement, affiche la section détaillée
+    if (offre === 'Alignement') {
+      var alignementDetail = document.getElementById('alignement-detail');
+      if (alignementDetail) {
+        if (alignementDetail.style.display === 'none' || alignementDetail.style.display === '') {
+          // Masquer les autres sections d'abord
+          document.getElementById('tarot-detail').style.display = 'none';
+          document.getElementById('pendule-detail').style.display = 'none';
+          
+          alignementDetail.style.display = 'block';
+          alignementDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          alignementDetail.style.display = 'none';
+        }
+      }
+      return;
+    }
+    
+    // Comportement normal pour les autres cartes
+    var select = document.getElementById('offre-select');
+    if (select) {
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text === offre) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+    // Scroll vers la section réservation
+    var reservation = document.getElementById('reservation');
+    if (reservation) {
+      reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      select.focus();
+    }
+  });
+});
+
+// Avertissement si le formulaire de réservation n'est pas complet
+document.querySelector('.reservation-form').addEventListener('submit', function(e) {
+  var inputs = this.querySelectorAll('.reservation-input');
+  var allFilled = true;
+  inputs.forEach(function(input) {
+    if (!input.value) allFilled = false;
+  });
+  if (!allFilled) {
+    e.preventDefault();
+    alert('Merci de remplir tous les champs pour réserver votre séance.');
+  } else {
+    e.preventDefault();
+    document.getElementById('reservation-confirmation').style.display = 'block';
+    this.style.display = 'none';
+  }
+});
+
+// Gestion inscription newsletter
+document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const emailInput = this.querySelector('.newsletter-input');
+  const submitBtn = this.querySelector('.newsletter-btn');
+  const email = emailInput.value.trim();
+  
+  if (!email || !email.includes('@')) {
+    alert('Veuillez saisir un email valide.');
+    return;
+  }
+  
+  // Désactiver le bouton pendant l'envoi
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Inscription...';
+  
+  // Appel API
+  fetch('./api/newsletter-subscribe.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email: email })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert('Erreur: ' + data.error);
+    } else {
+      // Succès
+      emailInput.value = '';
+      submitBtn.textContent = '✅ Inscrit !';
+      submitBtn.style.background = '#4caf50';
+      
+      // Afficher message de confirmation
+      let confirmMsg = document.createElement('div');
+      confirmMsg.textContent = data.message || 'Inscription réussie !';
+      confirmMsg.style.color = '#4caf50';
+      confirmMsg.style.fontWeight = '600';
+      confirmMsg.style.marginTop = '1em';
+      confirmMsg.style.textAlign = 'center';
+      this.appendChild(confirmMsg);
+      
+      // Remettre le bouton normal après 3 secondes
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Je m\'abonne';
+        submitBtn.style.background = '';
+        if (confirmMsg.parentNode) {
+          confirmMsg.parentNode.removeChild(confirmMsg);
+        }
+      }, 3000);
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    alert('Erreur de connexion. Veuillez réessayer.');
+  })
+  .finally(() => {
+    if (submitBtn.textContent === 'Inscription...') {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Je m\'abonne';
+    }
+  });
+});
+
+document.querySelector('.header-btn-ia').addEventListener('click', function(e) {
+  e.preventDefault();
+  // Crée le fond sombre
+  let overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(30,30,40,0.15)';
+  overlay.style.zIndex = 9999;
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+
+  // Crée la popup
+  let popup = document.createElement('div');
+  popup.className = 'tarot-popup'; // Ajoute la classe pour le CSS mobile
+  popup.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.1) 0%, rgba(186,230,253,0.1) 50%, rgba(255,207,236,0.1) 100%)';
+  popup.style.backdropFilter = 'blur(10px)';
+  popup.style.border = '1.5px solid rgba(255,255,255,0.45)';
+  popup.style.borderRadius = '2em';
+  popup.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.18)';
+  popup.style.padding = '1.5em 1.5em 1.5em 1.5em'; // Réduit le padding
+  popup.style.maxWidth = '650px'; // Encore plus large pour 6 colonnes confortables
+  popup.style.width = '95vw'; // Largeur responsive augmentée
+  popup.style.position = 'relative';
+  popup.style.textAlign = 'center';
+
+  // Titre du header
+  let titre = document.createElement('div');
+  titre.className = 'popup-title'; // Ajoute la classe pour le CSS mobile
+  titre.style.fontFamily = "'Revalia', cursive";
+  titre.style.fontSize = '2rem';
+  titre.style.letterSpacing = '2px';
+  titre.style.background = 'linear-gradient(90deg, #1a237e 0%, #FF6B35 100%)';
+  titre.style.webkitBackgroundClip = 'text';
+  titre.style.webkitTextFillColor = 'transparent';
+  titre.style.backgroundClip = 'text';
+  titre.style.textFillColor = 'transparent';
+  titre.style.marginBottom = '1.2em';
+
+  // Bouton fermer
+  let closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '1em';
+  closeBtn.style.right = '1.2em';
+  closeBtn.style.background = 'none';
+  closeBtn.style.border = 'none';
+  closeBtn.style.fontSize = '1.5em';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#FF6B35';
+  closeBtn.setAttribute('aria-label', 'Fermer');
+
+  closeBtn.onclick = () => {
+    // Arrêt de la synthèse vocale au cas où
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    
+    // Restaurer le scroll (version simple pour ce popup)
+    document.body.style.overflow = '';
+    
+    document.body.removeChild(overlay);
+  };
+
+  // Ajoute les éléments
+  popup.appendChild(closeBtn);
+  popup.appendChild(titre);
+
+  // Ajout des 3 lignes sous le titre
+  let ligne1 = document.createElement('div');
+  ligne1.textContent = '1. Choisir le thème';
+  ligne1.style.fontFamily = "'Quicksand', sans-serif";
+  ligne1.style.fontSize = '1.1rem';
+  ligne1.style.marginBottom = '0.7em';
+  ligne1.style.color = '#FFFFFF';
+  ligne1.style.fontWeight = 'bold';
+  ligne1.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+
+  let ligne2 = document.createElement('div');
+  ligne2.textContent = '2. Poser une question (optionnel)';
+  ligne2.style.fontFamily = "'Quicksand', sans-serif";
+  ligne2.style.fontSize = '1.1rem';
+  ligne2.style.marginBottom = '0.7em';
+  ligne2.style.color = '#FF6B35';
+  ligne2.style.fontWeight = 'bold';
+  ligne2.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+
+  let ligne3 = document.createElement('div');
+  ligne3.textContent = '3. Choisir le tirage';
+  ligne3.style.fontFamily = "'Quicksand', sans-serif";
+  ligne3.style.fontSize = '1.1rem';
+  ligne3.style.marginBottom = '1.2em';
+  ligne3.style.color = '#FFFFFF';
+  ligne3.style.fontWeight = 'bold';
+  ligne3.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+
+  popup.appendChild(ligne1);
+  popup.appendChild(ligne2);
+  popup.appendChild(ligne3);
+
+  // Cadre "thème" avec boutons
+  let themeBox = document.createElement('div');
+  themeBox.style.background = 'transparent';
+  themeBox.style.backdropFilter = 'none';
+  themeBox.style.borderRadius = '0';
+  themeBox.style.boxShadow = 'none';
+  themeBox.style.padding = '1.2em 0.5em 1em 0.5em';
+  themeBox.style.margin = '0 auto 1.5em auto';
+  themeBox.style.display = 'flex';
+  themeBox.style.justifyContent = 'center';
+  themeBox.style.gap = '1em';
+  themeBox.style.maxWidth = '340px';
+
+  const themes = [
+    { label: "Santé", color: "#1a237e" },
+    { label: "Amour", color: "#FF6B35" },
+    { label: "Argent", color: "#ff9800" },
+    { label: "Travail", color: "#009688" }
+  ];
+
+  themes.forEach(theme => {
+    let btn = document.createElement('button');
+    btn.className = 'theme-button'; // Ajoute la classe pour le CSS mobile
+    btn.textContent = theme.label;
+    btn.style.fontFamily = "'Quicksand', sans-serif";
+    btn.style.fontSize = '0.98rem';
+    btn.style.padding = '0.4em 1em';
+    btn.style.borderRadius = '22px';
+    btn.style.border = 'none';
+    btn.style.background = theme.color;
+    btn.style.color = '#fff';
+    btn.style.fontWeight = '700';
+    btn.style.cursor = 'pointer';
+    btn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+    btn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+    btn.style.opacity = '0.93';
+    btn.style.maxWidth = '180px'; // Limite la largeur
+    btn.style.whiteSpace = 'normal'; // Permet le retour à la ligne si besoin
+    btn.onmouseover = () => btn.style.transform = 'scale(1.08)';
+    btn.onmouseout = () => btn.style.transform = 'none';
+
+    btn.addEventListener('click', function() {
+      // Supprime un éventuel cadre déjà ouvert
+      let old = popup.querySelector('.ia-theme-question-box');
+      if (old) old.remove();
+
+      // Crée le cadre sous les boutons
+      let questionBox = document.createElement('div');
+      questionBox.className = 'ia-theme-question-box';
+      questionBox.style.background = 'transparent';
+      questionBox.style.backdropFilter = 'none';
+      questionBox.style.borderRadius = '0';
+      questionBox.style.boxShadow = 'none';
+      questionBox.style.padding = '1.2em 1em 1em 1em';
+      questionBox.style.margin = '1em auto 0 auto';
+      questionBox.style.maxWidth = '340px';
+      questionBox.style.textAlign = 'center';
+
+      // Titre thème choisi
+      let themeTitle = document.createElement('div');
+      themeTitle.textContent = `Thème choisi : ${theme.label}`;
+      themeTitle.style.fontFamily = "'Revalia', cursive";
+      themeTitle.style.fontSize = '1.1rem';
+      themeTitle.style.color = theme.color;
+      themeTitle.style.marginBottom = '0.7em';
+
+      // Zone question
+      let questionInput = document.createElement('textarea');
+      questionInput.placeholder = "Posez votre question (optionnel)";
+      questionInput.style.width = '90%';
+      questionInput.style.minHeight = '60px';
+      questionInput.style.borderRadius = '0.7em';
+      questionInput.style.border = '1px solid #FF6B35';
+      questionInput.style.padding = '0.7em';
+      questionInput.style.fontFamily = "'Quicksand', sans-serif";
+      questionInput.style.fontSize = '1rem';
+      questionInput.style.marginBottom = '1em';
+      questionInput.style.resize = 'vertical';
+
+      // Boutons valider / pas de question
+      let btnsDiv = document.createElement('div');
+      btnsDiv.style.display = 'flex';
+      btnsDiv.style.justifyContent = 'center';
+      btnsDiv.style.gap = '1em';
+      btnsDiv.style.marginTop = '0.7em';
+
+      let validerBtn = document.createElement('button');
+      validerBtn.textContent = 'Valider';
+      validerBtn.style.fontFamily = "'Quicksand', sans-serif";
+      validerBtn.style.fontSize = '1rem';
+      validerBtn.style.padding = '0.5em 1.3em';
+      validerBtn.style.borderRadius = '22px';
+      validerBtn.style.border = 'none';
+      validerBtn.style.background = theme.color;
+      validerBtn.style.color = '#fff';
+      validerBtn.style.fontWeight = '700';
+      validerBtn.style.cursor = 'pointer';
+      validerBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+      validerBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+      validerBtn.style.opacity = '0.93';
+
+      let pasQuestionBtn = document.createElement('button');
+      pasQuestionBtn.textContent = 'Pas de question';
+      pasQuestionBtn.style.fontFamily = "'Quicksand', sans-serif";
+      pasQuestionBtn.style.fontSize = '1rem';
+      pasQuestionBtn.style.padding = '0.5em 1.3em';
+      pasQuestionBtn.style.borderRadius = '22px';
+      pasQuestionBtn.style.border = 'none';
+      pasQuestionBtn.style.background = '#bdbdbd';
+      pasQuestionBtn.style.color = '#222';
+      pasQuestionBtn.style.fontWeight = '700';
+      pasQuestionBtn.style.cursor = 'pointer';
+      pasQuestionBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+      pasQuestionBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+      pasQuestionBtn.style.opacity = '0.93';
+
+      btnsDiv.appendChild(validerBtn);
+      btnsDiv.appendChild(pasQuestionBtn);
+
+      questionBox.appendChild(themeTitle);
+      questionBox.appendChild(questionInput);
+      questionBox.appendChild(btnsDiv);
+
+      // Ajoute le cadre sous le themeBox
+      themeBox.after(questionBox);
+
+      // Fonction pour ouvrir le cadre tirage
+      function openTirageBox() {
+        // Supprime un éventuel cadre tirage déjà ouvert
+        let oldTirage = popup.querySelector('.ia-tirage-box');
+        if (oldTirage) oldTirage.remove();
+
+        // Crée le cadre tirage
+        let tirageBox = document.createElement('div');
+        tirageBox.className = 'ia-tirage-box';
+        tirageBox.style.background = 'transparent';
+        tirageBox.style.backdropFilter = 'none';
+        tirageBox.style.borderRadius = '0';
+        tirageBox.style.boxShadow = 'none';
+        tirageBox.style.padding = '1.2em 1em 1em 1em';
+        tirageBox.style.margin = '1em auto 0 auto';
+        tirageBox.style.maxWidth = '340px';
+        tirageBox.style.textAlign = 'center';
+
+        // Titre
+        let tirageTitle = document.createElement('div');
+        tirageTitle.textContent = 'Choisir le tirage';
+        tirageTitle.style.fontFamily = "'Revalia', cursive";
+        tirageTitle.style.fontSize = '1.1rem';
+        tirageTitle.style.color = '#1a237e';
+        tirageTitle.style.marginBottom = '0.7em';
+
+        // Boutons tirage
+        let tirageBtnsDiv = document.createElement('div');
+        tirageBtnsDiv.style.display = 'flex';
+        tirageBtnsDiv.style.justifyContent = 'center';
+        tirageBtnsDiv.style.gap = '1em';
+        tirageBtnsDiv.style.marginTop = '0.7em';
+
+        let btn3 = document.createElement('button');
+        btn3.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
+        btn3.textContent = '3 cartes';
+        btn3.style.fontFamily = "'Quicksand', sans-serif";
+        btn3.style.fontSize = '1rem';
+        btn3.style.padding = '0.5em 1.3em';
+        btn3.style.borderRadius = '22px';
+        btn3.style.border = 'none';
+        btn3.style.background = '#FF6B35';
+        btn3.style.color = '#fff';
+        btn3.style.fontWeight = '700';
+        btn3.style.cursor = 'pointer';
+        btn3.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+        btn3.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+        btn3.style.opacity = '0.93';
+
+        btn3.style.position = 'relative';
+
+        // Création de la bulle d'aide personnalisée
+        function createTooltip(text) {
+          const tooltip = document.createElement('div');
+          tooltip.textContent = text;
+          tooltip.style.position = 'absolute';
+          tooltip.style.bottom = '110%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translateX(-50%)';
+          tooltip.style.background = 'linear-gradient(90deg, rgba(255, 215, 0, 0.95) 0%, rgba(255, 193, 7, 0.9) 60%, rgba(218, 165, 32, 0.95) 100%)';
+          tooltip.style.color = '#8b4513';
+          tooltip.style.padding = '0.7em 1.1em';
+          tooltip.style.borderRadius = '1em';
+          tooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+          tooltip.style.fontFamily = "'Quicksand', sans-serif";
+          tooltip.style.fontSize = '0.98rem';
+          tooltip.style.whiteSpace = 'pre-line';
+          tooltip.style.opacity = '0';
+          tooltip.style.pointerEvents = 'none';
+          tooltip.style.transition = 'opacity 0.18s';
+          tooltip.style.zIndex = '10001';
+          tooltip.style.fontWeight = '600';
+          tooltip.style.textAlign = 'center';
+          tooltip.style.textShadow = '0 2px 8px rgba(30,30,40,0.10)';
+          return tooltip;
+        }
+
+        // Ajoute la bulle d'aide au survol du bouton 3 cartes
+        btn3.addEventListener('mouseenter', function() {
+          const tip = createTooltip("Tirage 3 cartes :\nPassé, présent, futur.\nVision synthétique et rapide.");
+          btn3._tooltip = tip;
+          btn3.appendChild(tip);
+          setTimeout(() => { tip.style.opacity = '1'; }, 10);
+        });
+        btn3.addEventListener('mouseleave', function() {
+          if (btn3._tooltip) {
+            btn3._tooltip.style.opacity = '0';
+            setTimeout(() => {
+              if (btn3._tooltip && btn3.contains(btn3._tooltip)) btn3.removeChild(btn3._tooltip);
+              btn3._tooltip = null;
+            }, 180);
+          }
+        });
+
+        let btn5 = document.createElement('button');
+        btn5.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
+        btn5.textContent = '5 cartes';
+        btn5.style.fontFamily = "'Quicksand', sans-serif";
+        btn5.style.fontSize = '1rem';
+        btn5.style.padding = '0.5em 1.3em';
+        btn5.style.borderRadius = '22px';
+        btn5.style.border = 'none';
+        btn5.style.background = '#ff9800';
+        btn5.style.color = '#fff';
+        btn5.style.fontWeight = '700';
+        btn5.style.cursor = 'pointer';
+        btn5.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
+        btn5.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+        btn5.style.opacity = '0.93';
+
+        btn5.style.position = 'relative';
+
+        // Ajoute la bulle d'aide au survol du bouton 5 cartes
+        btn5.addEventListener('mouseenter', function() {
+          const tip = createTooltip("Tirage 5 cartes :\nInfluences, obstacles, conseils, évolution.\nPour une analyse approfondie.");
+          btn5._tooltip = tip;
+          btn5.appendChild(tip);
+          setTimeout(() => { tip.style.opacity = '1'; }, 10);
+        });
+        btn5.addEventListener('mouseleave', function() {
+          if (btn5._tooltip) {
+            btn5._tooltip.style.opacity = '0';
+            setTimeout(() => {
+              if (btn5._tooltip && btn5.contains(btn5._tooltip)) btn5.removeChild(btn5._tooltip);
+              btn5._tooltip = null;
+            }, 180);
+          }
+        });
+
+        tirageBtnsDiv.appendChild(btn3);
+        tirageBtnsDiv.appendChild(btn5);
+
+        tirageBox.appendChild(tirageTitle);
+        tirageBox.appendChild(tirageBtnsDiv);
+
+        // Ajoute le cadre tirage sous le cadre question
+        questionBox.after(tirageBox);
+
+        function showChoixCartesBox(nbCartes) {
+          // Crée le nouveau cadre (plus grand)
+          let choixBox = document.createElement('div');
+          choixBox.style.background = 'transparent';
+          choixBox.style.backdropFilter = 'none';
+          choixBox.style.border = 'none';
+          choixBox.style.borderRadius = '0';
+          choixBox.style.boxShadow = 'none';
+          choixBox.style.padding = '2.5em 2em 2em 2em';
+          choixBox.style.maxWidth = '800px'; // Limite la largeur sur grand écran
+          choixBox.style.width = 'fit-content'; // S'adapte au contenu
+          choixBox.style.margin = '0 auto'; // Centrer le popup
+          choixBox.style.position = 'relative';
+          choixBox.style.textAlign = 'center';
+          choixBox.style.opacity = '0';
+          choixBox.style.transition = 'opacity 0.7s';
+
+          // Titre dynamique selon le nombre de cartes
+          let titreChoix = document.createElement('div');
+          titreChoix.textContent = nbCartes === 3
+            ? 'Choisissez vos 3 cartes'
+            : nbCartes === 5
+              ? 'Choisissez vos 5 cartes'
+              : 'Choisissez vos cartes';
+          titreChoix.style.fontFamily = "'Revalia', cursive";
+          titreChoix.style.fontSize = '2.3rem';
+          titreChoix.style.letterSpacing = '2px';
+          titreChoix.style.background = 'linear-gradient(90deg, #1a237e 0%, #FF6B35 100%)';
+          titreChoix.style.webkitBackgroundClip = 'text';
+          titreChoix.style.webkitTextFillColor = 'transparent';
+          titreChoix.style.backgroundClip = 'text';
+          titreChoix.style.textFillColor = 'transparent';
+          titreChoix.style.marginBottom = '1.2em';
+
+          // Bouton fermer
+          let closeBtn2 = document.createElement('button');
+          closeBtn2.textContent = '✕';
+          closeBtn2.style.position = 'absolute';
+          closeBtn2.style.top = '1em';
+          closeBtn2.style.right = '1.2em';
+          closeBtn2.style.background = 'none';
+          closeBtn2.style.border = 'none';
+          closeBtn2.style.fontSize = '1.5em';
+          closeBtn2.style.cursor = 'pointer';
+          closeBtn2.style.color = '#FF6B35';
+          closeBtn2.setAttribute('aria-label', 'Fermer');
+          closeBtn2.onclick = () => {
+            if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          };
+
+          choixBox.appendChild(closeBtn2);
+          choixBox.appendChild(titreChoix);
+
+          // Grille de 22 cadres avec la carte verso
+          let cardsGrid = document.createElement('div');
+          cardsGrid.className = 'cards-selection-grid'; // Ajoute la classe pour le CSS mobile
+          cardsGrid.style.display = 'grid';
+          
+          // --- Logique responsive pour la grille ---
+          const screenWidth = window.innerWidth;
+          if (screenWidth > 768) { // Desktop & Tablette
+            cardsGrid.style.gridTemplateColumns = 'repeat(6, 1fr)';
+          } else { // Mobile
+            cardsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+          }
+          // --- Fin de la logique responsive ---
+
+          cardsGrid.style.gap = '1.2em';
+          cardsGrid.style.justifyItems = 'center';
+          cardsGrid.style.margin = '1.5em 0 0 0';
+          cardsGrid.style.position = 'relative';
+
+          // Tableau des noms de fichiers des 22 arcanes majeurs dans l'ordre
+          const faces = [
+            "00-le-mat",
+            "01-le-bateleur",
+            "02-la-papesse",
+            "03-limperatrice",
+            "04-lempereur",
+            "05-le-pape",
+            "06-lamoureux",
+            "07-le-chariot",
+            "08-la-justice",
+            "09-lhermite",
+            "10-la-roue-de-fortune",
+            "11-la-force",
+            "12-le-pendu",
+            "13-larcane-sans-nom",
+            "14-temperance",
+            "15-le-diable",
+            "16-la-maison-dieu",
+            "17-letoile",
+            "18-la-lune",
+            "19-le-soleil",
+            "20-le-jugement",
+            "21-le-monde"
+          ];
+          // Mélange aléatoirement le tableau
+          for (let i = faces.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [faces[i], faces[j]] = [faces[j], faces[i]];
+          }
+
+          let selectedCount = 0;
+          let selectedCards = [];
+
+          for (let i = 0; i < 22; i++) {
+            let cardFrame = document.createElement('div');
+            cardFrame.className = 'card-selection-frame'; // Ajoute la classe pour le CSS mobile
+            cardFrame.style.width = '90px';
+            cardFrame.style.height = '144px';
+            cardFrame.style.borderRadius = '1em';
+            // Fond très subtil pour effet verre, mais pas blanc
+            cardFrame.style.background = 'linear-gradient(135deg, rgba(227,230,243,0.18) 0%, rgba(255,227,236,0.13) 100%)';
+            cardFrame.style.backdropFilter = 'blur(4px)';
+            cardFrame.style.border = 'none'; // aucune bordure
+            cardFrame.style.boxShadow = '0 8px 32px 0 rgba(231, 84, 128, 0.13), 0 2px 12px 0 rgba(26,35,126,0.10)';
+            cardFrame.style.display = 'flex';
+            cardFrame.style.alignItems = 'center';
+            cardFrame.style.justifyContent = 'center';
+            cardFrame.style.cursor = 'pointer';
+            cardFrame.style.transition = 'transform 0.15s, box-shadow 0.15s';
+            cardFrame.style.position = 'relative';
+            cardFrame.style.overflow = 'hidden';
+            // Ajoute un léger padding pour éviter que l'image touche le bord
+            cardFrame.style.padding = '2px';
+
+            // Ajoute la carte verso
+            let img = document.createElement('img');
+            img.className = 'card-image'; // Ajoute la classe pour le CSS mobile
+            img.src = './public/img/majors/verso.webp'; // Chemin corrigé
+            img.alt = 'Carte tarot verso';
+            img.style.width = '95%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            img.style.pointerEvents = 'none';
+            img.style.transition = 'transform 0.5s';
+
+            // Ajoute la carte face (cachée au départ)
+            let imgFace = document.createElement('img');
+            imgFace.className = 'card-image'; // Ajoute la classe pour le CSS mobile
+            imgFace.src = `./public/img/majors/${faces[i]}.webp`;
+            imgFace.alt = `Carte tarot ${faces[i]}`;
+            imgFace.style.width = '95%';
+            imgFace.style.height = 'auto';
+            imgFace.style.display = 'none';
+            imgFace.style.position = 'absolute';
+            imgFace.style.top = '0';
+            imgFace.style.left = '0';
+            imgFace.style.transition = 'transform 0.5s';
+
+            cardFrame.appendChild(img);
+            cardFrame.appendChild(imgFace);
+
+            cardFrame.setAttribute('data-card', faces[i]);
+
+            // Effet au survol
+            cardFrame.addEventListener('mouseenter', function() {
+              cardFrame.style.transform = 'scale(1.10)';
+              cardFrame.style.boxShadow = '0 16px 40px 0 #FF6B3599, 0 2px 12px 0 #1a237e22';
+            });
+            cardFrame.addEventListener('mouseleave', function() {
+              cardFrame.style.transform = 'none';
+              cardFrame.style.boxShadow = '0 8px 32px 0 rgba(231, 84, 128, 0.13), 0 2px 12px 0 rgba(26,35,126,0.10)';
+            });
+
+            // Retourne la carte au clic (une seule fois, et seulement si quota non atteint)
+            cardFrame.addEventListener('click', function() {
+              if (img.style.display !== 'none' && selectedCount < nbCartes) {
+                img.style.display = 'none';
+                imgFace.style.display = 'block';
+                imgFace.style.transform = 'rotateY(0deg)';
+                selectedCount++;
+                selectedCards.push(faces[i]);
+
+                // Quand le quota est atteint, efface et affiche l'interprétation
+                if (selectedCount >= nbCartes) {
+                  // Désactive les autres cartes
+                  cardsGrid.querySelectorAll('div').forEach(function(frame) {
+                    if (frame.querySelector('img').style.display !== 'none') {
+                      frame.style.pointerEvents = 'none';
+                      frame.style.opacity = '0.5';
+                    }
+                  });
+                  // Laisse 1 seconde pour voir les cartes tirées
+                  setTimeout(() => {
+                    choixBox.style.transition = 'opacity 0.7s';
+                    choixBox.style.opacity = '0';
+                    setTimeout(() => {
+                      
+                      // Vide le popup existant au lieu de le supprimer
+                      const popup = overlay.querySelector('div');
+                      if (popup) {
+                        popup.innerHTML = '';
+                        popup.style.display = 'none';
+                      }
+                      
+                      // Appel à l'interprétation
+                      showInterpretationBox(selectedCards.slice(0, nbCartes), overlay);
+                    }, 700);
+                  }, 1000);
+                }
+              }
+            });
+
+            cardsGrid.appendChild(cardFrame);
+          }
+
+          choixBox.appendChild(cardsGrid);
+
+          overlay.appendChild(choixBox);
+          setTimeout(() => { choixBox.style.opacity = '1'; }, 30);
+        }
+
+        btn3.addEventListener('click', function() {
+          btn3.disabled = true;
+          btn5.disabled = true;
+          setTimeout(function() {
+            popup.style.transition = 'opacity 0.7s';
+            popup.style.opacity = '0';
+            setTimeout(() => {
+              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
+              showChoixCartesBox(3);
+            }, 700);
+          }, 600);
+        });
+        btn5.addEventListener('click', function() {
+          btn3.disabled = true;
+          btn5.disabled = true;
+          setTimeout(function() {
+            popup.style.transition = 'opacity 0.7s';
+            popup.style.opacity = '0';
+            setTimeout(() => {
+              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
+              showChoixCartesBox(5);
+            }, 700);
+          }, 600);
+        });
+      }
+
+      validerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openTirageBox();
+      });
+      pasQuestionBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openTirageBox();
+      });
+    });
+
+    themeBox.appendChild(btn);
+  });
+
+  popup.appendChild(themeBox);
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+});
+
+function showInterpretationBox(cards, overlay) {
+  
+  // Nettoie complètement l'overlay existant
+  if (overlay) {
+    overlay.innerHTML = '';
+  }
+
+  // Récupère le thème et la question dès le début
+  let theme = window.selectedTheme || "Général";
+  let question = window.selectedQuestion || "";
+  
+  let interpBox = document.createElement('div');
+  interpBox.className = 'interpretation-popup'; // Ajoute la classe pour le CSS mobile
+  interpBox.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+  interpBox.style.backdropFilter = 'blur(10px)';
+  interpBox.style.border = '1.5px solid rgba(255,255,255,0.35)';
+  interpBox.style.borderRadius = '2em';
+  interpBox.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.18)';
+  interpBox.style.padding = '2.5em 2em 2em 2em';
+  interpBox.style.maxWidth = '900px';
+  interpBox.style.width = '96vw';
+  interpBox.style.maxHeight = '85vh'; // AJOUT: hauteur max
+  interpBox.style.overflowY = 'auto'; // AJOUT: scroll vertical
+  interpBox.style.position = 'relative';
+  interpBox.style.textAlign = 'center';
+  interpBox.style.opacity = '0';
+  interpBox.style.transition = 'opacity 0.7s';
+
+  // Empêcher le scroll de la page d'arrière-plan
+  function preventBackgroundScroll(e) {
+    // Permettre le scroll DANS interpBox
+    if (interpBox.contains(e.target)) {
+      return; // Laisser passer le scroll dans le popup
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+
+  // Fonction pour nettoyer le verrouillage du scroll
+  function cleanupScrollLock() {
+    document.body.style.overflow = '';
+    document.removeEventListener('wheel', preventBackgroundScroll);
+    document.removeEventListener('touchmove', preventBackgroundScroll);
+  }
+
+  // Verrouiller le scroll de la page
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('wheel', preventBackgroundScroll, { passive: false });
+  document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+
+  // Bouton mute/unmute (créé ici, jamais ailleurs)
+  let soundBtn = document.createElement('button');
+  soundBtn.id = 'sound-toggle-btn';
+  soundBtn.title = 'Couper le son';
+  soundBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><rect x="20" y="10" width="2" height="8" rx="1" fill="#1a237e "/></svg>';
+  soundBtn.style.background = 'transparent';
+  soundBtn.style.border = 'none';
+  soundBtn.style.borderRadius = '50%';
+  soundBtn.style.width = '44px';
+  soundBtn.style.height = '44px';
+  soundBtn.style.display = 'flex';
+  soundBtn.style.alignItems = 'center';
+  soundBtn.style.justifyContent = 'center';
+  soundBtn.style.cursor = 'pointer';
+  soundBtn.style.transition = 'background 0.2s';
+  soundBtn.style.padding = '0';
+
+  let soundOn = true;
+  soundBtn.onclick = function() {
+    soundOn = !soundOn;
+    if (soundOn) {
+      window.speechSynthesis.resume();
+      soundBtn.title = 'Couper le son';
+      soundBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><rect x="20" y="10" width="2" height="8" rx="1" fill="#1a237e "/></svg>';
+    } else {
+      window.speechSynthesis.pause();
+      soundBtn.title = 'Activer le son';
+      soundBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e " stroke-width="2"/><path d="M8 18h4l5 5V5l-5 5H8v8z" fill="#1a237e "/><path d="M22.5 10.5l-5 7M17.5 10.5l5 7" stroke="#FF6B35" stroke-width="2.5" stroke-linecap="round"/></svg>';
+    }
+  };
+
+  // Titre
+  let titreInterp = document.createElement('div');
+  titreInterp.textContent = 'Interprétation du tirage';
+  titreInterp.style.fontFamily = "'Revalia', cursive";
+  titreInterp.style.fontSize = '2.3rem';
+  titreInterp.style.letterSpacing = '2px';
+  titreInterp.style.background = 'linear-gradient(90deg, #1a237e 0%, #FF6B35 100%)';
+  titreInterp.style.webkitBackgroundClip = 'text';
+  titreInterp.style.webkitTextFillColor = 'transparent';
+  titreInterp.style.backgroundClip = 'text';
+  titreInterp.style.textFillColor = 'transparent';
+  titreInterp.style.marginBottom = '1.2em';
+
+  // Bouton fermer
+  let closeBtn3 = document.createElement('button');
+  closeBtn3.textContent = '✕';
+  closeBtn3.style.position = 'absolute';
+  closeBtn3.style.top = '1em';
+  closeBtn3.style.right = '1.2em';
+  closeBtn3.style.background = 'none';
+  closeBtn3.style.border = 'none';
+  closeBtn3.style.fontSize = '1.5em';
+  closeBtn3.style.cursor = 'pointer';
+  closeBtn3.style.color = '#FF6B35';
+  closeBtn3.setAttribute('aria-label', 'Fermer');
+  closeBtn3.onclick = () => {
+    // Arrêt de la synthèse vocale et du typewriter
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    
+    // Restaurer le scroll avant de fermer
+    if (typeof cleanupScrollLock === 'function') {
+      cleanupScrollLock();
+    } else {
+      // Fallback si cleanupScrollLock n'est pas définie
+      document.body.style.overflow = '';
+      document.removeEventListener('wheel', preventBackgroundScroll);
+      document.removeEventListener('touchmove', preventBackgroundScroll);
+    }
+    
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  };
+
+  // interpBox.appendChild(soundBtn);
+
+  interpBox.appendChild(closeBtn3);
+  interpBox.appendChild(titreInterp);
+
+  // Grille des cartes tirées
+  let interpGrid = document.createElement('div');
+  interpGrid.className = 'cards-container'; // Ajoute la classe pour le CSS mobile
+  
+  // Configuration simple et intelligente pour tous les tirages
+  if (cards.length === 5) {
+    // Pour 5 cartes : le système Grid sera configuré plus bas
+    interpGrid.style.display = 'block';
+    interpGrid.style.margin = '1.5em auto';
+  } else {
+    // Pour 1, 2, 3 cartes : layout flex simple
+    interpGrid.style.display = 'flex';
+    interpGrid.style.justifyContent = 'center';
+    interpGrid.style.alignItems = 'center';
+    interpGrid.style.gap = '1.5em';
+    interpGrid.style.margin = '2em auto';
+    interpGrid.style.flexWrap = 'wrap';
+    interpGrid.style.width = '100%';
+  }
+
+  cards.forEach((cardName, index) => {
+    let cardBig = document.createElement('div');
+    cardBig.style.display = 'flex';
+    cardBig.style.flexDirection = 'column';
+    cardBig.style.alignItems = 'center';
+    cardBig.style.margin = '0';
+    cardBig.style.padding = '0'; // Enlever tout padding
+    cardBig.style.border = 'none'; // Enlever toute bordure
+
+    let imgBig = document.createElement('img');
+    imgBig.className = 'card-big'; // Ajoute la classe pour le CSS mobile
+    imgBig.src = `./public/img/majors/${cardName}.webp`; // Chemin corrigé
+    imgBig.alt = `Carte ${cardName}`;
+    
+    // Calcul adaptatif des tailles selon l'écran et le nombre de cartes
+    const screenWidth = window.innerWidth;
+    let cardWidth;
+    
+    if (screenWidth <= 480) {
+      // Très petits écrans - cartes équilibrées
+      cardWidth = cards.length === 5 ? '70px' : '78px';
+    } else if (screenWidth <= 768) {
+      // Tablettes - cartes moyennes
+      cardWidth = cards.length === 5 ? '90px' : '95px';
+    } else {
+      // Desktop
+      cardWidth = cards.length === 5 ? '120px' : '180px';
+    }
+    
+    imgBig.style.width = cardWidth;
+    imgBig.style.height = 'auto';
+    imgBig.style.borderRadius = '1em';
+    imgBig.style.boxShadow = '0 8px 32px #FF6B3544';
+    imgBig.style.marginBottom = '1em';
+    imgBig.style.border = 'none'; // Enlever toute bordure
+    imgBig.style.padding = '0';   // Enlever tout padding
+    imgBig.style.background = 'transparent'; // Fond transparent
+
+    // Nouveau système intelligent pour 5 cartes en forme de dé
+    if (cards.length === 5) {
+      // Configuration du conteneur en grille pour layout dé - optimisé pour popup
+      interpGrid.style.display = 'grid';
+      interpGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+      interpGrid.style.gridTemplateRows = 'repeat(3, auto)';
+      interpGrid.style.gap = screenWidth <= 480 ? '0.4em' : screenWidth <= 768 ? '0.6em' : '0.8em';
+      interpGrid.style.maxWidth = screenWidth <= 480 ? '240px' : screenWidth <= 768 ? '320px' : '400px';
+      interpGrid.style.margin = '1em auto';
+      interpGrid.style.justifyItems = 'center';
+      interpGrid.style.alignItems = 'center';
+      interpGrid.style.maxHeight = '300px';
+      interpGrid.style.overflow = 'visible';
+      
+      // Position dans la grille selon l'index (comme un dé n°5 avec cartes 4 et 5 remontées)
+      switch (index) {
+        case 0: // Coin haut-gauche - descendue un peu (compact)
+          cardBig.style.gridColumn = '1';
+          cardBig.style.gridRow = '1';
+          cardBig.style.marginTop = '0.5em';
+          break;
+        case 1: // Coin haut-droite - descendue un peu (compact)
+          cardBig.style.gridColumn = '3';
+          cardBig.style.gridRow = '1';
+          cardBig.style.marginTop = '0.5em';
+          break;
+        case 2: // Centre - remontée adaptée pour popup
+          cardBig.style.gridColumn = '2';
+          cardBig.style.gridRow = '2';
+          cardBig.style.marginTop = screenWidth <= 480 ? '-1.2em' : screenWidth <= 768 ? '-1.5em' : '-2em';
+          break;
+        case 3: // Coin bas-gauche - remontée adaptée
+          cardBig.style.gridColumn = '1';
+          cardBig.style.gridRow = '2';
+          cardBig.style.alignSelf = 'end';
+          cardBig.style.marginTop = '0.1em';
+          break;
+        case 4: // Coin bas-droite - remontée adaptée
+          cardBig.style.gridColumn = '3';
+          cardBig.style.gridRow = '2';
+          cardBig.style.alignSelf = 'end';
+          cardBig.style.marginTop = '0.1em';
+          break;
+      }
+      
+      // Taille des cartes optimisée pour popup
+      cardBig.style.width = screenWidth <= 480 ? '55px' : screenWidth <= 768 ? '70px' : '90px';
+      cardBig.style.height = 'auto';
+      
+      // Optimisation de l'image dans la carte
+      imgBig.style.width = '100%';
+      imgBig.style.height = 'auto';
+      imgBig.style.maxWidth = screenWidth <= 480 ? '55px' : screenWidth <= 768 ? '70px' : '90px';
+    }
+
+    cardBig.appendChild(imgBig);
+    interpGrid.appendChild(cardBig);
+  });
+
+  interpBox.appendChild(interpGrid);
+
+  // Cadre pour l'interprétation IA
+  let iaInterpretBox = document.createElement('div');
+  iaInterpretBox.id = 'ia-interpretation';
+  iaInterpretBox.style.background = 'linear-gradient(120deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.85) 50%, rgba(255,207,236,0.85) 100%)';
+  iaInterpretBox.style.backdropFilter = 'blur(6px)';
+  iaInterpretBox.style.border = '1.5px solid rgba(255,255,255,0.35)';
+  iaInterpretBox.style.borderRadius = '1.2em';
+  iaInterpretBox.style.boxShadow = '0 2px 12px rgba(30,30,40,0.10)';
+  iaInterpretBox.style.padding = '2em 1.5em 1.5em 1.5em';
+  iaInterpretBox.style.margin = '2.5em auto 0 auto';
+  iaInterpretBox.style.maxWidth = '700px';
+  iaInterpretBox.style.fontFamily = "'Quicksand', sans-serif";
+  iaInterpretBox.style.fontSize = '1.15rem';
+  iaInterpretBox.style.color = '#1a237e';
+  iaInterpretBox.style.textAlign = 'left';
+  iaInterpretBox.style.height = '20em';
+  iaInterpretBox.style.maxHeight = '20em';
+  iaInterpretBox.style.overflowY = 'auto';
+  iaInterpretBox.style.overflowX = 'hidden';
+  iaInterpretBox.style.display = 'block';
+  iaInterpretBox.style.scrollBehavior = 'smooth';
+  // Message d'attente plus engageant et personnalisé
+  const themeMessages = {
+    "Amour": "💖 Analyse de votre situation amoureuse",
+    "Travail": "💼 Étude de votre chemin professionnel", 
+    "Argent": "💰 Examen de vos finances",
+    "Santé": "🌿 Exploration de votre bien-être",
+    "Spiritualité": "🔮 Révélation de votre évolution spirituelle",
+    "Général": "✨ Découverte de votre guidance générale"
+  };
+  
+  const themeMsg = themeMessages[theme] || "✨ Analyse de votre tirage";
+  
+  iaInterpretBox.innerHTML = `
+    <div style="text-align: center; padding: 2em 1em;">
+      <div style="font-size: 1.4em; margin-bottom: 1em; color: #FF6B35; animation: pulse 2s infinite;">
+        ✨ ${themeMsg} ✨
+      </div>
+      <div style="font-size: 1.1em; line-height: 1.6; color: #1a237e;">
+        Madame IA.RMA connecte les énergies de vos cartes...<br>
+        <span style="font-style: italic; font-size: 0.95em; opacity: 0.8; margin-top: 0.5em; display: inline-block;">
+          Préparation de votre interprétation structurée
+        </span>
+      </div>
+      <div style="margin-top: 1.5em; font-size: 2em; color: #FF6B35; animation: spin 3s linear infinite;">
+        🔮
+      </div>
+    </div>
+    <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  `;
+
+  interpBox.appendChild(iaInterpretBox);
+
+  // --- Boîte d'actions ---
+  let actionsBox = document.createElement('div');
+  actionsBox.className = 'action-buttons'; // Ajout de la classe CSS
+  actionsBox.style.display = 'flex';
+  actionsBox.style.justifyContent = 'center';
+  actionsBox.style.alignItems = 'center';
+  actionsBox.style.gap = '1em';
+  actionsBox.style.marginTop = '1.5em';
+
+  // Style commun pour les boutons d'action
+  function styleActionButton(btn, bgColor, textColor) {
+    btn.className = 'action-button'; // Ajout de la classe CSS
+    btn.style.fontFamily = "'Quicksand', sans-serif";
+    btn.style.fontSize = '1rem';
+    btn.style.padding = '0.6em 1.4em';
+    btn.style.borderRadius = '22px';
+    btn.style.border = 'none';
+    btn.style.background = bgColor;
+    btn.style.color = textColor;
+    btn.style.fontWeight = '700';
+    btn.style.cursor = 'pointer';
+    btn.style.transition = 'transform 0.15s, box-shadow 0.15s';
+    btn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
+  }
+
+  // Bouton Recommencer
+  let restartBtn = document.createElement('button');
+  restartBtn.textContent = 'Recommencer';
+  styleActionButton(restartBtn, '#FF6B35', '#fff');
+  restartBtn.onclick = function() {
+    window.speechSynthesis.cancel();
+    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+    if (typeof cleanupScrollLock === 'function') cleanupScrollLock();
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    setTimeout(() => document.querySelector('.header-btn-ia').click(), 100);
+  };
+
+  // Bouton Sauvegarder
+  let emailBtn = document.createElement('button');
+  emailBtn.textContent = 'Sauvegarder';
+  styleActionButton(emailBtn, '#ff9800', '#fff');
+  emailBtn.onclick = function() {
+    alert("Sauvegarde du tirage (fonctionnalité à venir).");
+  };
+
+  // Bouton Retour
+  let backBtn = document.createElement('button');
+  backBtn.textContent = 'Retour';
+  styleActionButton(backBtn, '#bdbdbd', '#222');
+  backBtn.onclick = closeBtn3.onclick; // Réutilise la même logique que le bouton fermer
+
+  // Ajout des boutons à la boîte d'actions
+  actionsBox.appendChild(restartBtn);
+  actionsBox.appendChild(emailBtn);
+  actionsBox.appendChild(backBtn);
+  actionsBox.appendChild(soundBtn); // Ajout du bouton son ici
+
+  interpBox.appendChild(actionsBox);
+  // --- Fin Boîte d'actions ---
+
+  // Affiche la popup
+  overlay.appendChild(interpBox);
+  setTimeout(() => { interpBox.style.opacity = '1'; }, 30);
+
+  // Appel API IA avec le prompt personnalisé
+  iaInterpretBox.textContent = "Interprétation en cours...";
+
+  callAIInterpretationAPI(cards, theme, question, function(data) {
+    let txt = data.result || "";
+
+    // Supprime les numéros de cartes entre parenthèses
+    txt = txt.replace(/\s*\(\d{1,2}\)/g, "");
+
+    // Structure l'interprétation selon le thème
+    txt = formatInterpretationByTheme(txt, theme, question);
+
+    // Améliore l'organisation et nettoie le texte
+    txt = improveTextFormatting(txt);
+
+    // Découpe en paragraphes sur deux retours à la ligne
+    let paragraphs = txt.split(/\n\s*\n/);
+    let paraIndex = 0;
+    let charIndex = 0;
+
+    iaInterpretBox.textContent = "";
+
+    function speakPhrase(phrase) {
+      if (!phrase.trim()) return;
+      let utter = new SpeechSynthesisUtterance(phrase.trim());
+      utter.lang = 'fr-FR';
+      utter.rate = 1.05;
+      utter.volume = 1;
+      if (soundOn) {
+        if (soundBtn.style.display === 'none') soundBtn.style.display = 'flex';
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function typeWriterParagraph() {
+      if (paraIndex < paragraphs.length) {
+        let para = paragraphs[paraIndex];
+        let p = document.createElement('p');
+        p.style.margin = '0 0 1.2em 0';
+        p.style.padding = '0';
+        p.style.display = 'block';
+        p.style.lineHeight = '1.6';
+        
+        // Détection des sections importantes (nouvelles phrases d'introduction)
+        if (/^(Concernant votre|Pour votre|Quant à votre|Les influences de|Votre situation|En synthèse|Mes conseils)/i.test(para)) {
+          p.style.fontWeight = 'bold';
+          p.style.fontSize = '1.2em';
+          p.style.color = '#FF6B35';
+          p.style.marginTop = '1.8em';
+          p.style.marginBottom = '1em';
+          p.style.borderLeft = '4px solid #FF6B35';
+          p.style.paddingLeft = '1.2em';
+          p.style.background = 'rgba(255, 107, 53, 0.08)';
+          p.style.borderRadius = '0 8px 8px 0';
+        }
+        
+        // Style spécial pour les questions
+        if (/^Votre question :/.test(para)) {
+          p.style.fontStyle = 'italic';
+          p.style.color = '#1a237e';
+          p.style.background = 'rgba(26, 35, 126, 0.05)';
+          p.style.padding = '1em';
+          p.style.borderRadius = '8px';
+          p.style.marginBottom = '1.5em';
+        }
+        
+        iaInterpretBox.appendChild(p);
+
+        let phraseBuffer = "";
+
+        function typeWriterChar() {
+          if (charIndex < para.length) {
+            let char = para[charIndex];
+            p.textContent += char;
+            phraseBuffer += char;
+            iaInterpretBox.scrollTop = iaInterpretBox.scrollHeight;
+
+            // Si fin de phrase, on lit la phrase immédiatement
+            if (/[.!?…]/.test(char)) {
+              let phraseToSpeak = phraseBuffer.trim();
+              if (phraseToSpeak.length > 2) {
+                speakPhrase(phraseToSpeak);
+              }
+              phraseBuffer = "";
+            }
+
+            charIndex++;
+            typeWriterTimeout = setTimeout(typeWriterChar, 18);
+          } else {
+            // À la fin du paragraphe, s'il reste une phrase non lue
+            let lastPhrase = phraseBuffer.trim();
+            if (lastPhrase.length > 2) {
+              speakPhrase(lastPhrase);
+            }
+            p.style.display = 'block';
+            paraIndex++;
+            charIndex = 0;
+            setTimeout(typeWriterParagraph, 200);
+          }
+        }
+        typeWriterChar();
+      } else {
+        // Quand tout est écrit, active le scroll
+        iaInterpretBox.style.overflowY = 'auto';
+        iaInterpretBox.style.cursor = 'grab';
+      }
+    }
+    typeWriterParagraph();
+  });
+}
+
+// Fonction pour améliorer le formatage du texte d'interprétation
+function improveTextFormatting(text) {
+  // 1. Supprime tous les astérisques et autres caractères de formatage
+  text = text.replace(/\*\*([^*]+)\*\*/g, '$1'); // **texte** -> texte
+  text = text.replace(/\*([^*]+)\*/g, '$1'); // *texte* -> texte
+  text = text.replace(/_{1,2}([^_]+)_{1,2}/g, '$1'); // __texte__ ou _texte_ -> texte
+  
+  // 2. Nettoie les caractères indésirables pour la lecture
+  text = text.replace(/[#]+\s*/g, ''); // Supprime les # de titres markdown
+  text = text.replace(/^\s*[-*+]\s*/gm, ''); // Supprime les puces de listes
+  text = text.replace(/`([^`]+)`/g, '$1'); // `code` -> code
+  
+  // 3. Améliore la structure des paragraphes
+  text = text.replace(/\n{3,}/g, '\n\n'); // Limite les sauts de ligne multiples
+  text = text.replace(/^\s+|\s+$/g, ''); // Supprime les espaces en début/fin
+  
+  // 4. Identifie et formate les mots-clés importants (sans astérisques)
+  const keywords = [
+    'PASSÉ', 'PRÉSENT', 'FUTUR', 'CONSEIL', 'GUIDANCE', 'ÉVOLUTION',
+    'INFLUENCES', 'SITUATION', 'DÉFIS', 'OBSTACLES', 'CONSEILS',
+    'amour', 'travail', 'argent', 'santé', 'spiritualité',
+    'carte', 'cartes', 'tarot', 'énergie', 'énergies'
+  ];
+  
+  // Remplace les sections avec émojis par du texte plus naturel
+  text = text.replace(/🕐\s*PASSÉ\s*-\s*Les influences\s*:/gi, 'Concernant votre passé et les influences qui vous ont menée jusqu\'ici :');
+  text = text.replace(/⏰\s*PRÉSENT\s*-\s*Votre situation actuelle\s*:/gi, 'Pour votre situation présente :');
+  text = text.replace(/🔮\s*FUTUR\s*-\s*Ce qui vous attend\s*:/gi, 'Quant à votre avenir :');
+  text = text.replace(/🌅\s*INFLUENCES PASSÉES\s*:/gi, 'Les influences de votre passé révèlent que :');
+  text = text.replace(/⚡\s*SITUATION ACTUELLE\s*:/gi, 'Votre situation actuelle indique que :');
+  text = text.replace(/🚧\s*DÉFIS ET OBSTACLES\s*:/gi, 'Concernant les défis à venir :');
+  text = text.replace(/🎯\s*CONSEILS ET GUIDANCE\s*:/gi, 'Mes conseils pour vous :');
+  text = text.replace(/💫\s*Conseil global\s*:/gi, 'En synthèse :');
+  
+  // 5. Supprime les emojis isolés qui restent
+  text = text.replace(/[🕐⏰🔮🌅⚡🚧🎯💫🔍]/g, '');
+  
+  // 6. Améliore la ponctuation pour une meilleure lecture
+  text = text.replace(/\s*:\s*\n/g, ' :\n'); // Espaces autour des deux-points
+  text = text.replace(/([.!?])\s*\n/g, '$1\n\n'); // Double saut après phrase complète
+  
+  return text;
+}
+
+// Fonction pour obtenir les sections spécialisées selon le thème
+function getThemeSpecificSections(theme, cardCount) {
+  const sections = {
+    "Amour": {
+      3: {
+        section1: "� **Vos ex et tout le tralala :**",
+        section2: "💖 **Votre cœur en ce moment :**", 
+        section3: "� **L'amour qui arrive :**",
+        conseil: "� **Mes tips pour votre cœur :**"
+      },
+      5: {
+        section1: "� **Votre passé amoureux :**",
+        section2: "💓 **Vos sentiments actuels :**",
+        section3: "🤔 **Les galères à éviter :**",
+        section4: "🥰 **Votre futur romantique :**",
+        conseil: "💌 **Mes conseils de cupidonne :**"
+      }
+    },
+    "Travail": {
+      3: {
+        section1: "� **Votre CV en résumé :**",
+        section2: "💼 **Votre boulot actuel :**",
+        section3: "� **Votre carrière qui décolle :**", 
+        conseil: "🏆 **Mes tips de boss :**"
+      },
+      5: {
+        section1: "� **D'où vous venez pro :**",
+        section2: "⚡ **Votre job en ce moment :**",
+        section3: "� **Les galères au boulot :**",
+        section4: "🎯 **Votre avenir de winner :**",
+        conseil: "💡 **Mes astuces de réussite :**"
+      }
+    },
+    "Argent": {
+      3: {
+        section1: "� **Vos anciennes galères de fric :**",
+        section2: "💰 **Votre porte-monnaie aujourd'hui :**",
+        section3: "🤑 **Vos futurs gains :**",
+        conseil: "� **Mes tips de millionnaire :**"
+      },
+      5: {
+        section1: "� **D'où vient votre argent :**",
+        section2: "💵 **Vos finances actuelles :**", 
+        section3: "� **Les pièges à éviter :**",
+        section4: "� **Vos prochains jackpots :**",
+        conseil: "💍 **Mes secrets de prospérité :**"
+      }
+    },
+    "Santé": {
+      3: {
+        section1: "🤒 **Vos anciens bobos :**",
+        section2: "😊 **Votre forme aujourd'hui :**",
+        section3: "✨ **Votre bien-être à venir :**",
+        conseil: "🌱 **Mes tips de pêche :**"
+      },
+      5: {
+        section1: "🧬 **Vos bases santé :**",
+        section2: "💪 **Votre énergie actuelle :**",
+        section3: "� **Les trucs à surveiller :**", 
+        section4: "🌟 **Votre vitalité future :**",
+        conseil: "🥗 **Mes recettes bien-être :**"
+      }
+    },
+    "Spiritualité": {
+      3: {
+        section1: "� **Votre éveil d'avant :**",
+        section2: "🧘 **Votre âme en ce moment :**",
+        section3: "🌌 **Votre spiritualité qui monte :**",
+        conseil: "✨ **Mes tips cosmiques :**"
+      },
+      5: {
+        section1: "🕉️ **Vos racines spirituelles :**",
+        section2: "🔮 **Vos énergies actuelles :**",
+        section3: "🌪️ **Vos blocages à virer :**",
+        section4: "🦋 **Votre transformation à venir :**", 
+        conseil: "� **Mes pratiques magiques :**"
+      }
+    }
+  };
+
+  // Sections par défaut pour "Général" ou thèmes non définis
+  const defaultSections = {
+    3: {
+      section1: "⏪ **Votre passé :**",
+      section2: "⏸️ **Maintenant :**",
+      section3: "⏩ **Bientôt :**",
+      conseil: "� **Mon conseil :**"
+    },
+    5: {
+      section1: "📖 **Votre histoire :**",
+      section2: "📍 **Où vous en êtes :**", 
+      section3: "⚠️ **Les pièges :**",
+      section4: "🎁 **Les surprises :**",
+      conseil: "� **Mes tips de vie :**"
+    }
+  };
+
+  return sections[theme] ? sections[theme][cardCount] : defaultSections[cardCount];
+}
+
+// Fonction pour structurer l'interprétation selon le thème
+function formatInterpretationByTheme(interpretation, theme, question) {
+  // Messages d'introduction personnalisés selon le thème
+  const themeIntros = {
+    "Amour": "💖 **Votre guidance amoureuse** 💖",
+    "Travail": "💼 **Votre chemin professionnel** 💼", 
+    "Argent": "💰 **Votre situation financière** 💰",
+    "Santé": "🌿 **Votre bien-être** 🌿",
+    "Spiritualité": "🔮 **Votre évolution spirituelle** 🔮",
+    "Général": "✨ **Votre guidance générale** ✨"
+  };
+
+  // Structure selon le nombre de cartes tirées
+  const cardCount = window.selectedCards ? window.selectedCards.length : 1;
+  let structuredText = "";
+
+  // Si une question spécifique a été posée
+  if (question && question.trim()) {
+    structuredText += `🔍 **Votre question :** "${question}"\n\n`;
+  }
+
+  // Organisation selon le type de tirage ET le thème
+  if (cardCount === 1) {
+    structuredText += interpretation;
+  } else if (cardCount === 3) {
+    // Tirage 3 cartes avec sections adaptées au thème
+    const sections = interpretation.split(/\n\s*\n/);
+    if (sections.length >= 3) {
+      const themeSections = getThemeSpecificSections(theme, 3);
+      structuredText += `${themeSections.section1}\n` + (sections[0] || "") + "\n\n";
+      structuredText += `${themeSections.section2}\n` + (sections[1] || "") + "\n\n"; 
+      structuredText += `${themeSections.section3}\n` + (sections[2] || "");
+      if (sections.length > 3) {
+        structuredText += `\n\n${themeSections.conseil}\n` + sections.slice(3).join("\n\n");
+      }
+    } else {
+      structuredText += interpretation;
+    }
+  } else if (cardCount === 5) {
+    // Tirage 5 cartes avec sections adaptées au thème
+    const sections = interpretation.split(/\n\s*\n/);
+    if (sections.length >= 4) {
+      const themeSections = getThemeSpecificSections(theme, 5);
+      structuredText += `${themeSections.section1}\n` + (sections[0] || "") + "\n\n";
+      structuredText += `${themeSections.section2}\n` + (sections[1] || "") + "\n\n";
+      structuredText += `${themeSections.section3}\n` + (sections[2] || "") + "\n\n";
+      structuredText += `${themeSections.section4}\n` + (sections[3] || "");
+      if (sections.length > 4) {
+        structuredText += `\n\n${themeSections.conseil}\n` + sections.slice(4).join("\n\n");
+      }
+    } else {
+      structuredText += interpretation;
+    }
+  } else {
+    structuredText += interpretation;
+  }
+
+  return structuredText;
+}
+
+function callAIInterpretationAPI(cards, theme, question, callback) {
+iconBar.style.display = 'flex';
+iconBar.style.justifyContent = 'center';
+iconBar.style.alignItems = 'center';
+iconBar.style.gap = '2em';
+iconBar.style.margin = '2.5em 0 0 0';
+iconBar.style.background = 'rgba(26,35,126,0.1)'; // Debug: fond visible
+iconBar.style.padding = '20px 0'; // Debug: padding visible
+iconBar.style.borderRadius = '10px'; // Debug: coins arrondis
+console.log("iconBar créé:", iconBar);
+
+// Style commun
+function styleIconBtn(btn) {
+  btn.style.background = 'linear-gradient(120deg, #fff 0%, #1a237e 100%)';
+  btn.style.border = '2px solid #1a237e';
+  btn.style.borderRadius = '50%';
+  btn.style.width = '44px';
+  btn.style.height = '44px';
+  btn.style.display = 'flex';
+  btn.style.alignItems = 'center';
+  btn.style.justifyContent = 'center';
+  btn.style.boxShadow = '0 2px 12px rgba(30,30,40,0.13)';
+  btn.style.cursor = 'pointer';
+  btn.style.transition = 'background 0.2s, border 0.2s';
+  btn.style.padding = '0';
+}
+
+// 1. Encore (refresh)
+let encoreBtn = document.createElement('button');
+encoreBtn.title = "Nouveau tirage";
+styleIconBtn(encoreBtn);
+encoreBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <path d="M20 14a6 6 0 1 1-2.2-4.6" stroke="#1a237e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <polyline points="18,8 22,8 22,12" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+encoreBtn.onclick = function() {
+  window.speechSynthesis.cancel();
+  if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+  
+  // Restaurer le scroll avant de fermer
+  if (typeof cleanupScrollLock === 'function') {
+    cleanupScrollLock();
+  } else {
+    // Fallback si cleanupScrollLock n'est pas définie
+    document.body.style.overflow = '';
+    document.removeEventListener('wheel', preventBackgroundScroll);
+    document.removeEventListener('touchmove', preventBackgroundScroll);
+  }
+  
+  if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  document.querySelector('.header-btn-ia').click();
+};
+
+// Tooltip stylé au survol
+let encoreTooltip = document.createElement('div');
+encoreTooltip.textContent = "nouveau tirage";
+encoreTooltip.style.position = 'absolute';
+encoreTooltip.style.left = '50%';
+encoreTooltip.style.top = '120%';
+encoreTooltip.style.transform = 'translateX(-50%)';
+encoreTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+encoreTooltip.style.color = '#1a237e';
+encoreTooltip.style.padding = '0.5em 1.2em';
+encoreTooltip.style.borderRadius = '1em';
+encoreTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+encoreTooltip.style.fontFamily = "'Quicksand', sans-serif";
+encoreTooltip.style.fontSize = '0.98rem';
+encoreTooltip.style.fontWeight = '600';
+encoreTooltip.style.textAlign = 'center';
+encoreTooltip.style.whiteSpace = 'nowrap';
+encoreTooltip.style.opacity = '0';
+encoreTooltip.style.pointerEvents = 'none';
+encoreTooltip.style.transition = 'opacity 0.18s';
+encoreTooltip.style.zIndex = '10001';
+
+// Positionne le bouton en relatif pour le tooltip
+encoreBtn.style.position = 'relative';
+
+encoreBtn.appendChild(encoreTooltip);
+
+encoreBtn.addEventListener('mouseenter', function() {
+  encoreTooltip.style.opacity = '1';
+});
+encoreBtn.addEventListener('mouseleave', function() {
+  encoreTooltip.style.opacity = '0';
+});
+
+// 2. Mail (enveloppe)
+let mailBtn = document.createElement('button');
+mailBtn.title = "Recevoir mon tirage par mail";
+styleIconBtn(mailBtn);
+mailBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <rect x="7" y="10" width="14" height="8" rx="2" fill="none" stroke="#1a237e" stroke-width="2"/>
+  <polyline points="7,10 14,16 21,10" fill="none" stroke="#1a237e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+mailBtn.onclick = function() {
+  // Vérifie si le formulaire existe déjà
+  if (interpBox.querySelector('.mail-form-popup')) return;
+
+  let mailForm = document.createElement('form');
+  mailForm.className = 'mail-form-popup';
+  mailForm.style.marginTop = '1.5em';
+  mailForm.style.display = 'flex';
+  mailForm.style.justifyContent = 'center';
+  mailForm.style.alignItems = 'center';
+  mailForm.style.gap = '1em';
+
+  let mailInput = document.createElement('input');
+  mailInput.type = 'email';
+  mailInput.placeholder = 'Votre email';
+  mailInput.required = true;
+  mailInput.style.padding = '0.5em 1em';
+  mailInput.style.borderRadius = '18px';
+  mailInput.style.border = '1px solid #1a237e';
+  mailInput.style.fontSize = '1rem';
+
+  let mailSend = document.createElement('button');
+  mailSend.type = 'submit';
+  mailSend.textContent = 'Envoyer';
+  mailSend.style.background = '#1a237e';
+  mailSend.style.color = '#fff';
+  mailSend.style.border = 'none';
+  mailSend.style.borderRadius = '18px';
+  mailSend.style.padding = '0.5em 1.5em';
+  mailSend.style.fontSize = '1rem';
+  mailSend.style.cursor = 'pointer';
+
+  mailForm.appendChild(mailInput);
+  mailForm.appendChild(mailSend);
+
+  // Ajoute le formulaire juste sous la barre d'icônes
+  interpBox.appendChild(mailForm);
+
+  mailForm.onsubmit = function(e) {
+    e.preventDefault();
+    mailSend.disabled = true;
+    mailSend.textContent = "Envoi...";
+    fetch('/api/send-tirage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: mailInput.value,
+        cartes: cards,
+        interpretation: document.getElementById('ia-interpretation').textContent
+      })
+    })
+    .then(r => {
+      mailSend.textContent = "Envoyé !";
+      mailSend.style.background = "#009688";
+      mailInput.disabled = true;
+      setTimeout(() => {
+        mailForm.innerHTML = "<div style='color:#1a237e;font-weight:600;margin-top:1em;font-family:\"Revalia\",cursive;font-size:1.2em;width:100%;text-align:center;'>Votre tirage a bien été envoyé !</div>";
+      }, 1200);
+    })
+    .catch(() => {
+      mailSend.textContent = "Erreur";
+      mailSend.style.background = "#FF6B35";
+      mailSend.disabled = false;
+    });
+  };
+};
+
+// Tooltip stylé au survol pour le bouton mail
+let mailTooltip = document.createElement('div');
+mailTooltip.textContent = "votre tirage par mail";
+mailTooltip.style.position = 'absolute';
+mailTooltip.style.left = '50%';
+mailTooltip.style.top = '120%';
+mailTooltip.style.transform = 'translateX(-50%)';
+mailTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+mailTooltip.style.color = '#1a237e';
+mailTooltip.style.padding = '0.5em 1.2em';
+mailTooltip.style.borderRadius = '1em';
+mailTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+mailTooltip.style.fontFamily = "'Quicksand', sans-serif";
+mailTooltip.style.fontSize = '0.98rem';
+mailTooltip.style.fontWeight = '600';
+mailTooltip.style.textAlign = 'center';
+mailTooltip.style.whiteSpace = 'nowrap';
+mailTooltip.style.opacity = '0';
+mailTooltip.style.pointerEvents = 'none';
+mailTooltip.style.transition = 'opacity 0.18s';
+mailTooltip.style.zIndex = '10001';
+
+mailBtn.style.position = 'relative';
+mailBtn.appendChild(mailTooltip);
+
+mailBtn.addEventListener('mouseenter', function() {
+  mailTooltip.style.opacity = '1';
+});
+mailBtn.addEventListener('mouseleave', function() {
+  mailTooltip.style.opacity = '0';
+});
+
+// 3. Retour Opanoma (maison)
+let homeBtn = document.createElement('button');
+homeBtn.title = "Retour à l'accueil Opanoma";
+styleIconBtn(homeBtn);
+homeBtn.innerHTML = `
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#1a237e" stroke-width="2"/>
+  <path d="M8 16V12l6-5 6 5v4a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" fill="none" stroke="#1a237e" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="12" y="16" width="4" height="4" fill="none" stroke="#1a237e" stroke-width="2"/>
+</svg>
+`;
+homeBtn.onclick = function() {
+  window.speechSynthesis.cancel();
+  if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
+  window.location.href = '/#';
+};
+
+// Tooltip stylé au survol pour le bouton retour
+let homeTooltip = document.createElement('div');
+homeTooltip.textContent = "retour au site";
+homeTooltip.style.position = 'absolute';
+homeTooltip.style.left = '50%';
+homeTooltip.style.top = '120%';
+homeTooltip.style.transform = 'translateX(-50%)';
+homeTooltip.style.background = 'linear-gradient(90deg, #fff 0%, #b3c6e7 60%, #1a237e 100%)';
+homeTooltip.style.color = '#1a237e';
+homeTooltip.style.padding = '0.5em 1.2em';
+homeTooltip.style.borderRadius = '1em';
+homeTooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
+homeTooltip.style.fontFamily = "'Quicksand', sans-serif";
+homeTooltip.style.fontSize = '0.98rem';
+homeTooltip.style.fontWeight = '600';
+homeTooltip.style.textAlign = 'center';
+homeTooltip.style.whiteSpace = 'nowrap';
+homeTooltip.style.opacity = '0';
+homeTooltip.style.pointerEvents = 'none';
+homeTooltip.style.transition = 'opacity 0.18s';
+homeTooltip.style.zIndex = '10001';
+
+homeBtn.style.position = 'relative';
+homeBtn.appendChild(homeTooltip);
+
+homeBtn.addEventListener('mouseenter', function() {
+  homeTooltip.style.opacity = '1';
+});
+homeBtn.addEventListener('mouseleave', function() {
+  homeTooltip.style.opacity = '0';
+});
+
+// Ajoute les boutons à la barre
+console.log("Ajout des boutons à iconBar...");
+iconBar.appendChild(encoreBtn);
+iconBar.appendChild(mailBtn);
+iconBar.appendChild(homeBtn);
+console.log("Boutons ajoutés. iconBar contient:", iconBar.children.length, "éléments");
+
+console.log("Ajout d'iconBar à interpBox...");
+interpBox.appendChild(iconBar);
+console.log("iconBar ajouté à interpBox");
+
+} // <--- AJOUTE CETTE ACCOLADE pour fermer showInterpretationBox
+
+function callAIInterpretationAPI(cards, theme, question, callback) {
+  // Créer un prompt spécialisé selon le thème
+  const themePrompts = {
+    "Amour": `Tu es une experte tarologie avec beaucoup d'humour ! Analyse ce tirage côté AMOUR uniquement : relations, sentiments, rencontres. Sois directe, chaleureuse et un peu espiègle. Évite le blabla, va à l'essentiel avec le sourire !`,
+    
+    "Travail": `Tu es une experte tarologie avec du pep's ! Analyse ce tirage côté BOULOT uniquement : carrière, collègues, opportunités. Sois cash, motivante et rigolote. Pas de langue de bois, des conseils concrets avec de l'humour !`,
+    
+    "Argent": `Tu es une experte tarologie pleine de malice ! Analyse ce tirage côté FRIC uniquement : finances, gains, investissements. Sois franche, pragmatique et drôle. Du concret, pas de blabla, avec une pointe d'ironie !`,
+    
+    "Santé": `Tu es une experte tarologie bienveillante et fun ! Analyse ce tirage côté BIEN-ÊTRE uniquement : santé, énergie, équilibre. Sois douce mais directe, avec de l'humour léger. Des conseils simples et encourageants !`,
+    
+    "Spiritualité": `Tu es une experte tarologie zen et malicieuse ! Analyse ce tirage côté ÂME uniquement : éveil, intuition, énergies. Sois mystique mais terre-à-terre, avec une pointe d'humour cosmique !`,
+    
+    "Général": `Tu es une experte tarologie pleine de vie ! Donne une interprétation équilibrée avec humour et bienveillance. Sois synthétique, juste et fun !`
+  };
+
+  const specificPrompt = themePrompts[theme] || themePrompts["Général"];
+  
+  fetch('http://localhost:3000/api/open-proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      cartes: cards,
+      theme: theme,
+      question: question,
+      prompt_specifique: specificPrompt
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    callback(data);
+  })
+  .catch(err => {
+    callback({ result: "Erreur lors de l'appel à l'API. Veuillez réessayer plus tard." });
+  });
+}
+
+// Fonction pour scroll vers réservation
+function scrollToReservation() {
+  const reservation = document.getElementById('reservation');
+  if (reservation) {
+    reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Fonction pour déclencher le tirage IA
+function triggerTirageIA() {
+  const btnIA = document.querySelector('.header-btn-ia');
+  if (btnIA) {
+    btnIA.click();
+  } else {
+    // Fallback si le bouton n'existe pas encore
+    console.log('Bouton IA non trouvé, tentative alternative...');
+  }
+}
+
+// Connexion des boutons du header
+document.addEventListener('DOMContentLoaded', function() {
+  // Bouton "Réserver" -> scroll vers section reservation
+  const btnReserver = document.querySelector('.btn-pro');
+  if (btnReserver) {
+    btnReserver.addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToReservation();
+    });
+  }
+
+  // Bouton "Tirage IA" -> ouvre le popup de choix
+  const btnTirageIA = document.querySelector('.btn-ia');
+  if (btnTirageIA) {
+    btnTirageIA.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (typeof openTirageBox === 'function') {
+        openTirageBox();
+      }
+    });
+  }
+
+  // Tous les boutons "Réserver" des sections de détail -> scroll vers réservation et pré-sélectionne l'offre
+  const reservationButtons = document.querySelectorAll('.offre-btn-small');
+  reservationButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Pré-sélectionne l'offre correspondante dans le formulaire
+      const offreType = button.getAttribute('data-offre');
+      const offreSelect = document.getElementById('offre-select');
+      if (offreType && offreSelect) {
+        offreSelect.value = offreType;
+      }
+      
+      scrollToReservation();
+    });
+  });
+
+  // Gestion du bouton de réservation final
+  const submitReservationBtn = document.getElementById('submit-reservation');
+  if (submitReservationBtn) {
+    submitReservationBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Récupère les valeurs du formulaire
+      const clientName = document.getElementById('client-name').value.trim();
+      const clientEmail = document.getElementById('client-email').value.trim();
+      const reservationDate = document.getElementById('reservation-date').value;
+      const reservationTime = document.getElementById('reservation-time').value;
+      const selectedOffre = document.getElementById('offre-select').value;
+      
+      // Vérifie que tous les champs sont remplis
+      if (!clientName || !clientEmail || !reservationDate || !reservationTime || !selectedOffre) {
+        alert('Merci de remplir tous les champs pour réserver votre séance.');
+        return;
+      }
+      
+      // Construit l'URL de réservation avec les paramètres
+      const baseUrl = 'https://cal.com/christophe-sebille-yps3zm';
+      
+      // Combine date et heure pour Cal.com (format ISO)
+      const dateTimeString = reservationDate + 'T' + reservationTime + ':00';
+      const startTime = new Date(dateTimeString).toISOString();
+      
+      // Construit l'URL avec les paramètres
+      const params = new URLSearchParams({
+        'date': reservationDate,
+        'time': reservationTime,
+        'duration': '60', // Durée par défaut
+        'prefill[name]': clientName,
+        'prefill[email]': clientEmail,
+        'prefill[notes]': 'Service demandé: ' + selectedOffre
+      });
+      
+      const finalUrl = baseUrl + '?' + params.toString();
+      
+      // Ouvre la page de réservation dans un nouvel onglet
+      window.open(finalUrl, '_blank');
+      
+      // Efface le formulaire après la réservation
+      document.getElementById('client-name').value = '';
+      document.getElementById('client-email').value = '';
+      document.getElementById('reservation-date').value = '';
+      document.getElementById('reservation-time').value = '';
+      document.getElementById('offre-select').value = '';
+      
+      // Scroll vers le haut de la page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Gestion des liens "Témoignages" dans le menu (desktop ET mobile)
+  const temoignagesLinks = document.querySelectorAll('a[href="#temoignages"]');
+  const temoignagesSection = document.getElementById('temoignages-section');
+  
+  if (temoignagesLinks.length > 0 && temoignagesSection) {
+    temoignagesLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Toggle de l'affichage de la section témoignages
+        if (temoignagesSection.style.display === 'none' || temoignagesSection.style.display === '') {
+          temoignagesSection.style.display = 'block';
+          
+          // Scroll vers la section témoignages
+          temoignagesSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        } else {
+          temoignagesSection.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Gestion des liens "FAQ" dans le menu (desktop ET mobile)
+  const faqLinks = document.querySelectorAll('a[href="#faq"]');
+  const faqSection = document.getElementById('faq-section');
+  
+  if (faqLinks.length > 0 && faqSection) {
+    faqLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Toggle de l'affichage de la section FAQ
+        if (faqSection.style.display === 'none' || faqSection.style.display === '') {
+          faqSection.style.display = 'block';
+          
+          // Scroll vers la section FAQ avec un meilleur positionnement
+          setTimeout(function() {
+            const faqRect = faqSection.getBoundingClientRect();
+            const offsetTop = window.pageYOffset + faqRect.top - 100; // 100px de marge en haut
+            
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            });
+          }, 50); // Petit délai pour que l'affichage se fasse
+        } else {
+          faqSection.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Gestion des accordéons FAQ
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(function(item) {
+    const question = item.querySelector('.faq-question');
+    question.addEventListener('click', function() {
+      // Ferme tous les autres accordéons
+      faqItems.forEach(function(otherItem) {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+        }
+      });
+      
+      // Toggle l'accordéon actuel
+      item.classList.toggle('active');
+    });
+  });
+
+  // Gestion des filtres par catégorie FAQ
+  const faqCategories = document.querySelectorAll('.faq-category');
+  faqCategories.forEach(function(category) {
+    category.addEventListener('click', function() {
+      // Retire la classe active de toutes les catégories
+      faqCategories.forEach(function(cat) {
+        cat.classList.remove('active');
+      });
+      
+      // Ajoute la classe active à la catégorie cliquée
+      category.classList.add('active');
+      
+      // Filtre les questions selon la catégorie
+      const selectedCategory = category.getAttribute('data-category');
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(function(item) {
+        const itemCategory = item.getAttribute('data-category');
+        
+        if (selectedCategory === 'all' || itemCategory === selectedCategory) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+        
+        // Ferme tous les accordéons lors du filtrage
+        item.classList.remove('active');
+      });
+    });
+  });
+
+  // Gestion des liens "Consultations" dans le menu (desktop ET mobile)
+  const consultationsLinks = document.querySelectorAll('a[href="#consultations"]');
+  const consultationsSection = document.getElementById('consultations-section');
+  
+  if (consultationsLinks.length > 0 && consultationsSection) {
+    consultationsLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Retire l'effet de focus précédent s'il existe
+        consultationsSection.classList.remove('consultation-focus');
+        
+        // Scroll vers la section consultations - différent selon mobile/desktop
+        const isMobile = window.innerWidth <= 980;
+        if (isMobile) {
+          // Mobile : scroll vers le haut du cadre avec marge pour le header
+          const consultationsRect = consultationsSection.getBoundingClientRect();
+          const offsetTop = window.pageYOffset + consultationsRect.top - 80; // 80px pour le header fixe
+          
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        } else {
+          // Desktop : centré comme avant
+          consultationsSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+        
+        // Ajoute l'effet de focus après un délai pour le scroll
+        setTimeout(function() {
+          consultationsSection.classList.add('consultation-focus');
+          
+          // Retire l'effet après l'animation (2 secondes)
+          setTimeout(function() {
+            consultationsSection.classList.remove('consultation-focus');
+          }, 2000);
+        }, 500);
+      });
+    });
+  }
+});
+</script>
+</body>
+</html>

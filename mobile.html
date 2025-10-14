@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#667eea">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="apple-mobile-web-app-title" content="Opanoma">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/public/img/logo.png">
+  <link rel="icon" type="image/png" href="/public/img/logo.png">
+  <title>L'Œil d'Opanoma - Version Mobile</title>
+  
+  <!-- Fonts optimisés pour mobile -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS principal + mobile -->
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="stylesheet" href="/src/newsletter-mobile.css">
+  
+  <style>
+    /* 📱 CSS MOBILE-FIRST SPÉCIFIQUE */
+    
+    /* Variables pour mobile */
+    :root {
+      --mobile-padding: 1rem;
+      --mobile-border-radius: 16px;
+      --touch-target: 48px; /* Taille recommandée Apple/Google */
+    }
+    
+    /* Base mobile */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+    
+    /* Container mobile */
+    .mobile-container {
+      max-width: 100vw;
+      padding: var(--mobile-padding);
+      margin: 0 auto;
+    }
+    
+    /* Header mobile optimisé */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem var(--mobile-padding);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .mobile-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      text-decoration: none;
+    }
+    
+    .mobile-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #e75480, #ff9800);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    /* Hero mobile */
+    .mobile-hero {
+      text-align: center;
+      padding: 3rem var(--mobile-padding) 2rem;
+      background: rgba(255,255,255,0.05);
+      margin: var(--mobile-padding);
+      border-radius: var(--mobile-border-radius);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .mobile-hero h1 {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff, #e2e8f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    
+    .mobile-hero p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    /* CTA mobile optimisé */
+    .mobile-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #e75480, #ff9800);
+      color: white;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 8px 24px rgba(231,84,128,0.3);
+      transition: all 0.3s ease;
+      min-height: var(--touch-target);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    
+    .mobile-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(231,84,128,0.4);
+    }
+    
+    /* Section features mobile */
+    .mobile-features {
+      display: grid;
+      gap: 1rem;
+      padding: 2rem var(--mobile-padding);
+    }
+    
+    .mobile-feature {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--mobile-border-radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .mobile-feature:hover {
+      transform: translateY(-4px);
+    }
+    
+    .mobile-feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .mobile-feature h3 {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .mobile-feature p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    
+    /* Footer mobile */
+    .mobile-footer {
+      background: rgba(0,0,0,0.2);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 2rem var(--mobile-padding);
+      text-align: center;
+      margin-top: 3rem;
+    }
+    
+    .mobile-footer p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin: 0;
+    }
+    
+    /* Animations mobile */
+    .mobile-fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: mobileFadeIn 0.8s ease forwards;
+    }
+    
+    @keyframes mobileFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* PWA Style */
+    .pwa-install-prompt {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      padding: 1rem;
+      border-radius: var(--mobile-border-radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+      text-align: center;
+      transform: translateY(100px);
+      transition: transform 0.3s ease;
+      z-index: 2000;
+    }
+    
+    .pwa-install-prompt.show {
+      transform: translateY(0);
+    }
+    
+    .pwa-install-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      margin-left: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    
+    /* Media queries pour différents mobiles */
+    @media screen and (max-width: 360px) {
+      .mobile-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .mobile-hero p {
+        font-size: 1rem;
+      }
+      
+      .mobile-cta {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+    
+    @media screen and (min-width: 768px) {
+      .mobile-features {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .mobile-container {
+        max-width: 1200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Mobile -->
+  <header class="mobile-header">
+    <a href="#" class="mobile-logo">
+      <div class="mobile-logo-icon">🔮</div>
+      <span>L'Œil d'Opanoma</span>
+    </a>
+  </header>
+  
+  <!-- Container Principal -->
+  <div class="mobile-container">
+    <!-- Hero Section -->
+    <section class="mobile-hero mobile-fade-in">
+      <h1>Votre Guidance Spirituelle</h1>
+      <p>Découvrez les secrets du tarot avec Manon, votre guide bienveillante vers la sagesse ancestrale.</p>
+      <a href="#newsletter" class="mobile-cta">✨ Recevoir ma guidance</a>
+    </section>
+    
+    <!-- Features -->
+    <section class="mobile-features">
+      <div class="mobile-feature mobile-fade-in" style="animation-delay: 0.2s">
+        <span class="mobile-feature-icon">🌙</span>
+        <h3>Tirage Personnalisé</h3>
+        <p>Chaque semaine, une carte spécialement tirée pour vous avec son interprétation détaillée.</p>
+      </div>
+      
+      <div class="mobile-feature mobile-fade-in" style="animation-delay: 0.4s">
+        <span class="mobile-feature-icon">🤖</span>
+        <h3>Intelligence Artificielle</h3>
+        <p>Des interprétations uniques générées par IA et personnalisées selon votre énergie.</p>
+      </div>
+      
+      <div class="mobile-feature mobile-fade-in" style="animation-delay: 0.6s">
+        <span class="mobile-feature-icon">📧</span>
+        <h3>Newsletter Hebdomadaire</h3>
+        <p>Recevez directement dans votre boîte mail votre guidance spirituelle chaque lundi.</p>
+      </div>
+    </section>
+    
+    <!-- Newsletter Section Mobile Optimisée -->
+    <section id="newsletter" class="newsletter-mobile-enhanced mobile-fade-in" style="animation-delay: 0.8s">
+      <h2 class="newsletter-mobile-title">🔮 Votre Guidance Hebdomadaire</h2>
+      <p class="newsletter-mobile-subtitle">Inscrivez-vous pour recevoir chaque lundi votre carte de tarot personnalisée</p>
+      
+      <form class="newsletter-mobile-form" id="mobile-newsletter-form">
+        <div class="newsletter-mobile-input-group">
+          <input 
+            type="text" 
+            class="newsletter-mobile-input" 
+            id="mobile-name"
+            placeholder="Votre prénom"
+            required
+          >
+        </div>
+        
+        <div class="newsletter-mobile-input-group">
+          <input 
+            type="email" 
+            class="newsletter-mobile-input" 
+            id="mobile-email"
+            placeholder="votre@email.com"
+            required
+          >
+        </div>
+        
+        <button type="submit" class="newsletter-mobile-button" id="mobile-submit">
+          ✨ Je veux ma guidance
+        </button>
+        
+        <div class="newsletter-mobile-message" id="mobile-message"></div>
+      </form>
+    </section>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="mobile-footer">
+    <p>&copy; 2025 L'Œil d'Opanoma - Guidance spirituelle avec bienveillance</p>
+  </footer>
+  
+  <!-- PWA Install Prompt -->
+  <div class="pwa-install-prompt" id="pwa-prompt" style="display: none;">
+    📱 Installer l'app pour un accès rapide à votre guidance !
+    <button class="pwa-install-btn" id="pwa-install">Installer</button>
+    <button class="pwa-install-btn" id="pwa-dismiss" style="background: #ccc; color: #666;">Plus tard</button>
+  </div>
+  
+  <script>
+    // 📱 JAVASCRIPT MOBILE-OPTIMISÉ
+    
+    // Gestion du formulaire newsletter mobile
+    document.getElementById('mobile-newsletter-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('mobile-name').value.trim();
+      const email = document.getElementById('mobile-email').value.trim();
+      const submitBtn = document.getElementById('mobile-submit');
+      const messageEl = document.getElementById('mobile-message');
+      
+      // Validation
+      if (!name || !email) {
+        showMessage('Veuillez remplir tous les champs', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showMessage('Format d\'email invalide', 'error');
+        return;
+      }
+      
+      // Loading state
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+      
+      try {
+        // Appel API (même endpoint que la version desktop)
+        const response = await fetch('/api/newsletter-subscribe.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            first_name: name
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('🎉 Inscription réussie ! Vérifiez votre email.', 'success');
+          this.reset();
+          
+          // Analytics/tracking mobile
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'newsletter_signup_mobile', {
+              event_category: 'engagement',
+              event_label: 'mobile_form'
+            });
+          }
+          
+          // Haptic feedback sur iOS
+          if ('vibrate' in navigator) {
+            navigator.vibrate([100, 50, 100]);
+          }
+          
+        } else {
+          showMessage(result.message || 'Erreur lors de l\'inscription', 'error');
+        }
+        
+      } catch (error) {
+        console.error('Erreur:', error);
+        showMessage('Erreur de connexion. Réessayez plus tard.', 'error');
+      } finally {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+    });
+    
+    function showMessage(text, type) {
+      const messageEl = document.getElementById('mobile-message');
+      messageEl.textContent = text;
+      messageEl.className = `newsletter-mobile-message ${type} show`;
+      
+      setTimeout(() => {
+        messageEl.classList.remove('show');
+      }, 5000);
+    }
+    
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    
+    // PWA Install Prompt
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('pwa-prompt').style.display = 'block';
+      
+      setTimeout(() => {
+        document.getElementById('pwa-prompt').classList.add('show');
+      }, 2000);
+    });
+    
+    document.getElementById('pwa-install').addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+          console.log('PWA installée');
+        }
+        
+        deferredPrompt = null;
+        document.getElementById('pwa-prompt').classList.remove('show');
+      }
+    });
+    
+    document.getElementById('pwa-dismiss').addEventListener('click', () => {
+      document.getElementById('pwa-prompt').classList.remove('show');
+    });
+    
+    // Smooth scrolling pour mobile
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Optimisation des performances mobiles
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        // Lazy loading des animations
+        const elements = document.querySelectorAll('.mobile-fade-in');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationPlayState = 'running';
+            }
+          });
+        });
+        
+        elements.forEach(el => {
+          el.style.animationPlayState = 'paused';
+          observer.observe(el);
+        });
+      });
+    }
+    
+    // Support mode hors ligne basique
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch(() => console.log('Service Worker registration failed'));
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+/* 📱 AMÉLIORATIONS MOBILE POUR NEWSLETTER */
+
+/* Ajouts CSS pour optimiser mobile */
+
+/* Amélioration responsive newsletter existante */
+@media screen and (max-width: 768px) {
+  .newsletter-section {
+    margin: 2em 1em !important;
+    padding: 2em 1.2em !important;
+    border-radius: 1.2em !important;
+  }
+  
+  .newsletter-title {
+    font-size: 1.8rem !important;
+    margin-bottom: 0.8em !important;
+    letter-spacing: 1px !important;
+  }
+  
+  .newsletter-desc {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.3em !important;
+  }
+  
+  .newsletter-form {
+    flex-direction: column !important;
+    gap: 1em !important;
+    align-items: center !important;
+  }
+  
+  .newsletter-input {
+    width: 100% !important;
+    max-width: 300px !important;
+    min-width: unset !important;
+    font-size: 16px !important; /* Évite le zoom iOS */
+    padding: 0.8em 1.2em !important;
+  }
+  
+  .newsletter-btn {
+    width: 100% !important;
+    max-width: 300px !important;
+    padding: 0.8em 1.5em !important;
+    font-size: 1rem !important;
+    letter-spacing: 1px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .newsletter-section {
+    margin: 1.5em 0.8em !important;
+    padding: 1.8em 1em !important;
+  }
+  
+  .newsletter-title {
+    font-size: 1.6rem !important;
+  }
+  
+  .newsletter-desc {
+    font-size: 0.95rem !important;
+  }
+  
+  .newsletter-input,
+  .newsletter-btn {
+    max-width: 280px !important;
+  }
+}
+
+/* 📱 NOUVEAU FORMULAIRE MOBILE-FIRST COMPLET */
+.newsletter-mobile-enhanced {
+  position: relative;
+  margin: 2em auto;
+  max-width: 400px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 2em 1.5em;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.newsletter-mobile-enhanced::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #e75480, #ff9800);
+  border-radius: 22px;
+  z-index: -1;
+  opacity: 0.7;
+  filter: blur(8px);
+}
+
+.newsletter-mobile-title {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 0.5em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.newsletter-mobile-subtitle {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 1.5em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.newsletter-mobile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.newsletter-mobile-input-group {
+  position: relative;
+}
+
+.newsletter-mobile-input {
+  width: 100%;
+  padding: 1em 1.2em;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 15px;
+  background: rgba(255,255,255,0.9);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px; /* Important pour éviter zoom iOS */
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.newsletter-mobile-input:focus {
+  border-color: #e75480;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 0 0 4px rgba(231,84,128,0.2);
+  transform: translateY(-2px);
+}
+
+.newsletter-mobile-input::placeholder {
+  color: #666;
+  opacity: 0.8;
+}
+
+.newsletter-mobile-button {
+  width: 100%;
+  padding: 1em 1.5em;
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  letter-spacing: 0.5px;
+}
+
+.newsletter-mobile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(102,126,234,0.4);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.newsletter-mobile-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102,126,234,0.3);
+}
+
+.newsletter-mobile-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* État de chargement */
+.newsletter-mobile-button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.newsletter-mobile-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Message de confirmation mobile */
+.newsletter-mobile-message {
+  margin-top: 1em;
+  padding: 0.8em 1em;
+  border-radius: 10px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.newsletter-mobile-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.newsletter-mobile-message.success {
+  background: rgba(76,175,80,0.9);
+  color: white;
+  box-shadow: 0 4px 16px rgba(76,175,80,0.3);
+}
+
+.newsletter-mobile-message.error {
+  background: rgba(244,67,54,0.9);
+  color: white;
+  box-shadow: 0 4px 16px rgba(244,67,54,0.3);
+}
+
+/* Améliorations tactiles */
+.newsletter-mobile-input,
+.newsletter-mobile-button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Support iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  .newsletter-mobile-input {
+    font-size: 16px !important; /* Empêche le zoom */
+  }
+}
+
+/* Mode sombre mobile */
+@media (prefers-color-scheme: dark) {
+  .newsletter-mobile-enhanced {
+    background: rgba(30,30,40,0.95);
+    border-color: rgba(255,255,255,0.15);
+  }
+  
+  .newsletter-mobile-input {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-color: rgba(255,255,255,0.2);
+  }
+  
+  .newsletter-mobile-input::placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+}
+
+/* Animations d'entrée */
+.newsletter-mobile-enhanced {
+  animation: mobileSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mobileSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive pour très petits écrans */
+@media screen and (max-width: 360px) {
+  .newsletter-mobile-enhanced {
+    margin: 1.5em 0.5em;
+    padding: 1.5em 1em;
+  }
+  
+  .newsletter-mobile-title {
+    font-size: 1.6rem;
+  }
+  
+  .newsletter-mobile-input,
+  .newsletter-mobile-button {
+    padding: 0.9em 1em;
+  }
+}
