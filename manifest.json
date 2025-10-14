@@ -2,30 +2,30 @@
   "name": "L'Œil d'Opanoma - Guidance Spirituelle",
   "short_name": "Opanoma",
   "description": "Votre guidance spirituelle personnalisée avec le tarot et l'intelligence artificielle",
-  "start_url": "/mobile.html",
+  "start_url": "mobile.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "./",
   "lang": "fr",
   "dir": "ltr",
   
   "icons": [
     {
-      "src": "/public/img/logo.png",
+      "src": "public/img/logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/public/img/logo.png", 
+      "src": "public/img/logo.png", 
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/public/img/logo.png",
+      "src": "public/img/logo.png",
       "sizes": "180x180", 
       "type": "image/png",
       "purpose": "apple-touch-icon"
@@ -34,13 +34,13 @@
   
   "screenshots": [
     {
-      "src": "/public/img/screenshot-mobile.jpg",
+      "src": "public/img/screenshot-mobile.jpg",
       "sizes": "375x812",
       "type": "image/jpeg",
       "form_factor": "narrow"
     },
     {
-      "src": "/public/img/screenshot-tablet.jpg", 
+      "src": "public/img/screenshot-tablet.jpg", 
       "sizes": "768x1024",
       "type": "image/jpeg",
       "form_factor": "wide"
@@ -54,10 +54,10 @@
       "name": "Newsletter",
       "short_name": "Newsletter", 
       "description": "S'inscrire à la newsletter hebdomadaire",
-      "url": "/mobile.html#newsletter",
+      "url": "mobile.html#newsletter",
       "icons": [
         {
-          "src": "/public/img/logo.png",
+          "src": "public/img/logo.png",
           "sizes": "96x96"
         }
       ]
@@ -66,10 +66,10 @@
       "name": "Tirage",
       "short_name": "Tirage",
       "description": "Faire un tirage de tarot", 
-      "url": "/mobile.html#tirage",
+      "url": "mobile.html#tirage",
       "icons": [
         {
-          "src": "/public/img/logo.png", 
+          "src": "public/img/logo.png", 
           "sizes": "96x96"
         }
       ]
@@ -80,7 +80,7 @@
   "prefer_related_applications": false,
   
   "share_target": {
-    "action": "/mobile.html",
+    "action": "mobile.html",
     "method": "GET",
     "params": {
       "title": "title",
