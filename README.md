@@ -57,3 +57,18 @@ Pour corriger ces erreurs :
 3. **Re-déployer la branche `main`** une fois les liens corrigés (`git push origin main`).
 
 Ces étapes permettent de publier rapidement la version hébergée de votre site directement depuis `main`, sans configuration de branche supplémentaire, tout en s’assurant que les assets sont correctement servis sur GitHub Pages.
+
+### Tester le fonctionnement en conditions "en ligne"
+
+Pour reproduire le comportement de GitHub Pages depuis votre machine ou valider qu’un déploiement n’a pas de ressources manquantes :
+
+1. **Lancer un serveur statique depuis le dossier parent du projet** afin d’exposer le site sous un sous-répertoire, comme le fait GitHub Pages :
+   ```bash
+   cd ..
+   python -m http.server 4173
+   ```
+   Le site est alors accessible à l’adresse [http://localhost:4173/opanoma-prod/](http://localhost:4173/opanoma-prod/).
+2. **Ouvrir l’URL ci-dessus dans un navigateur** pour vérifier que les styles, scripts (`src/card-animations.js`), vidéos (`public/fond10.mp4`) et icônes se chargent correctement.
+3. **Surveiller la console du navigateur** : aucune erreur 404 ne doit apparaître. Si un fichier est manquant, vérifiez son chemin dans le dépôt.
+
+Cette procédure reproduit fidèlement la structure d’URL qu’utilise GitHub Pages (`/<nom-du-repo>/...`) et permet de détecter en local les erreurs de chemin avant même la mise en ligne.

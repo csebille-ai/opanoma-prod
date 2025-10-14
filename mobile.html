@@ -515,7 +515,8 @@
     // Support mode hors ligne basique
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        const swUrl = new URL('sw.js', window.location.href);
+        navigator.serviceWorker.register(swUrl.pathname + swUrl.search)
           .then(() => console.log('Service Worker registered'))
           .catch(() => console.log('Service Worker registration failed'));
       });
