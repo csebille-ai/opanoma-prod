@@ -62,13 +62,22 @@ Ces étapes permettent de publier rapidement la version hébergée de votre site
 
 Pour reproduire le comportement de GitHub Pages depuis votre machine ou valider qu’un déploiement n’a pas de ressources manquantes :
 
-1. **Lancer un serveur statique depuis le dossier parent du projet** afin d’exposer le site sous un sous-répertoire, comme le fait GitHub Pages :
+1. **Lancer un serveur statique depuis le dossier parent du projet** afin d’exposer le site sous un sous-répertoire, comme le fait GitHub Pages. Deux approches sont possibles :
+   - Se placer dans le dossier parent et lancer directement :
+     ```bash
+     cd ..
+     python -m http.server 4173
+     ```
+   - Ou, si vous préférez rester dans le dossier du projet, utilisez l’option `--directory` pour cibler le parent :
+     ```bash
+     python -m http.server 4173 --directory ..
+     ```
+   Dans les deux cas, adaptez `opanoma-prod` à **votre** nom de dossier (par exemple `opanoma-fresh`) lorsque vous consultez les URLs.
+2. **Ouvrir l’URL `http://localhost:4173/<nom-du-dossier>/` dans un navigateur** pour vérifier que les styles, scripts (`src/card-animations.js`), vidéos (`public/fond10.mp4`) et icônes se chargent correctement.
+   Vous pouvez également vérifier une ressource précise en remplaçant `<nom-du-dossier>` par le bon dossier :
    ```bash
-   cd ..
-   python -m http.server 4173
+   curl -I http://localhost:4173/<nom-du-dossier>/public/fond10.mp4
    ```
-   Le site est alors accessible à l’adresse [http://localhost:4173/opanoma-prod/](http://localhost:4173/opanoma-prod/).
-2. **Ouvrir l’URL ci-dessus dans un navigateur** pour vérifier que les styles, scripts (`src/card-animations.js`), vidéos (`public/fond10.mp4`) et icônes se chargent correctement.
 3. **Surveiller la console du navigateur** : aucune erreur 404 ne doit apparaître. Si un fichier est manquant, vérifiez son chemin dans le dépôt.
 
 Cette procédure reproduit fidèlement la structure d’URL qu’utilise GitHub Pages (`/<nom-du-repo>/...`) et permet de détecter en local les erreurs de chemin avant même la mise en ligne.
