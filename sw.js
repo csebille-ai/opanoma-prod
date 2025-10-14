@@ -2,17 +2,33 @@
 // Version simple et efficace
 
 const CACHE_NAME = 'opanoma-mobile-v1';
+const BASE_URL = self.registration ? self.registration.scope : new URL('./', self.location.href).href;
+const BASE_PATH = new URL('./', BASE_URL).pathname;
+const MOBILE_PATH = new URL('mobile.html', BASE_URL).pathname;
+const INDEX_PATH = new URL('index.html', BASE_URL).pathname;
+const API_PREFIX = new URL('api', BASE_URL).pathname;
+
+function resolveAsset(path) {
+  return new URL(path, BASE_URL).toString();
+}
+
+const ROOT_ASSET = resolveAsset('./');
+const MOBILE_ASSET = resolveAsset('mobile.html');
+const INDEX_ASSET = resolveAsset('index.html');
+
+const LOGO_ASSET = resolveAsset('public/img/logo.png');
+
 const ASSETS_TO_CACHE = [
-  '/',
-  '/mobile.html',
-  '/index.html',
-  '/src/style.css',
-  '/src/newsletter-mobile.css',
-  '/public/img/logo.png',
+  ROOT_ASSET,
+  MOBILE_ASSET,
+  INDEX_ASSET,
+  resolveAsset('src/style.css'),
+  resolveAsset('src/newsletter-mobile.css'),
+  LOGO_ASSET,
   // Cartes essentielles pour offline
-  '/public/img/majors/00-le-mat.webp',
-  '/public/img/majors/01-le-bateleur.webp',
-  '/public/img/majors/02-la-papesse.webp'
+  resolveAsset('public/img/majors/00-le-mat.webp'),
+  resolveAsset('public/img/majors/01-le-bateleur.webp'),
+  resolveAsset('public/img/majors/02-la-papesse.webp')
 ];
 
 // Installation du Service Worker
@@ -62,7 +78,11 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   
   // Ignorer les requêtes non-GET et les APIs
-  if (request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+  if (
+    request.method !== 'GET' ||
+    url.pathname === API_PREFIX ||
+    url.pathname.startsWith(`${API_PREFIX}/`)
+  ) {
     return;
   }
   
@@ -94,7 +114,7 @@ self.addEventListener('fetch', event => {
             
             // Page de fallback pour navigation hors ligne
             if (request.destination === 'document') {
-              return caches.match('/mobile.html');
+              return caches.match(MOBILE_ASSET);
             }
             
             // Image de fallback
@@ -121,7 +141,7 @@ function shouldCache(request) {
   }
   
   // Cacher les pages importantes
-  if (url.pathname === '/' || url.pathname === '/mobile.html') {
+  if (url.pathname === BASE_PATH || url.pathname === MOBILE_PATH || url.pathname === INDEX_PATH) {
     return true;
   }
   
@@ -140,8 +160,8 @@ self.addEventListener('push', event => {
   if (event.data) {
     const options = {
       body: event.data.text(),
-      icon: '/public/img/logo.png',
-      badge: '/public/img/logo.png',
+      icon: LOGO_ASSET,
+      badge: LOGO_ASSET,
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -151,12 +171,12 @@ self.addEventListener('push', event => {
         {
           action: 'explore',
           title: 'Voir ma guidance',
-          icon: '/public/img/logo.png'
+          icon: LOGO_ASSET
         },
         {
           action: 'close',
           title: 'Fermer',
-          icon: '/public/img/logo.png'
+          icon: LOGO_ASSET
         }
       ]
     };
@@ -170,11 +190,11 @@ self.addEventListener('push', event => {
 // Gestion des clics sur notifications
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  
+
   if (event.action === 'explore') {
     // Ouvrir l'app
     event.waitUntil(
-      clients.openWindow('/mobile.html')
+      clients.openWindow(MOBILE_ASSET)
     );
   }
 });

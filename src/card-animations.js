@@ -203,11 +203,11 @@ class CardAnimations {
             if (popup.querySelector('.popup-video-background')) return;
 
             // Détermine la vidéo à utiliser selon le type de popup
-            let videoSrc = '/public/roule.mp4'; // Par défaut pour interprétation et sélection de cartes
+            let videoSrc = './public/roule.mp4'; // Par défaut pour interprétation et sélection de cartes
             
             // Si c'est un popup de choix de thèmes/tirages (tarot-popup), utilise hero.mp4
             if (popupType === 'tarot-popup') {
-                videoSrc = '/public/hero.mp4';
+                videoSrc = './public/hero.mp4';
             }
 
             // Crée l'élément vidéo de fond
