@@ -1648,7 +1648,7 @@ console.log("iconBar ajouté à interpBox");
 } // <--- AJOUTE CETTE ACCOLADE pour fermer showInterpretationBox
 
 function callAIInterpretationAPI(cards, theme, question, callback) {
-  fetch('http://localhost:3000/api/open-proxy', {
+  fetch('https://api-opanoma.csebille.workers.dev/api/open-proxy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -1710,3 +1710,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
