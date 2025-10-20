@@ -604,9 +604,12 @@
 
   const stage = document.createElement('div');
   stage.style.display = 'flex';
-  stage.style.justifyContent = 'center';
+  // align grid to the left with a small offset so cards are 'collées' à gauche
+  stage.style.justifyContent = 'flex-start';
   // more vertical padding to add breathing room above/below the grid
   stage.style.padding = '12px 0 12px 0';
+  // add a left padding so the grid is not flush to the popup edge
+  stage.style.paddingLeft = '12px';
 
   const grid = document.createElement('div');
   grid.style.display = 'grid';
@@ -741,7 +744,7 @@
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px' });
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', paddingLeft: '12px' });
               overlay.appendChild(container);
               document.body.appendChild(overlay);
             }
