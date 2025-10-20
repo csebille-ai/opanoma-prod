@@ -291,7 +291,7 @@
               Object.assign(para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.9)', flex: '1 1 auto', fontFamily: forcedFont });
               const btn = document.createElement('button'); btn.textContent = 'Choisir ' + count + ' cartes';
               Object.assign(btn.style, {
-                padding: '5px 8px',
+                padding: '4px 8px',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 border: 'none',
@@ -301,7 +301,10 @@
                 boxShadow: '0 5px 12px rgba(0,0,0,0.28)',
                 transition: 'transform 160ms ease, box-shadow 160ms ease',
                 fontFamily: forcedFont,
-                fontSize: '0.85rem'
+                fontSize: '0.85rem',
+                display: 'inline-block',
+                whiteSpace: 'nowrap',
+                alignSelf: 'flex-start'
               });
               // subtle hover lift
               btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
@@ -343,7 +346,7 @@
             p3para.innerHTML = `Le tirage à trois cartes offre une lecture claire et rapide d’une situation. Il met en lumière le passé ou le contexte, le défi présent et la tendance à venir. Cette méthode simple permet d’obtenir une réponse précise tout en ouvrant une réflexion plus profonde. Chaque carte dialogue avec les autres pour révéler les influences en jeu et les pistes d’évolution possibles. C’est un tirage idéal pour éclairer une question ciblée ou prendre une décision en conscience.`;
             Object.assign(p3para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p3btn = document.createElement('button'); p3btn.textContent = 'Choisir 3 cartes';
-            Object.assign(p3btn.style, { padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem' });
+            Object.assign(p3btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p3btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p3btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
             p3btn.addEventListener('click', function () { try { if (typeof showTirageDisplay === 'function') showTirageDisplay(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showTirageDisplay === 'function') window.PopupAdapter.showTirageDisplay(3); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
@@ -371,7 +374,7 @@
             p5para.innerHTML = 'Le tirage à cinq cartes offre une vision complète d’une situation en explorant plusieurs niveaux d\’influence. Chaque carte éclaire un aspect distinct : les forces favorables, les obstacles, les causes profondes, la tendance à venir et la synthèse ou le conseil final. Ce tirage met en lumière le jeu des équilibres, des tensions et des prises de conscience nécessaires pour avancer. Plus détaillé qu’un tirage simple, il permet d’obtenir une lecture nuancée et stratégique, alliant intuition et analyse.';
             Object.assign(p5para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p5btn = document.createElement('button'); p5btn.textContent = 'Choisir 5 cartes';
-            Object.assign(p5btn.style, { padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem' });
+            Object.assign(p5btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p5btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p5btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
             p5btn.addEventListener('click', function () { try { if (typeof showTirageDisplay === 'function') showTirageDisplay(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showTirageDisplay === 'function') window.PopupAdapter.showTirageDisplay(5); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
