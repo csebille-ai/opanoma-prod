@@ -512,9 +512,9 @@
           background: 'linear-gradient(180deg,#eee,#ddd)',
           display: 'flex',
           alignItems: 'center',
-          // align image to left inside slot and add a small left padding
-          justifyContent: 'flex-start',
-          paddingLeft: '6px',
+        // align image to left inside slot with no left padding so it hugs the edge
+        justifyContent: 'flex-start',
+        paddingLeft: '0px',
           width: '80px',
           height: '120px'
         });
@@ -610,8 +610,8 @@
   stage.style.justifyContent = 'flex-start';
   // more vertical padding to add breathing room above/below the grid
   stage.style.padding = '12px 0 12px 0';
-  // add a left padding so the grid is not flush to the popup edge
-  stage.style.paddingLeft = '12px';
+  // no left padding — cards should hug the left edge
+  stage.style.paddingLeft = '0px';
 
   const grid = document.createElement('div');
   grid.style.display = 'grid';
@@ -668,7 +668,7 @@
           alignItems: 'center',
           // align image to left inside slot and add a small left padding
           justifyContent: 'flex-start',
-          paddingLeft: '6px',
+          paddingLeft: '0px',
           width: cardW + 'px',
           height: cardH + 'px'
         });
@@ -748,7 +748,7 @@
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', paddingLeft: '12px' });
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', paddingLeft: '0px' });
               overlay.appendChild(container);
               document.body.appendChild(overlay);
             }
