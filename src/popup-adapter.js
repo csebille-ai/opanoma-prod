@@ -85,9 +85,10 @@
   }
 
   function showThemeChoice(onDone) {
-    const container = document.createElement('div');
-    container.style.textAlign = 'center';
-    container.style.padding = '12px';
+  const container = document.createElement('div');
+  container.style.textAlign = 'center';
+  // small left padding so content is slightly inset but tight to the left
+  container.style.padding = '12px 12px 12px 4px';
 
     const title = document.createElement('h2');
     title.className = 'pm-popup-title';
@@ -591,8 +592,8 @@
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
   container.style.textAlign = 'center';
-  // increase internal padding so the popup appears less cramped left/right and bottom
-  container.style.padding = '18px';
+  // small left padding so content is slightly inset but tight to the left
+  container.style.padding = '18px 18px 18px 4px';
   // request a larger popup frame from PopupManager (if present)
   try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
   // also set min visual dimensions so a simple container fallback looks bigger
@@ -748,7 +749,7 @@
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', paddingLeft: '0px' });
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px' });
               overlay.appendChild(container);
               document.body.appendChild(overlay);
             }
