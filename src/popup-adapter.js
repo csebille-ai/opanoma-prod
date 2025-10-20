@@ -312,10 +312,14 @@
               btn.addEventListener('click', function () {
                 try {
                   // open the tirage display for the chosen count
-                  if (typeof showTirageDisplay === 'function') {
-                    showTirageDisplay(count);
-                  } else if (window.PopupAdapter && typeof window.PopupAdapter.showTirageDisplay === 'function') {
-                    window.PopupAdapter.showTirageDisplay(count);
+                  // open the full 22-card deck popup and mark the chosen draw count
+                  if (typeof showDeckPopup === 'function') {
+                      showDeckPopup(count);
+                  } else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') {
+                      window.PopupAdapter.showDeckPopup(count);
+                  } else if (typeof showTirageDisplay === 'function') {
+                      // fallback: open tirage with given count
+                      showTirageDisplay(count);
                   }
                 } catch (e) { console && console.warn && console.warn('open tirage error', e); }
               });
@@ -349,7 +353,7 @@
             Object.assign(p3btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p3btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p3btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
-            p3btn.addEventListener('click', function () { try { if (typeof showTirageDisplay === 'function') showTirageDisplay(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showTirageDisplay === 'function') window.PopupAdapter.showTirageDisplay(3); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
+            p3btn.addEventListener('click', function () { try { if (typeof showDeckPopup === 'function') showDeckPopup(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(3); else if (typeof showTirageDisplay === 'function') showTirageDisplay(3); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
             panelThree.appendChild(p3h); panelThree.appendChild(p3para); panelThree.appendChild(p3btn);
             // Panel B: 5-card tirage descriptive panel (longer explanatory paragraph provided)
             const panelFive = document.createElement('div');
@@ -377,7 +381,7 @@
             Object.assign(p5btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p5btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p5btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
-            p5btn.addEventListener('click', function () { try { if (typeof showTirageDisplay === 'function') showTirageDisplay(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showTirageDisplay === 'function') window.PopupAdapter.showTirageDisplay(5); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
+            p5btn.addEventListener('click', function () { try { if (typeof showDeckPopup === 'function') showDeckPopup(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(5); else if (typeof showTirageDisplay === 'function') showTirageDisplay(5); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
             panelFive.appendChild(p5h); panelFive.appendChild(p5para); panelFive.appendChild(p5btn);
 
             grid.appendChild(panelThree); grid.appendChild(panelFive);
@@ -573,6 +577,43 @@
     }, 50);
 
     return popupHandle;
+  }
+
+  // New: show full deck popup with 22 slots pre-filled with verso image
+  function showDeckPopup(chosenCount) {
+    try {
+      const total = 22;
+      const handle = showTirageDisplay(total);
+      // try to populate with the verso image after layout
+      setTimeout(() => {
+        try {
+          const base = './public/img/majors/verso.webp';
+          // If window.PopupAdapter.placeCardInSlot is available, use it
+          if (window.PopupAdapter && typeof window.PopupAdapter.placeCardInSlot === 'function') {
+            for (let i = 0; i < total; i++) {
+              try { window.PopupAdapter.placeCardInSlot(i, base, 'verso'); } catch (e) {}
+            }
+          } else {
+            // fallback: find slots and append images directly
+            const slots = document.querySelectorAll('.pm-card-slot');
+            for (let i = 0; i < slots.length && i < total; i++) {
+              try {
+                slots[i].innerHTML = '';
+                const img = document.createElement('img');
+                img.src = base;
+                img.alt = 'verso';
+                img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover';
+                slots[i].appendChild(img);
+              } catch (e) {}
+            }
+          }
+        } catch (e) { console && console.warn && console.warn('showDeckPopup fill error', e); }
+      }, 80);
+      // expose choice if needed on PopupAdapter
+      window.PopupAdapter = window.PopupAdapter || {};
+      window.PopupAdapter.showDeckPopup = showDeckPopup;
+      return handle;
+    } catch (e) { console && console.warn && console.warn('showDeckPopup error', e); }
   }
 
   // Message rotator state and helpers
