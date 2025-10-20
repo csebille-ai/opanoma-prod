@@ -290,6 +290,57 @@
   // expose theme button refs so stopThemeMessages can reset visuals
   window.PopupAdapter._themeButtons = themeButtons;
 
+  // helper: return the last measured deck popup size/rect (if any)
+  try {
+    window.PopupAdapter.getLastDeckSize = function () {
+      try {
+        return window.PopupAdapter._lastDeckPopupRect || window.PopupAdapter._lastDeckPopupSize || null;
+      } catch (e) { return null; }
+    };
+
+    // helper: ask the user (confirm) and apply the stored deck size to the active deck popup wrapper/container
+    window.PopupAdapter.confirmAndApplyLastDeckSize = function () {
+      try {
+        const rect = window.PopupAdapter.getLastDeckSize();
+        if (!rect) {
+          return { ok: false, reason: 'no-stored-size' };
+        }
+        const msg = `Taille détectée pour le tirage : ${rect.width}px × ${rect.height}px.\nAppliquer cette taille au popup tirage maintenant ?`;
+        // use window.confirm so the user is explicitly warned in-page
+        const apply = (typeof window.confirm === 'function') ? window.confirm(msg) : true;
+        if (!apply) return { ok: false, reason: 'user-declined' };
+
+        // find candidates: recent interp frame, any .pa-deck-overlay-fallback, or last opened container
+        const candidates = [];
+        try { const w = document.querySelector('.pa-deck-overlay-fallback'); if (w) candidates.push(w); } catch (e) {}
+        try { const lastDeck = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastDeck) candidates.push(lastDeck); } catch (e) {}
+        try { const popupNodes = document.querySelectorAll && document.querySelectorAll('.pm-popup, .pm-popup-root, .pm-popup-box'); if (popupNodes && popupNodes.length) popupNodes.forEach(n => candidates.push(n)); } catch (e) {}
+
+        // fallback: use body children that match inline-style width/height hints
+        if (!candidates.length) {
+          try { Array.from(document.body.children).slice(-6).forEach(n => candidates.push(n)); } catch (e) {}
+        }
+
+        // apply to found candidates
+        let applied = 0;
+        candidates.forEach(node => {
+          try {
+            if (!node || !node.style) return;
+            node.style.width = rect.width + 'px';
+            node.style.minWidth = rect.width + 'px';
+            node.style.maxWidth = rect.width + 'px';
+            // set maxHeight to measured height and let content flow
+            node.style.maxHeight = rect.height + 'px';
+            node.style.height = 'auto';
+            node.style.minHeight = 'auto';
+            applied++;
+          } catch (e) {}
+        });
+        return { ok: true, applied: applied, rect: rect };
+      } catch (e) { return { ok: false, reason: 'exception' }; }
+    };
+  } catch (e) {}
+
     // helper to start playing messages for a specific theme
     function startThemePlay(themeKey, questionText) {
       try {
@@ -648,18 +699,21 @@
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
   container.style.textAlign = 'center';
-  // smaller top padding so title and cards sit higher in the popup (lifted)
-  container.style.padding = '8px 18px 18px 4px';
+  // minimal top padding so title and cards sit as high as possible in the popup
+  container.style.padding = '4px 18px 12px 4px';
   // request a larger popup frame from PopupManager (if present)
   try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
   // also set min visual dimensions so a simple container fallback looks bigger
   // increase width/height so the deck popup is large and long enough to contain all cards
-  container.style.minWidth = '820px';
-  container.style.minHeight = '720px';
+  container.style.minWidth = '980px';
+  container.style.minHeight = '820px';
 
       // dynamic title that shows remaining cards to draw
-      const title = document.createElement('h3');
-      title.className = 'pm-popup-title';
+  const title = document.createElement('h3');
+  title.className = 'pm-popup-title';
+  // tighten title margins so it doesn't add extra vertical space
+  title.style.marginTop = '4px';
+  title.style.marginBottom = '6px';
       // initialize remaining count from chosenCount (fallback to 0)
       const initialRemaining = (Number(chosenCount) === 3 || Number(chosenCount) === 5) ? Number(chosenCount) : 0;
       let remaining = initialRemaining;
@@ -711,11 +765,12 @@
 
   const stage = document.createElement('div');
   stage.style.display = 'flex';
-  // align grid to the left but lift content upward so title/cards sit higher
-  stage.style.justifyContent = 'flex-start';
-  // reduce top padding so grid moves upward inside the popup
-  stage.style.padding = '6px 0 18px 0';
-  // no left padding — cards should hug the left edge
+  // center the grid horizontally so the card block appears centered in the popup
+  stage.style.justifyContent = 'center';
+  stage.style.alignItems = 'center';
+  // remove top padding so grid moves upward and sits directly under the title
+  stage.style.padding = '0px 0 12px 0';
+  // remove left padding — grid will be centered
   stage.style.paddingLeft = '0px';
   // prevent stage from creating scrollbars
   stage.style.overflow = 'hidden';
@@ -726,8 +781,8 @@
   grid.style.gap = '0px';
   // use border-box so width accounts for padding if we add any later
   grid.style.boxSizing = 'border-box';
-  // add small bottom margin so cards don't touch the popup edge
-  grid.style.marginBottom = '12px';
+  // center grid and add small bottom margin so cards don't touch the popup edge
+  grid.style.margin = '0 auto 12px';
 
       // compute available popup width and height and force 4-row layout (6,6,6,4)
       const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
@@ -776,7 +831,7 @@
   // breathing space around the grid (padding inside popup)
   const horizontalPadding = 48; // left + right total
     // increase vertical padding to allow larger visual frame and breathing space
-    const verticalPadding = 160; // includes title + top/bottom spacing
+  const verticalPadding = 200; // includes title + top/bottom spacing
 
     // set grid gap according to computed gap and set grid and stage sizes explicitly
     try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
@@ -889,8 +944,8 @@
 
   // compute desired popup frame dimensions based on grid + breathing
   // aim for a larger desired width/height but clamp to viewport with safe margins
-  const desiredWidth = Math.min(window.innerWidth - 40, Math.max(gridW + horizontalPadding, 840));
-  const desiredHeight = Math.min(window.innerHeight - 80, Math.max(gridH + verticalPadding, 700));
+  const desiredWidth = Math.min(window.innerWidth - 40, Math.max(gridW + horizontalPadding, 960));
+  const desiredHeight = Math.min(window.innerHeight - 80, Math.max(gridH + verticalPadding, 780));
   // remember the deck popup size so interpretation popup can match it
   try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupSize = { width: Math.round(desiredWidth), height: Math.round(desiredHeight) }; } catch (e) {}
   try { container.style.width = desiredWidth + 'px'; } catch (e) {}
@@ -924,9 +979,9 @@
         const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
         const target = wrapper || container;
         if (target && target.style) {
-          try { target.style.minWidth = Math.max(720, desiredWidth) + 'px'; } catch (e) {}
-          try { target.style.width = Math.max(760, desiredWidth + 20) + 'px'; } catch (e) {}
-          try { target.style.minHeight = Math.max(540, desiredHeight) + 'px'; } catch (e) {}
+          try { target.style.minWidth = Math.max(900, desiredWidth) + 'px'; } catch (e) {}
+          try { target.style.width = Math.max(940, desiredWidth + 20) + 'px'; } catch (e) {}
+          try { target.style.minHeight = Math.max(700, desiredHeight) + 'px'; } catch (e) {}
           try { target.style.height = 'auto'; } catch (e) {}
           try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = Math.max(720, desiredWidth) + 'px'; target.parentNode.style.width = Math.max(760, desiredWidth + 20) + 'px'; target.parentNode.style.minHeight = Math.max(540, desiredHeight) + 'px'; } } catch (e) {}
         }
@@ -936,7 +991,7 @@
           try {
             const checkEl = wrapper || container;
             const rect = (checkEl && checkEl.getBoundingClientRect) ? checkEl.getBoundingClientRect() : { width: 0, height: 0 };
-            if ((rect.width || 0) < Math.min(700, desiredWidth)) {
+            if ((rect.width || 0) < Math.min(900, desiredWidth)) {
               // create overlay
               const overlay = document.createElement('div');
               overlay.className = 'pa-deck-overlay-fallback';
@@ -944,8 +999,8 @@
     position: 'fixed',
     left: '50%',
   transform: 'translate(-50%,0)',
-    // lift overlay a bit so it sits higher on the page
-    top: '100px',
+  // lift overlay a lot so it sits near the top of the page (minimal blank space)
+  top: '60px',
     zIndex: 999999,
     background: 'rgba(255,255,255,0.02)',
     padding: '12px',
