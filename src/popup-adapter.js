@@ -3,6 +3,24 @@
 (function () {
   'use strict';
 
+  // inject helper styles to hide scrollbars when popup is open
+  try {
+    if (!document.getElementById('pa-popup-styles')) {
+      const s = document.createElement('style');
+      s.id = 'pa-popup-styles';
+      s.textContent = `
+        .pa-popup-open, .pa-popup-open html, .pa-popup-open body { overflow: hidden !important; }
+        .pa-deck-overlay-fallback { overflow: hidden !important; }
+        .pa-deck-overlay-fallback::-webkit-scrollbar { display: none; }
+        .pm-popup-msgbox { overflow-x: hidden !important; -ms-overflow-style: none; scrollbar-width: none; }
+        .pm-popup-msgbox::-webkit-scrollbar { display: none; }
+        .pm-card-slot { -ms-overflow-style: none; scrollbar-width: none; }
+        .pm-card-slot::-webkit-scrollbar { display: none; }
+      `;
+      (document.head || document.documentElement).appendChild(s);
+    }
+  } catch (e) { /* ignore style injection errors */ }
+
   // Utility: preferred max width for popup frames
   function getMaxFrameWidth() {
     try {
@@ -720,7 +738,9 @@
   try { container.style.width = desiredWidth + 'px'; } catch (e) {}
   try { container.style.minHeight = desiredHeight + 'px'; } catch (e) {}
 
-      const popupHandle = openPopup(container);
+  const popupHandle = openPopup(container);
+  // ensure page hides scrollbars while this popup is active (best-effort)
+  try { document.body.classList.add('pa-popup-open'); } catch (e) {}
 
   // If PopupManager returned a wrapper element, attempt to force larger visual
       // dimensions on the wrapper. If that still results in a too-small visual
@@ -763,7 +783,7 @@
               const closeBtn = document.createElement('button');
               closeBtn.textContent = '×';
               Object.assign(closeBtn.style, { position: 'absolute', right: '10px', top: '6px', background: 'transparent', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer' });
-              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); } catch (e) {} });
+              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); document.body.classList.remove('pa-popup-open'); document.body.style.overflowX = ''; } catch (e) {} });
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
