@@ -73,7 +73,10 @@
     // Try to use page's PopupManager if available; otherwise return the container
     try {
       if (typeof PopupManager !== 'undefined' && PopupManager && typeof PopupManager.open === 'function') {
-        return PopupManager.open({ html: container, maxWidth: getMaxFrameWidth() });
+        // allow per-container override of maxWidth (e.g., large deck popup)
+        const override = container && container.dataset && container.dataset.maxWidth;
+        const mw = override || getMaxFrameWidth();
+        return PopupManager.open({ html: container, maxWidth: mw });
       }
     } catch (e) {
       // fall through to returning container
@@ -587,9 +590,12 @@
   const container = document.createElement('div');
   container.style.textAlign = 'center';
   // increase internal padding so the popup appears less cramped left/right and bottom
-  container.style.padding = '16px';
-  // ask for a slightly larger max width inside the popup frame
-  try { container.style.maxWidth = getMaxFrameWidth(); } catch (e) {}
+  container.style.padding = '18px';
+  // request a larger popup frame from PopupManager (if present)
+  try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
+  // also set min visual dimensions so a simple container fallback looks bigger
+  container.style.minWidth = '680px';
+  container.style.minHeight = '520px';
 
       const title = document.createElement('h3');
       title.className = 'pm-popup-title';
