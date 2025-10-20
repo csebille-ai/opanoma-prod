@@ -566,8 +566,8 @@
             const img = document.createElement('img');
             img.src = src;
             img.alt = alt || '';
-            img.style.width = '100%';
-            img.style.height = '100%';
+            img.style.width = '95%';
+            img.style.height = '95%';
             img.style.objectFit = 'cover';
             containerSlot.appendChild(img);
           }
@@ -742,8 +742,8 @@
           const sl = grid.querySelectorAll('.pm-card-slot');
           if (!sl || idx < 0 || idx >= sl.length) return false;
           sl[idx].innerHTML = '';
-          if (src) {
-            const im = document.createElement('img'); im.src = src; im.alt = alt || ''; im.style.width = '100%'; im.style.height = '100%'; im.style.objectFit = 'cover'; sl[idx].appendChild(im);
+        if (src) {
+          const im = document.createElement('img'); im.src = src; im.alt = alt || ''; im.style.width = '95%'; im.style.height = '95%'; im.style.objectFit = 'cover'; sl[idx].appendChild(im);
           }
           return true;
         } catch (e) { return false; }
