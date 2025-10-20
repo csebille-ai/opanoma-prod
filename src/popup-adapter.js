@@ -626,20 +626,30 @@
       const cols = 6;
       const rows = 4;
 
-      // base card width to fill cols in available width
-      let cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
-      let cardH = Math.floor(cardW * cardRatio);
-      let totalH = rows * cardH + (rows - 1) * gap;
-      if (totalH > availH) {
-        const scale = Math.max(0.45, (availH / totalH) * 0.95);
-        cardW = Math.max(36, Math.floor(cardW * scale));
-        cardH = Math.max(48, Math.floor(cardW * cardRatio));
-        totalH = rows * cardH + (rows - 1) * gap;
-      }
+    // compute card size so 6x4 volume is used as base, then add breathing space
+    let cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
+    let cardH = Math.floor(cardW * cardRatio);
+    // compute grid volume exact sizes
+    let gridW = (cardW * cols) + ((cols - 1) * gap);
+    let gridH = (cardH * rows) + ((rows - 1) * gap);
+    // if vertical space is limited, scale both dimensions down proportionally
+    if (gridH > availH) {
+      const scale = Math.max(0.45, (availH / gridH) * 0.95);
+      cardW = Math.max(36, Math.floor(cardW * scale));
+      cardH = Math.max(48, Math.floor(cardW * cardRatio));
+      gridW = (cardW * cols) + ((cols - 1) * gap);
+      gridH = (cardH * rows) + ((rows - 1) * gap);
+    }
 
-      grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
-      grid.style.gridAutoRows = `${cardH}px`;
-      grid.style.width = (cardW * cols + (cols - 1) * gap) + 'px';
+    // breathing space around the grid (padding inside popup)
+    const horizontalPadding = 48; // left + right total
+    const verticalPadding = 120; // includes title + top/bottom spacing
+
+    // set grid and stage sizes explicitly
+    grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
+    grid.style.gridAutoRows = `${cardH}px`;
+    grid.style.width = gridW + 'px';
+    grid.style.height = gridH + 'px';
 
       // create slots and fill with verso image; center last row by starting its first slot at column 2
       for (let i = 0; i < total; i++) {
@@ -675,12 +685,18 @@
         grid.appendChild(slot);
       }
 
-      stage.appendChild(grid);
-      container.appendChild(stage);
+  stage.appendChild(grid);
+  container.appendChild(stage);
+
+  // compute desired popup frame dimensions based on grid + breathing
+  const desiredWidth = Math.min(window.innerWidth - 40, gridW + horizontalPadding);
+  const desiredHeight = Math.min(window.innerHeight - 80, gridH + verticalPadding);
+  try { container.style.width = desiredWidth + 'px'; } catch (e) {}
+  try { container.style.minHeight = desiredHeight + 'px'; } catch (e) {}
 
       const popupHandle = openPopup(container);
 
-      // If PopupManager returned a wrapper element, attempt to force larger visual
+  // If PopupManager returned a wrapper element, attempt to force larger visual
       // dimensions on the wrapper. If that still results in a too-small visual
       // frame (common when page modal managers enforce sizing), create a fallback
       // absolute-positioned overlay that guarantees the requested size and position.
@@ -688,19 +704,19 @@
         const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
         const target = wrapper || container;
         if (target && target.style) {
-          try { target.style.minWidth = '720px'; } catch (e) {}
-          try { target.style.width = '760px'; } catch (e) {}
-          try { target.style.minHeight = '540px'; } catch (e) {}
+          try { target.style.minWidth = Math.max(720, desiredWidth) + 'px'; } catch (e) {}
+          try { target.style.width = Math.max(760, desiredWidth + 20) + 'px'; } catch (e) {}
+          try { target.style.minHeight = Math.max(540, desiredHeight) + 'px'; } catch (e) {}
           try { target.style.height = 'auto'; } catch (e) {}
-          try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = '720px'; target.parentNode.style.width = '760px'; target.parentNode.style.minHeight = '540px'; } } catch (e) {}
+          try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = Math.max(720, desiredWidth) + 'px'; target.parentNode.style.width = Math.max(760, desiredWidth + 20) + 'px'; target.parentNode.style.minHeight = Math.max(540, desiredHeight) + 'px'; } } catch (e) {}
         }
 
         // after a tiny delay, check if the visual width is still too small; if so, create fallback overlay
-        setTimeout(() => {
+            setTimeout(() => {
           try {
             const checkEl = wrapper || container;
             const rect = (checkEl && checkEl.getBoundingClientRect) ? checkEl.getBoundingClientRect() : { width: 0, height: 0 };
-            if ((rect.width || 0) < 700) {
+            if ((rect.width || 0) < Math.min(700, desiredWidth)) {
               // create overlay
               const overlay = document.createElement('div');
               overlay.className = 'pa-deck-overlay-fallback';
@@ -708,14 +724,14 @@
                 position: 'fixed',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                top: '120px', // lower placement
+                    top: '140px', // lower placement
                 zIndex: 999999,
                 background: 'rgba(255,255,255,0.02)',
                 padding: '12px',
                 borderRadius: '10px',
                 boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
-                width: '920px',
-                maxWidth: 'calc(100% - 40px)'
+                    width: Math.min(960, desiredWidth + 80) + 'px',
+                    maxWidth: 'calc(100% - 40px)'
               });
               // add a close button
               const closeBtn = document.createElement('button');
