@@ -680,22 +680,57 @@
 
       const popupHandle = openPopup(container);
 
-      // If PopupManager returned a wrapper element (or if openPopup returned container
-      // but the visual frame is controlled by an outer wrapper), attempt to force
-      // larger visual dimensions on the wrapper so the deck popup appears bigger.
+      // If PopupManager returned a wrapper element, attempt to force larger visual
+      // dimensions on the wrapper. If that still results in a too-small visual
+      // frame (common when page modal managers enforce sizing), create a fallback
+      // absolute-positioned overlay that guarantees the requested size and position.
       try {
-        // popupHandle may be the container or a wrapper object/element depending on implementation
         const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
         const target = wrapper || container;
         if (target && target.style) {
-          // apply enforced sizes (use px values to override most managers)
           try { target.style.minWidth = '720px'; } catch (e) {}
           try { target.style.width = '760px'; } catch (e) {}
           try { target.style.minHeight = '540px'; } catch (e) {}
           try { target.style.height = 'auto'; } catch (e) {}
-          // also nudge parent if present
           try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = '720px'; target.parentNode.style.width = '760px'; target.parentNode.style.minHeight = '540px'; } } catch (e) {}
         }
+
+        // after a tiny delay, check if the visual width is still too small; if so, create fallback overlay
+        setTimeout(() => {
+          try {
+            const checkEl = wrapper || container;
+            const rect = (checkEl && checkEl.getBoundingClientRect) ? checkEl.getBoundingClientRect() : { width: 0, height: 0 };
+            if ((rect.width || 0) < 700) {
+              // create overlay
+              const overlay = document.createElement('div');
+              overlay.className = 'pa-deck-overlay-fallback';
+              Object.assign(overlay.style, {
+                position: 'fixed',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                top: '120px', // lower placement
+                zIndex: 999999,
+                background: 'rgba(255,255,255,0.02)',
+                padding: '12px',
+                borderRadius: '10px',
+                boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
+                width: '920px',
+                maxWidth: 'calc(100% - 40px)'
+              });
+              // add a close button
+              const closeBtn = document.createElement('button');
+              closeBtn.textContent = '×';
+              Object.assign(closeBtn.style, { position: 'absolute', right: '10px', top: '6px', background: 'transparent', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer' });
+              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); } catch (e) {} });
+              overlay.appendChild(closeBtn);
+              // move our container inside overlay (detach from previous parent)
+              try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px' });
+              overlay.appendChild(container);
+              document.body.appendChild(overlay);
+            }
+          } catch (e) {}
+        }, 120);
       } catch (e) {}
 
       // expose helpers
