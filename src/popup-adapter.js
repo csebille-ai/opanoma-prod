@@ -503,19 +503,21 @@
     grid.style.boxSizing = 'content-box';
     const slots = [];
 
-    for (let i = 0; i < total; i++) {
-      const slot = document.createElement('div');
-      slot.className = 'pm-card-slot';
-      Object.assign(slot.style, {
-        overflow: 'hidden',
-        borderRadius: '6px',
-        background: 'linear-gradient(180deg,#eee,#ddd)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '80px',
-        height: '120px'
-      });
+      for (let i = 0; i < total; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'pm-card-slot';
+        Object.assign(slot.style, {
+          overflow: 'hidden',
+          borderRadius: '6px',
+          background: 'linear-gradient(180deg,#eee,#ddd)',
+          display: 'flex',
+          alignItems: 'center',
+          // align image to left inside slot and add a small left padding
+          justifyContent: 'flex-start',
+          paddingLeft: '6px',
+          width: '80px',
+          height: '120px'
+        });
       slot.dataset.slotIndex = i;
       grid.appendChild(slot);
       slots.push(slot);
@@ -664,7 +666,9 @@
           background: 'linear-gradient(180deg,#eee,#ddd)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          // align image to left inside slot and add a small left padding
+          justifyContent: 'flex-start',
+          paddingLeft: '6px',
           width: cardW + 'px',
           height: cardH + 'px'
         });
