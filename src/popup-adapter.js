@@ -583,36 +583,103 @@
   function showDeckPopup(chosenCount) {
     try {
       const total = 22;
-      const handle = showTirageDisplay(total);
-      // try to populate with the verso image after layout
-      setTimeout(() => {
+      // build container ourselves so we can tightly control dimensions
+      const container = document.createElement('div');
+      container.style.textAlign = 'center';
+      container.style.padding = '10px';
+
+      const title = document.createElement('h3');
+      title.className = 'pm-popup-title';
+      title.textContent = 'Tirage - Choisissez vos cartes';
+      container.appendChild(title);
+
+      const stage = document.createElement('div');
+      stage.style.display = 'flex';
+      stage.style.justifyContent = 'center';
+      stage.style.padding = '6px 0 6px 0';
+
+      const grid = document.createElement('div');
+      grid.style.display = 'grid';
+      grid.style.gap = '8px';
+      grid.style.boxSizing = 'content-box';
+
+      // compute available popup width and height
+      const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
+      const reserved = (title.getBoundingClientRect ? Math.round(title.getBoundingClientRect().height) : 56) + 24;
+      const availH = Math.max(320, window.innerHeight - reserved - 40);
+
+      const gap = 8;
+      const cardRatio = 3 / 2; // height = ratio * width
+
+      let best = { cols: 1, cardW: 40, cardH: 60, rows: Math.ceil(total / 1) };
+      for (let cols = 1; cols <= Math.min(total, 11); cols++) {
+        const rows = Math.ceil(total / cols);
+        const cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
+        const cardH = Math.floor(cardW * cardRatio);
+        const totalH = rows * cardH + (rows - 1) * gap;
+        const scale = Math.min(1, availH / Math.max(1, totalH));
+        const effW = Math.floor(cardW * scale);
+        // prefer larger effective width
+        if (effW > best.cardW) {
+          best = { cols, cardW: effW, cardH: Math.floor(effW * cardRatio), rows };
+        }
+      }
+
+      grid.style.gridTemplateColumns = `repeat(${best.cols}, ${best.cardW}px)`;
+      grid.style.gridAutoRows = `${best.cardH}px`;
+      grid.style.width = (best.cardW * best.cols + (best.cols - 1) * gap) + 'px';
+
+      // create slots and fill with verso image
+      for (let i = 0; i < total; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'pm-card-slot';
+        Object.assign(slot.style, {
+          overflow: 'hidden',
+          borderRadius: '6px',
+          background: 'linear-gradient(180deg,#eee,#ddd)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: best.cardW + 'px',
+          height: best.cardH + 'px'
+        });
+        slot.dataset.slotIndex = i;
+        // fill image
         try {
-          const base = './public/img/majors/verso.webp';
-          // If window.PopupAdapter.placeCardInSlot is available, use it
-          if (window.PopupAdapter && typeof window.PopupAdapter.placeCardInSlot === 'function') {
-            for (let i = 0; i < total; i++) {
-              try { window.PopupAdapter.placeCardInSlot(i, base, 'verso'); } catch (e) {}
-            }
-          } else {
-            // fallback: find slots and append images directly
-            const slots = document.querySelectorAll('.pm-card-slot');
-            for (let i = 0; i < slots.length && i < total; i++) {
-              try {
-                slots[i].innerHTML = '';
-                const img = document.createElement('img');
-                img.src = base;
-                img.alt = 'verso';
-                img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover';
-                slots[i].appendChild(img);
-              } catch (e) {}
-            }
-          }
-        } catch (e) { console && console.warn && console.warn('showDeckPopup fill error', e); }
-      }, 80);
-      // expose choice if needed on PopupAdapter
+          const img = document.createElement('img');
+          img.src = './public/img/majors/verso.webp';
+          img.alt = 'verso';
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          slot.appendChild(img);
+        } catch (e) {}
+        grid.appendChild(slot);
+      }
+
+      stage.appendChild(grid);
+      container.appendChild(stage);
+
+      const popupHandle = openPopup(container);
+
+      // expose helpers
       window.PopupAdapter = window.PopupAdapter || {};
-      window.PopupAdapter.showDeckPopup = showDeckPopup;
-      return handle;
+      // allow external code to place/clear cards inside this deck popup
+      window.PopupAdapter.placeCardInSlot = function (index, src, alt) {
+        try {
+          const idx = Number(index) || 0;
+          const sl = grid.querySelectorAll('.pm-card-slot');
+          if (!sl || idx < 0 || idx >= sl.length) return false;
+          sl[idx].innerHTML = '';
+          if (src) {
+            const im = document.createElement('img'); im.src = src; im.alt = alt || ''; im.style.width = '100%'; im.style.height = '100%'; im.style.objectFit = 'cover'; sl[idx].appendChild(im);
+          }
+          return true;
+        } catch (e) { return false; }
+      };
+      window.PopupAdapter.clearAllSlots = function () { try { grid.querySelectorAll('.pm-card-slot').forEach(s => { s.innerHTML = ''; }); } catch (e) {} };
+
+      return popupHandle;
     } catch (e) { console && console.warn && console.warn('showDeckPopup error', e); }
   }
 
