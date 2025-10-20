@@ -680,6 +680,24 @@
 
       const popupHandle = openPopup(container);
 
+      // If PopupManager returned a wrapper element (or if openPopup returned container
+      // but the visual frame is controlled by an outer wrapper), attempt to force
+      // larger visual dimensions on the wrapper so the deck popup appears bigger.
+      try {
+        // popupHandle may be the container or a wrapper object/element depending on implementation
+        const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
+        const target = wrapper || container;
+        if (target && target.style) {
+          // apply enforced sizes (use px values to override most managers)
+          try { target.style.minWidth = '720px'; } catch (e) {}
+          try { target.style.width = '760px'; } catch (e) {}
+          try { target.style.minHeight = '540px'; } catch (e) {}
+          try { target.style.height = 'auto'; } catch (e) {}
+          // also nudge parent if present
+          try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = '720px'; target.parentNode.style.width = '760px'; target.parentNode.style.minHeight = '540px'; } } catch (e) {}
+        }
+      } catch (e) {}
+
       // expose helpers
       window.PopupAdapter = window.PopupAdapter || {};
       // allow external code to place/clear cards inside this deck popup
