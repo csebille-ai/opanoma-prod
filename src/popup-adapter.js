@@ -1068,15 +1068,15 @@
           try {
             // ensure global API base is available for configuration
             window.PopupAdapter = window.PopupAdapter || {};
-            // default placeholder — user should set this to their Cloudflare Worker endpoint
-            const defaultApi = 'https://your-cloudflare-worker.example.workers.dev/interpret';
+            // default to the deployed worker route used in this repo
+            const defaultApi = 'https://api-opanoma.csebille.workers.dev/api/open-proxy';
             const apiBase = (window.PopupAdapter.apiBase && String(window.PopupAdapter.apiBase).trim()) ? String(window.PopupAdapter.apiBase).trim() : defaultApi;
 
-            // minimal payload: list of selected card filenames (or indices) and optional context
+            // payload expected by the worker: { cartes: [...], theme: '', question: '' }
             const payload = {
-              cards: cards.map(c => (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c)),
-              timestamp: Date.now(),
-              locale: (navigator.language || 'fr').split('-')[0]
+              cartes: cards.map(c => (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c)),
+              theme: (window.PopupAdapter && window.PopupAdapter.currentTheme) ? window.PopupAdapter.currentTheme : '',
+              question: (window.PopupAdapter && window.PopupAdapter.currentQuestion) ? window.PopupAdapter.currentQuestion : ''
             };
 
             // create a content container inside the frame for scrollable results
