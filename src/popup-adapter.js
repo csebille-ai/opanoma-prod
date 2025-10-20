@@ -1009,7 +1009,7 @@
             overflow: 'hidden',
             textAlign: 'center'
           });
-          frame.textContent = 'Interprétation en cours... (sera remplie par une API plus tard)';
+          frame.textContent = 'Interprétation en cours...';
           interp.appendChild(frame);
           // expose reference for diagnostics
           try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastInterpFrame = frame; } catch (e) {}
@@ -1063,6 +1063,76 @@
             } catch (e) {}
           });
           interp.appendChild(chosenWrap);
+
+          // fetch and render interpretation from configured API (Cloudflare Workers)
+          try {
+            // ensure global API base is available for configuration
+            window.PopupAdapter = window.PopupAdapter || {};
+            // default placeholder — user should set this to their Cloudflare Worker endpoint
+            const defaultApi = 'https://your-cloudflare-worker.example.workers.dev/interpret';
+            const apiBase = (window.PopupAdapter.apiBase && String(window.PopupAdapter.apiBase).trim()) ? String(window.PopupAdapter.apiBase).trim() : defaultApi;
+
+            // minimal payload: list of selected card filenames (or indices) and optional context
+            const payload = {
+              cards: cards.map(c => (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c)),
+              timestamp: Date.now(),
+              locale: (navigator.language || 'fr').split('-')[0]
+            };
+
+            // create a content container inside the frame for scrollable results
+            const content = document.createElement('div');
+            content.id = 'ia-interpretation-content';
+            content.style.maxHeight = '320px';
+            content.style.overflow = 'auto';
+            content.style.padding = '6px';
+            content.style.boxSizing = 'border-box';
+            content.style.textAlign = 'left';
+            content.textContent = 'Chargement de l\'interprétation...';
+            // clear previous simple text and append content
+            frame.textContent = '';
+            frame.appendChild(content);
+
+            // call the API with POST JSON
+            (async () => {
+              try {
+                const resp = await fetch(apiBase, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+                if (!resp.ok) {
+                  const txt = await resp.text().catch(()=>resp.statusText||String(resp.status));
+                  content.textContent = 'Erreur API: ' + txt;
+                  console.warn('[PopupAdapter] Interpretation API error', resp.status, txt);
+                  return;
+                }
+                // prefer HTML, fallback to JSON/text
+                const ctype = (resp.headers.get('content-type') || '').toLowerCase();
+                if (ctype.indexOf('text/html') !== -1) {
+                  const html = await resp.text();
+                  content.innerHTML = html;
+                } else if (ctype.indexOf('application/json') !== -1) {
+                  const j = await resp.json();
+                  // if API returns { html: '...' } render HTML, else stringify
+                  if (j && j.html) {
+                    content.innerHTML = j.html;
+                  } else if (j && j.text) {
+                    content.textContent = j.text;
+                  } else {
+                    content.textContent = typeof j === 'string' ? j : JSON.stringify(j, null, 2);
+                  }
+                } else {
+                  const txt = await resp.text();
+                  content.textContent = txt;
+                }
+              } catch (err) {
+                content.textContent = 'Erreur réseau lors de la récupération de l\'interprétation.';
+                console.error('[PopupAdapter] fetchInterpretation failed', err);
+              }
+            })();
+          } catch (e) {
+            console.warn('[PopupAdapter] Could not launch interpretation fetch', e);
+          }
 
           // wire button behaviors
           btnTirage.addEventListener('click', function () {
