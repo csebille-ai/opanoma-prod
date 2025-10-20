@@ -603,33 +603,32 @@
       grid.style.gap = '8px';
       grid.style.boxSizing = 'content-box';
 
-      // compute available popup width and height
+      // compute available popup width and height and force 4-row layout (6,6,6,4)
       const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
       const reserved = (title.getBoundingClientRect ? Math.round(title.getBoundingClientRect().height) : 56) + 24;
       const availH = Math.max(320, window.innerHeight - reserved - 40);
 
       const gap = 8;
-      const cardRatio = 3 / 2; // height = ratio * width
+      const cardRatio = 3 / 2;
+      const cols = 6;
+      const rows = 4;
 
-      let best = { cols: 1, cardW: 40, cardH: 60, rows: Math.ceil(total / 1) };
-      for (let cols = 1; cols <= Math.min(total, 11); cols++) {
-        const rows = Math.ceil(total / cols);
-        const cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
-        const cardH = Math.floor(cardW * cardRatio);
-        const totalH = rows * cardH + (rows - 1) * gap;
-        const scale = Math.min(1, availH / Math.max(1, totalH));
-        const effW = Math.floor(cardW * scale);
-        // prefer larger effective width
-        if (effW > best.cardW) {
-          best = { cols, cardW: effW, cardH: Math.floor(effW * cardRatio), rows };
-        }
+      // base card width to fill cols in available width
+      let cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
+      let cardH = Math.floor(cardW * cardRatio);
+      let totalH = rows * cardH + (rows - 1) * gap;
+      if (totalH > availH) {
+        const scale = Math.max(0.45, (availH / totalH) * 0.95);
+        cardW = Math.max(36, Math.floor(cardW * scale));
+        cardH = Math.max(48, Math.floor(cardW * cardRatio));
+        totalH = rows * cardH + (rows - 1) * gap;
       }
 
-      grid.style.gridTemplateColumns = `repeat(${best.cols}, ${best.cardW}px)`;
-      grid.style.gridAutoRows = `${best.cardH}px`;
-      grid.style.width = (best.cardW * best.cols + (best.cols - 1) * gap) + 'px';
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
+      grid.style.gridAutoRows = `${cardH}px`;
+      grid.style.width = (cardW * cols + (cols - 1) * gap) + 'px';
 
-      // create slots and fill with verso image
+      // create slots and fill with verso image; center last row by starting its first slot at column 2
       for (let i = 0; i < total; i++) {
         const slot = document.createElement('div');
         slot.className = 'pm-card-slot';
@@ -640,10 +639,16 @@
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: best.cardW + 'px',
-          height: best.cardH + 'px'
+          width: cardW + 'px',
+          height: cardH + 'px'
         });
         slot.dataset.slotIndex = i;
+        // if first of last row, offset to center (for 6-columns layout and 22 cards)
+        const firstOfLastRowIndex = cols * (rows - 1); // 6 * 3 = 18
+        if (i === firstOfLastRowIndex && (total % cols) !== 0) {
+          // start at column 2 so 4 cards sit in columns 2..5 (centered)
+          try { slot.style.gridColumnStart = '2'; } catch (e) {}
+        }
         // fill image
         try {
           const img = document.createElement('img');
