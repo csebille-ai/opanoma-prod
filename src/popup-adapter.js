@@ -21,7 +21,8 @@
         .pm-card-slot { -ms-overflow-style: none !important; scrollbar-width: none !important; }
         .pm-card-slot::-webkit-scrollbar { display: none !important; }
       `;
-      (document.head || document.documentElement).appendChild(s);
+      stage.style.display = 'flex'; 
+      stage.style.justifyContent = 'center';
     }
   } catch (e) { /* ignore style injection errors */ }
 
@@ -333,6 +334,7 @@
               const para = document.createElement('div'); para.innerHTML = String(explText);
               Object.assign(para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.9)', flex: '1 1 auto', fontFamily: forcedFont });
               const btn = document.createElement('button'); btn.textContent = 'Choisir ' + count + ' cartes';
+              try { btn.setAttribute('data-pa-choose', String(count)); } catch (e) {}
               Object.assign(btn.style, {
                 padding: '4px 8px',
                 borderRadius: '8px',
@@ -393,6 +395,7 @@
             p3para.innerHTML = `Le tirage à trois cartes offre une lecture claire et rapide d’une situation. Il met en lumière le passé ou le contexte, le défi présent et la tendance à venir. Cette méthode simple permet d’obtenir une réponse précise tout en ouvrant une réflexion plus profonde. Chaque carte dialogue avec les autres pour révéler les influences en jeu et les pistes d’évolution possibles. C’est un tirage idéal pour éclairer une question ciblée ou prendre une décision en conscience.`;
             Object.assign(p3para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p3btn = document.createElement('button'); p3btn.textContent = 'Choisir 3 cartes';
+            try { p3btn.setAttribute('data-pa-choose', '3'); } catch (e) {}
             Object.assign(p3btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p3btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p3btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
@@ -421,6 +424,7 @@
             p5para.innerHTML = 'Le tirage à cinq cartes offre une vision complète d’une situation en explorant plusieurs niveaux d\’influence. Chaque carte éclaire un aspect distinct : les forces favorables, les obstacles, les causes profondes, la tendance à venir et la synthèse ou le conseil final. Ce tirage met en lumière le jeu des équilibres, des tensions et des prises de conscience nécessaires pour avancer. Plus détaillé qu’un tirage simple, il permet d’obtenir une lecture nuancée et stratégique, alliant intuition et analyse.';
             Object.assign(p5para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p5btn = document.createElement('button'); p5btn.textContent = 'Choisir 5 cartes';
+            try { p5btn.setAttribute('data-pa-choose', '5'); } catch (e) {}
             Object.assign(p5btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p5btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p5btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
@@ -884,12 +888,30 @@
   // compute desired popup frame dimensions based on grid + breathing
   const desiredWidth = Math.min(window.innerWidth - 40, gridW + horizontalPadding);
   const desiredHeight = Math.min(window.innerHeight - 80, gridH + verticalPadding);
+  // remember the deck popup size so interpretation popup can match it
+  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupSize = { width: Math.round(desiredWidth), height: Math.round(desiredHeight) }; } catch (e) {}
   try { container.style.width = desiredWidth + 'px'; } catch (e) {}
   try { container.style.minHeight = desiredHeight + 'px'; } catch (e) {}
 
   const popupHandle = openPopup(container);
   // ensure page hides scrollbars while this popup is active (best-effort)
   try { setGlobalNoScroll(true); } catch (e) {}
+
+  // after a short delay, measure the actual rendered wrapper rect and store it
+  try {
+    setTimeout(() => {
+      try {
+        const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
+        const measureEl = wrapper || container;
+        if (measureEl && measureEl.getBoundingClientRect) {
+          const r = measureEl.getBoundingClientRect();
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupRect = { width: Math.round(r.width), height: Math.round(r.height), left: Math.round(r.left), top: Math.round(r.top) }; } catch (e) {}
+          // also mirror to the older property for compatibility
+          try { if (!window.PopupAdapter._lastDeckPopupSize) window.PopupAdapter._lastDeckPopupSize = { width: Math.round(r.width), height: Math.round(r.height) }; } catch (e) {}
+        }
+      } catch (e) {}
+    }, 220);
+  } catch (e) {}
 
   // If PopupManager returned a wrapper element, attempt to force larger visual
       // dimensions on the wrapper. If that still results in a too-small visual
@@ -919,7 +941,7 @@
                 position: 'fixed',
                 left: '50%',
         transform: 'translate(-50%,0)',
-          top: '120px', // lower placement
+                top: '136px', // shifted down by 100px per user request
                 zIndex: 999999,
                 background: 'rgba(255,255,255,0.02)',
                 padding: '12px',
@@ -974,8 +996,10 @@
           // use balanced padding on all sides so inner frames don't touch the popup edges
           interp.style.padding = '18px';
           try { interp.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
-          interp.style.minWidth = (container.style && container.style.minWidth) ? container.style.minWidth : '680px';
-          interp.style.minHeight = (container.style && container.style.minHeight) ? container.style.minHeight : '520px';
+          interp.style.minWidth = (container && container.style && container.style.minWidth) ? container.style.minWidth : '680px';
+          // do not inherit a large minHeight from the deck popup — allow the interpretation popup
+          // to size to its content (we control the internal viewport height separately)
+          interp.style.minHeight = 'auto';
           // ensure no scrollbars: content fits inside the popup and overflow is hidden
           interp.style.overflow = 'hidden';
 
@@ -1026,10 +1050,55 @@
           const btnBack = document.createElement('button'); btnBack.textContent = 'Retour';
           [btnTirage, btnSave, btnBack].forEach(b => Object.assign(b.style, { padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: '#2b2b2b', color: '#fff' }));
           btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
+
+          // add a single audio icon button to control TTS (placed to the right)
+          const audioBtn = document.createElement('button');
+          audioBtn.title = 'Lire / Couper le son';
+          audioBtn.style.border = 'none';
+          audioBtn.style.background = 'transparent';
+          audioBtn.style.cursor = 'pointer';
+          audioBtn.style.padding = '8px';
+          audioBtn.style.marginLeft = '6px';
+          audioBtn.style.borderRadius = '8px';
+          audioBtn.style.display = 'inline-flex';
+          audioBtn.style.alignItems = 'center';
+          audioBtn.style.justifyContent = 'center';
+          audioBtn.style.fontSize = '18px';
+          audioBtn.style.color = '#fff';
+          audioBtn.style.background = 'linear-gradient(90deg,#ff7a59,#ffb86b)';
+          audioBtn.innerHTML = '🔊';
+          // start disabled until the interpretation is ready
+          audioBtn.disabled = true;
+          btnRow.appendChild(audioBtn);
           interp.appendChild(btnRow);
+
+          // wiring: when interpretation content is rendered, the renderInterpretationInto
+          // function returns controls which we attach here to toggle audio.
+          let _interpControls = null;
+          // helper to update button icon
+          function setAudioIcon(isPlaying) {
+            try { audioBtn.innerHTML = isPlaying ? '⏸️' : '🔊'; } catch (e) {}
+          }
+          // click toggles play/stop
+          audioBtn.addEventListener('click', function(){
+            try {
+              if (!audioBtn || audioBtn.disabled) return;
+              if (_interpControls) {
+                try {
+                  // if speech is ongoing, stop; otherwise start
+                  if (speechSynthesis && speechSynthesis.speaking) {
+                    try { _interpControls.stop(); setAudioIcon(false); } catch (e) { setAudioIcon(false); }
+                  } else {
+                    try { _interpControls.play(1.0); setAudioIcon(true); } catch (e) { setAudioIcon(false); }
+                  }
+                } catch (e) { console && console.warn && console.warn('audio toggle failed', e); }
+              }
+            } catch (e) {}
+          });
 
           // Show the selected cards below the buttons in larger format
           const chosenWrap = document.createElement('div');
+          chosenWrap.id = 'pa-chosen-wrap';
           chosenWrap.style.display = 'flex';
           chosenWrap.style.flexWrap = 'wrap';
           chosenWrap.style.gap = '14px';
@@ -1082,8 +1151,10 @@
             // create a content container inside the frame for scrollable results
             const content = document.createElement('div');
             content.id = 'ia-interpretation-content';
-            content.style.maxHeight = '320px';
-            content.style.overflow = 'auto';
+            // smaller maxHeight to keep the interpretation frame compact and avoid excess vertical length
+            content.style.maxHeight = '160px';
+            // hide scrollbars and prevent native scrolling; credits animation will handle movement
+            content.style.overflow = 'hidden';
             content.style.padding = '6px';
             content.style.boxSizing = 'border-box';
             content.style.textAlign = 'left';
@@ -1092,43 +1163,390 @@
             frame.textContent = '';
             frame.appendChild(content);
 
-            // call the API with POST JSON
-            (async () => {
-              try {
-                const resp = await fetch(apiBase, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(payload)
-                });
-                if (!resp.ok) {
-                  const txt = await resp.text().catch(()=>resp.statusText||String(resp.status));
-                  content.textContent = 'Erreur API: ' + txt;
-                  console.warn('[PopupAdapter] Interpretation API error', resp.status, txt);
-                  return;
-                }
-                // prefer HTML, fallback to JSON/text
-                const ctype = (resp.headers.get('content-type') || '').toLowerCase();
-                if (ctype.indexOf('text/html') !== -1) {
-                  const html = await resp.text();
-                  content.innerHTML = html;
-                } else if (ctype.indexOf('application/json') !== -1) {
-                  const j = await resp.json();
-                  // if API returns { html: '...' } render HTML, else stringify
-                  if (j && j.html) {
-                    content.innerHTML = j.html;
-                  } else if (j && j.text) {
-                    content.textContent = j.text;
-                  } else {
-                    content.textContent = typeof j === 'string' ? j : JSON.stringify(j, null, 2);
-                  }
-                } else {
-                  const txt = await resp.text();
-                  content.textContent = txt;
-                }
-              } catch (err) {
-                content.textContent = 'Erreur réseau lors de la récupération de l\'interprétation.';
-                console.error('[PopupAdapter] fetchInterpretation failed', err);
+            // inject small stylesheet for interpretation frame (once)
+            try {
+              if (!document.getElementById('pa-interpretation-styles')) {
+                const st = document.createElement('style');
+                st.id = 'pa-interpretation-styles';
+                st.textContent = `
+                  #ia-interpretation-content { font-family: 'Inter', 'Quicksand', Arial, sans-serif; color: #111; font-size: 15px; line-height: 1.5; padding: 8px; }
+                  #ia-interpretation-content p { margin: 0 0 0.8em 0; }
+                  .pa-interpretation-toolbar { display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-bottom:6px }
+                  .pa-interpretation-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); background:linear-gradient(180deg,#fff,#f6f6f6); cursor:pointer }
+                  .pa-interpretation-viewport { height: 180px; max-height: 180px; overflow: hidden !important; position: relative; }
+                  /* ensure interpretation content never shows scrollbars */
+                  #ia-interpretation-content { overflow: hidden !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+                  .pa-interpretation-viewport, #ia-interpretation-content { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+                  .pa-interpretation-viewport::-webkit-scrollbar, #ia-interpretation-content::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+                  .pa-interpret-line { transition: transform 260ms ease, opacity 220ms ease; white-space: pre-wrap; }
+                  .pa-interpretation-skeleton { background: linear-gradient(90deg,#f3f3f3,#ececec,#f3f3f3); height:14px; border-radius:6px; margin-bottom:8px; animation: pa-skel 1.2s linear infinite }
+                  @keyframes pa-skel { 0% { background-position: -200px 0 } 100% { background-position: 200px 0 } }
+                  .pa-interpretation-fadein { animation: pa-fade-in 320ms ease both }
+                  @keyframes pa-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity:1; transform:none } }
+                `;
+                (document.head || document.documentElement).appendChild(st);
               }
+            } catch (e) {}
+
+            // helper to render interpretation text/html into the content area
+            function renderInterpretationInto(el, data, opts) {
+              try {
+                // NOTE: toolbar buttons removed per UX request. We provide programmatic TTS controls
+                // returned from this function. The UI button will be placed next to Tirage/Enregistrer/Retour.
+
+                // content body
+                const body = document.createElement('div');
+                body.style.opacity = '0';
+                body.className = 'pa-interpretation-fadein';
+
+                // helper to safely set text as paragraphs (used for reduced-motion fallback)
+                function setTextAsParagraphs(target, txt) {
+                  const parts = String(txt || '').split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
+                  target.innerHTML = '';
+                  parts.forEach(p => {
+                    const pEl = document.createElement('p');
+                    pEl.innerHTML = p.replace(/\n/g, '<br>');
+                    target.appendChild(pEl);
+                  });
+                  if (!parts.length) target.textContent = String(txt || '');
+                }
+
+                // put body into the element (clear first)
+                el.innerHTML = '';
+                el.appendChild(body);
+
+                // create a fixed viewport for typed content so we can control overflow
+                const viewport = document.createElement('div');
+                viewport.className = 'pa-interpretation-viewport';
+                viewport.style.overflow = 'hidden';
+                // prefer the caller-specified maxHeight if present, otherwise default to 180px
+                try { viewport.style.maxHeight = (el.style && el.style.maxHeight) ? el.style.maxHeight : '180px'; } catch (e) { viewport.style.maxHeight = '180px'; }
+                // lock the explicit height to the maxHeight so the viewport cannot grow
+                try {
+                  // if maxHeight is a simple px value like '320px', apply it to height and minHeight
+                  const mh = String(viewport.style.maxHeight || '180px').trim();
+                  viewport.style.height = mh;
+                  viewport.style.minHeight = mh;
+                } catch (e) {}
+                viewport.style.position = 'relative';
+                viewport.style.width = '100%';
+                viewport.style.boxSizing = 'border-box';
+
+                // inner queue will hold lines stacked vertically; align to bottom so new lines appear at the bottom
+                const queue = document.createElement('div');
+                queue.style.display = 'flex';
+                queue.style.flexDirection = 'column';
+                queue.style.justifyContent = 'flex-end';
+                queue.style.width = '100%';
+                queue.style.boxSizing = 'border-box';
+                queue.style.gap = '6px';
+                queue.style.willChange = 'transform';
+
+                viewport.appendChild(queue);
+                // attach body + viewport to element
+                el.innerHTML = '';
+                el.appendChild(body);
+                el.appendChild(viewport);
+
+                // fade in effect for the body/viewport
+                setTimeout(() => { try { viewport.style.opacity = '1'; } catch (e) {} }, 20);
+
+                // debug: log viewport size at open for easier troubleshooting
+                try { const rect = viewport.getBoundingClientRect(); console && console.log && console.log('[PopupAdapter] interp viewport rect', rect); } catch (e) {}
+
+                // speech synthesis wiring (programmatic control)
+                let utter = null;
+                function stopSpeak() { try { if (utter) { speechSynthesis.cancel(); utter = null; } } catch (e) {} }
+                function playSpeak(text, rate) {
+                  try {
+                    stopSpeak();
+                    const txt = String(text || (queue.innerText || queue.textContent || '') || '').trim();
+                    if (!txt) return false;
+                    utter = new SpeechSynthesisUtterance(txt);
+                    utter.lang = (navigator.language || 'fr').indexOf('fr') === 0 ? 'fr-FR' : (navigator.language || 'fr');
+                    utter.rate = Number(rate || 1.0) || 1.0;
+                    speechSynthesis.speak(utter);
+                    return true;
+                  } catch (e) { console && console.warn && console.warn('TTS play failed', e); return false; }
+                }
+
+                // Credits mode state
+                let _creditsRunning = false;
+                let _creditsCancel = null;
+
+                // Typing implementation: append lines at the bottom, remove top lines when overflow
+                let _typingCancelled = false;
+                function stopTyping() { _typingCancelled = true; }
+
+                const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                // accumulated removed height so transforms are continuous
+                let _removedHeight = 0;
+
+                // helper to perform a smooth upward scroll of the queue by 'shift' px
+                // This creates a movie-credits effect: the whole queue translates up, then
+                // we remove the top child and reset transform to keep visual continuity.
+                function animateScrollUp(shift) {
+                  return new Promise(resolve => {
+                    try {
+                      if (!shift || shift <= 0) return resolve();
+                      // ensure no concurrent transition
+                      queue.style.transition = 'transform 700ms linear';
+                      // animate from current removedHeight to removedHeight + shift
+                      queue.style.transform = `translateY(-${_removedHeight + shift}px)`;
+                      let done = false;
+                      const onEnd = () => {
+                        if (done) return; done = true;
+                        try {
+                          // remove the top child and update removedHeight; keep transform equal to -_removedHeight
+                          const first = queue.firstElementChild;
+                          if (first && first.parentNode) first.parentNode.removeChild(first);
+                          _removedHeight += shift;
+                          // clear transition so subsequent updates are immediate
+                          queue.style.transition = '';
+                          // leave queue.style.transform as translateY(-_removedHeight) to preserve continuity
+                        } catch (e) {}
+                        try { queue.removeEventListener('transitionend', onEnd); } catch (e) {}
+                        resolve();
+                      };
+                      queue.addEventListener('transitionend', onEnd);
+                      // fallback guard
+                      setTimeout(onEnd, 900);
+                    } catch (e) { resolve(); }
+                  });
+                }
+
+                // Immediately populate all lines and start credits-mode (no typewriter)
+                (function() {
+                  try {
+                    // resolve text source depending on type
+                    let rawText = '';
+                    if (opts && opts.type === 'html') {
+                      // render HTML first, then derive raw text from its textContent so we can split into paragraphs
+                      queue.innerHTML = data || '';
+                      rawText = (queue && (queue.innerText || queue.textContent)) ? (queue.innerText || queue.textContent) : String(data || '');
+                    } else if (opts && opts.type === 'json') {
+                      if (data && data.html) { queue.innerHTML = data.html; rawText = (queue && (queue.innerText || queue.textContent)) ? (queue.innerText || queue.textContent) : String(data.html || ''); }
+                      else if (data && data.result) rawText = String(data.result || '');
+                      else rawText = JSON.stringify(data, null, 2);
+                    } else {
+                      rawText = String(data || '');
+                    }
+
+                    // sanitize text: remove leading header like "Interprétation des cartes :" and problematic glyphs
+                    function sanitizeTextForDisplay(t) {
+                      if (!t) return '';
+                      // remove header variants (case-insensitive)
+                      t = t.replace(/^\s*Interpr[eé]tation des cartes\s*[:\-–—]*\s*/i, '');
+                      // remove markdown-like leading markers and bullets on lines
+                      t = t.replace(/^[ \t]*([\-*•·\u2022]+)[ \t]*/mg, '');
+                      t = t.replace(/^[ \t]*([#>~=\-]{1,3})[ \t]*/mg, '');
+                      // remove leading numeric enumerations like '1.', '1)', '1 -', or '01.'
+                      t = t.replace(/^[ \t]*\d+(?:[\.\)\-]|\s+-)\s*/mg, '');
+                      // remove nested dot enumerations like '1.2.3' appearing at start or inline
+                      t = t.replace(/\b\d+(?:\.\d+){1,}\b/g, '');
+                      // remove parenthetical numeric suffixes like ' (00)' or ' (1)'
+                      t = t.replace(/\s*\(\s*\d{1,3}\s*\)\s*/g, '');
+                      // remove common decorative glyphs
+                      t = t.replace(/[\*`•·▪■►◄●★☆✓✔‣›‹»«…·°°•◆◆●]/g, '');
+                      // remove other brackets and control chars
+                      t = t.replace(/[\[\]\{\}\<\>\|\\]/g, '');
+                      // remove control characters except newlines
+                      t = t.replace(/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]+/g, '');
+                      // replace sequences of punctuation like '---' or '***' by a single separator (space)
+                      t = t.replace(/[-*_]{2,}/g, ' ');
+                      // collapse multiple spaces
+                      t = t.replace(/[ \t]{2,}/g, ' ');
+                      // collapse multiple blank lines to a single blank line
+                      t = t.replace(/(?:\r?\n){3,}/g, '\n\n');
+                      // trim
+                      return t.trim();
+                    }
+
+                    // split into paragraphs (blank-line separated) to preserve paragraph breaks
+                    const paragraphs = sanitizeTextForDisplay(rawText).split(/\r?\n\s*\r?\n/).map(s => s.replace(/^\s+|\s+$/g, '')).filter(Boolean);
+
+                    // reduced-motion: inject paragraphs and allow user scrolling
+                    if (prefersReduced) {
+                      queue.innerHTML = '';
+                      paragraphs.forEach(p => {
+                        const clean = sanitizeTextForDisplay(p);
+                        const pEl = document.createElement('div'); pEl.className = 'pa-interpret-line'; pEl.style.margin = '0'; pEl.style.whiteSpace = 'pre-wrap';
+                        pEl.textContent = clean || '\u00A0';
+                        queue.appendChild(pEl);
+                      });
+                      // keep overflow hidden to avoid visible scrollbars
+                      viewport.style.overflow = 'hidden';
+                      return;
+                    }
+
+                    // Normal: render all paragraphs immediately and start credits-mode automatically (slow)
+                    queue.innerHTML = '';
+                    paragraphs.forEach(p => {
+                      const clean = sanitizeTextForDisplay(p);
+                      const pEl = document.createElement('div'); pEl.className = 'pa-interpret-line'; pEl.style.margin = '0'; pEl.style.whiteSpace = 'pre-wrap';
+                      pEl.textContent = clean || '\u00A0';
+                      queue.appendChild(pEl);
+                    });
+                    // start credits at slow speed (use paragraphs array)
+                    try { startCreditsMode(paragraphs, 8); } catch (e) {}
+                  } catch (e) { console && console.warn && console.warn('[PopupAdapter] credits render error', e); }
+                })();
+
+                // Credits-mode animator: render all lines and smoothly scroll them upward like film credits
+                function startCreditsMode(lines, speedPxPerSec) {
+                  try {
+                    stopCreditsMode();
+                    _creditsRunning = true;
+                    _creditsCancel = null;
+                    queue.innerHTML = '';
+                    viewport.style.overflow = 'hidden';
+                    // fill queue with paragraph elements (use textContent to avoid HTML injection)
+                    lines.forEach(l => {
+                      const lineEl = document.createElement('div');
+                      lineEl.className = 'pa-interpret-line';
+                      lineEl.style.margin = '0';
+                      lineEl.style.whiteSpace = 'pre-wrap';
+                      lineEl.textContent = String(l || '\u00A0');
+                      queue.appendChild(lineEl);
+                    });
+                    // compute total distance to scroll: queueHeight + viewportHeight
+                    // ensure layout updated
+                    void queue.offsetHeight;
+                    const qh = queue.scrollHeight || queue.offsetHeight || 0;
+                    const vh = viewport.clientHeight || 320;
+                    const totalDistance = qh + vh;
+                    const speed = Math.max(10, Number(speedPxPerSec) || 30); // px per second
+                    const durationMs = Math.max(800, Math.round((totalDistance / speed) * 1000));
+
+                    // start with queue positioned below viewport (translateY = viewportHeight)
+                    queue.style.transition = '';
+                    queue.style.transform = `translateY(${vh}px)`;
+                    // force reflow
+                    void queue.offsetHeight;
+                    // then animate to -qh over duration
+                    queue.style.transition = `transform ${durationMs}ms linear`;
+                    queue.style.transform = `translateY(-${qh}px)`;
+
+                    const onEnd = () => {
+                      try { _creditsRunning = false; _creditsCancel = null; queue.style.transition = ''; } catch (e) {}
+                    };
+                    const onEndHandler = () => { onEnd(); queue.removeEventListener('transitionend', onEndHandler); };
+                    queue.addEventListener('transitionend', onEndHandler);
+                    // cancel function
+                    _creditsCancel = () => {
+                      try { queue.style.transition = ''; queue.style.transform = ''; _creditsRunning = false; _creditsCancel = null; } catch (e) {}
+                    };
+                    // fallback guard
+                    setTimeout(() => { if (_creditsRunning) onEnd(); }, durationMs + 300);
+                  } catch (e) { console && console.warn && console.warn('startCreditsMode failed', e); }
+                }
+
+                function stopCreditsMode() { try { if (_creditsCancel) { _creditsCancel(); } _creditsRunning = false; _creditsCancel = null; } catch (e) {} }
+
+                // provide a programmatic credits trigger (no UI button)
+                function triggerCredits() {
+                  try {
+                    // collect last rendered text or request the API result body
+                    let existingLines = Array.prototype.slice.call(queue.children || []).map(c => c.innerText || c.textContent || '');
+                    if (!existingLines || !existingLines.length) {
+                      try {
+                        const raw = (typeof rawText !== 'undefined') ? rawText : (opts && opts.type === 'json' && data && data.result ? String(data.result || '') : String(data || ''));
+                        existingLines = (raw || '').split(/\r?\n/).map(s => s.replace(/^\s+|\s+$/g, ''));
+                      } catch (e) { existingLines = [String(data || '')]; }
+                    }
+                    startCreditsMode(existingLines, 28);
+                  } catch (e) { console && console.warn && console.warn('credits trigger error', e); }
+                }
+
+                // return programmatic controls for external UI wiring
+                return { play: (rate) => playSpeak(null, rate), stop: stopSpeak, stopTyping, credits: triggerCredits };
+              } catch (e) { try { el.textContent = (typeof data === 'string') ? data : JSON.stringify(data); } catch (er) {} }
+            }
+
+            // call the API with POST JSON, but use a retry wrapper and provide a retry button on failure
+            (async () => {
+              // helper: fetch with attempts + timeout
+              async function fetchWithRetries(url, options, attempts = 3, baseDelay = 700, timeoutMs = 12000) {
+                let lastErr = null;
+                for (let i = 0; i < attempts; i++) {
+                  try {
+                    const controller = new AbortController();
+                    const id = setTimeout(() => controller.abort(), timeoutMs);
+                    const resp = await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+                    clearTimeout(id);
+                    return resp;
+                  } catch (e) {
+                    lastErr = e;
+                    // if aborted due to timeout or network, wait then retry (unless last attempt)
+                    if (i < attempts - 1) await new Promise(r => setTimeout(r, baseDelay * (i + 1)));
+                  }
+                }
+                throw lastErr;
+              }
+
+              // main request runner with UI hooks so we can retry on user click
+              async function doRequest() {
+                try {
+                  // show skeleton while waiting
+                  content.innerHTML = '';
+                  const sk = document.createElement('div'); sk.className = 'pa-interpretation-skeleton'; sk.style.width = '80%'; sk.style.height = '18px'; content.appendChild(sk);
+                  // run fetch with retries
+                  const resp = await fetchWithRetries(apiBase, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }, 3, 700, 12000);
+                  if (!resp || !resp.ok) {
+                    const txt = await (resp ? resp.text().catch(()=>resp.statusText||String(resp.status)) : Promise.resolve('No response'));
+                    showError('Erreur API: ' + txt);
+                    console.warn('[PopupAdapter] Interpretation API error', resp && resp.status, txt);
+                    return;
+                  }
+                  const ctype = (resp.headers.get('content-type') || '').toLowerCase();
+                  if (ctype.indexOf('text/html') !== -1) {
+                    const html = await resp.text();
+                    try {
+                      const ctr = renderInterpretationInto(content, html, { type: 'html' });
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                    } catch (e) { content.innerHTML = html; }
+                  } else if (ctype.indexOf('application/json') !== -1) {
+                    const j = await resp.json();
+                    try {
+                      const ctr = renderInterpretationInto(content, j, { type: 'json' });
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                    } catch (e) { content.textContent = typeof j === 'string' ? j : JSON.stringify(j, null, 2); }
+                  } else {
+                    const txt = await resp.text();
+                    try {
+                      const ctr = renderInterpretationInto(content, txt, { type: 'text' });
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                    } catch (e) { content.textContent = txt; }
+                  }
+                } catch (err) {
+                  // network/abort error
+                  const msg = (err && err.name === 'AbortError') ? 'Temps d\'attente épuisé' : (err && err.message) ? err.message : 'Erreur réseau lors de la récupération de l\'interprétation.';
+                  showError('Erreur API: ' + msg, err);
+                }
+              }
+
+              function showError(msg, err) {
+                try {
+                  content.innerHTML = '';
+                  const em = document.createElement('div'); em.style.padding = '8px'; em.style.color = '#b00'; em.textContent = msg;
+                  const detail = document.createElement('div'); detail.style.fontSize = '12px'; detail.style.color = '#666'; detail.style.marginTop = '6px'; detail.textContent = (err && err.toString()) || '';
+                  content.appendChild(em); content.appendChild(detail);
+                  const retry = document.createElement('button'); retry.textContent = 'Réessayer'; retry.style.marginTop = '8px'; retry.className = 'pa-interpretation-btn';
+                  retry.addEventListener('click', function(){ try { doRequest(); } catch(e){} });
+                  content.appendChild(retry);
+                } catch (e) { try { content.textContent = msg; } catch (ee) {} }
+                console.error('[PopupAdapter] fetchInterpretation failed', err || msg);
+              }
+
+              // respect offline mode quickly
+              if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+                showError('Vous êtes hors-ligne. Vérifiez votre connexion et réessayez.');
+                return;
+              }
+
+              // launch initial request
+              doRequest();
             })();
           } catch (e) {
             console.warn('[PopupAdapter] Could not launch interpretation fetch', e);
@@ -1184,7 +1602,87 @@
           try { setGlobalNoScroll(true); } catch (e) {}
           try { interp.style.boxSizing = 'border-box'; interp.style.maxWidth = 'calc(100vw - 40px)'; interp.style.maxHeight = 'calc(100vh - 160px)'; interp.style.overflow = 'hidden'; } catch (e) {}
                   // open the interpretation popup
-                  const handle = openPopup(interp);
+                          // if we have a cached deck popup size, apply it so both popups match exactly
+                          try {
+                            // prefer the precise measured rect (set after deck open) if available
+                            const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
+                            if (rect) {
+                              try { interp.style.minWidth = (rect.width ? (rect.width + 'px') : interp.style.minWidth); } catch (e) {}
+                              try { interp.style.width = (rect.width ? (rect.width + 'px') : interp.style.width); } catch (e) {}
+                              // Do NOT force a large fixed height on the interpretation popup. Instead cap the
+                              // maximum height to the previously measured deck height and allow the popup to
+                              // size to its content. This prevents the interpretation frame from being too tall.
+                              try { interp.style.maxHeight = (rect.height ? (rect.height + 'px') : interp.style.maxHeight); } catch (e) {}
+                              try { interp.style.height = 'auto'; } catch (e) {}
+                              try { interp.style.minHeight = 'auto'; } catch (e) {}
+                            }
+                          } catch (e) {}
+                          const handle = openPopup(interp);
+                          // robustly enforce wrapper sizing. PopupManager may wrap/override; use immediate + delayed reapply + MutationObserver
+                          try {
+                            const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
+                            const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                            if (wrapper && rect) {
+                              const applyRect = (w, r) => {
+                                try { w.style.minWidth = r.width + 'px'; } catch (e) {}
+                                try { w.style.width = r.width + 'px'; } catch (e) {}
+                                // Avoid forcing wrapper to a fixed tall height. Cap the wrapper's maxHeight
+                                // to the measured deck height to keep parity but allow the wrapper to shrink
+                                // to fit the interpretation content.
+                                try { w.style.maxHeight = r.height + 'px'; } catch (e) {}
+                                try { w.style.height = 'auto'; } catch (e) {}
+                                try { w.style.minHeight = 'auto'; } catch (e) {}
+                              };
+                              try { applyRect(wrapper, rect); } catch (e) {}
+                              // reapply slightly later in case the host mutates the wrapper
+                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) {} }, 120);
+                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) {} }, 420);
+                              // observe wrapper for attribute/style changes and reapply once if needed
+                              try {
+                                const mo = new MutationObserver((mut) => {
+                                  try { applyRect(wrapper, rect); } catch (e) {}
+                                });
+                                mo.observe(wrapper, { attributes: true, attributeFilter: ['style', 'class'], childList: false, subtree: false });
+                                // disconnect after a short grace period
+                                setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 2500);
+                              } catch (e) {}
+                            }
+                          } catch (e) {}
+                  // after the popup is attached to the DOM, ensure popup bottom is below the chosen cards
+                  try {
+                    setTimeout(() => {
+                      try {
+                        const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                        const chosenEl = document.getElementById('pa-chosen-wrap');
+                        if (!wrapper || !chosenEl) return;
+                        const wRect = wrapper.getBoundingClientRect();
+                        const cRect = chosenEl.getBoundingClientRect();
+                        // if the wrapper bottom is above the chosen cards bottom, expand wrapper minHeight
+                        if ((wRect.bottom || 0) < (cRect.bottom || 0)) {
+                          const delta = Math.round((cRect.bottom || 0) - (wRect.bottom || 0)) + 12;
+                          try {
+                            const newMin = ( (wrapper.clientHeight || wRect.height || 0) + delta );
+                            wrapper.style.minHeight = newMin + 'px';
+                            // also ensure wrapper height can grow
+                            try { wrapper.style.height = 'auto'; } catch (e) {}
+                          } catch (e) {}
+                        }
+                      } catch (e) {}
+                    }, 160);
+                  } catch (e) {}
+                  // Force a downward offset of 100px on the wrapper returned by openPopup (some page managers override positioning)
+                  try {
+                    const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                    if (wrapper && wrapper.style) {
+                      try {
+                        // preserve original transform
+                        if (!wrapper.dataset._pa_origTransform) wrapper.dataset._pa_origTransform = wrapper.style.transform || '';
+                        // apply translateY(100px)
+                        wrapper.style.transform = (wrapper.style.transform || '') + ' translateY(100px)';
+                        wrapper.dataset._pa_downshift = '100';
+                      } catch (e) {}
+                    }
+                  } catch (e) {}
                   // After the popup is visible, measure alignment and apply a corrective translate if needed
                   try {
                     setTimeout(() => {
@@ -1739,6 +2237,35 @@
       }
       return { offsetPx: offsetPx, offsetCm: offsetCm, frameCenter: frameCenter, viewCenter: viewCenter };
     } catch (e) { console && console.warn && console.warn('[PopupAdapter] measure error', e); return null; }
+  };
+
+  // Return heights for the interpretation viewport and its content (in pixels).
+  // Useful to inspect opening height (viewport) vs final content height (queue.scrollHeight).
+  window.PopupAdapter.getInterpretationHeights = function () {
+    try {
+      const frame = document.getElementById('pa-last-interpretation-frame') || (window.PopupAdapter && window.PopupAdapter._lastInterpFrame);
+      if (!frame) return null;
+      const viewport = frame.querySelector && (frame.querySelector('.pa-interpretation-viewport') || frame.querySelector('#ia-interpretation-content'));
+      // queue is the inner element holding lines
+      const queue = viewport && viewport.querySelector ? (viewport.querySelector('div') || null) : null;
+      const viewportHeight = viewport ? (viewport.clientHeight || parseInt(window.getComputedStyle(viewport).height || '0', 10)) : null;
+      const contentHeight = queue ? (queue.scrollHeight || queue.offsetHeight || null) : null;
+      return { viewportHeight: viewportHeight, contentHeight: contentHeight };
+    } catch (e) { console && console.warn && console.warn('[PopupAdapter] getInterpretationHeights error', e); return null; }
+  };
+
+  // Reapply last deck popup size (width/height) to a given element or wrapper.
+  window.PopupAdapter.reapplyLastDeckSize = function (el) {
+    try {
+      const last = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
+      const node = el || null;
+      if (!last || !node) return false;
+      try { node.style.minWidth = last.width + 'px'; } catch (e) {}
+      try { node.style.width = last.width + 'px'; } catch (e) {}
+      try { node.style.minHeight = last.height + 'px'; } catch (e) {}
+      try { node.style.height = last.height + 'px'; } catch (e) {}
+      return true;
+    } catch (e) { return false; }
   };
 
   window.PopupAdapter.clearCenterGuides = function () { try { const a = document.getElementById('pa-center-guide'); if (a && a.parentNode) a.parentNode.removeChild(a); const b = document.getElementById('pa-frame-center-guide'); if (b && b.parentNode) b.parentNode.removeChild(b); } catch (e) {} };
