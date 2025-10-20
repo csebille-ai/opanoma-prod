@@ -1220,8 +1220,11 @@
                       try { wrapper.dataset._pa_centered = '1'; } catch (e) {}
                     }
                   } catch (e) {}
-          // auto-invoke interpretation starter if provided by external code
-          try { setTimeout(() => { try { if (window.PopupAdapter && typeof window.PopupAdapter._interpretationStarter === 'function') window.PopupAdapter._interpretationStarter(function(cardsArg, frameEl) { try { if (frameEl) frameEl.textContent = 'Appel API automatique… (exemple)'; } catch (e) {} }); } catch (e) {} }, 120); } catch (e) {}
+          // Note: previously we auto-invoked a sample interpretation starter which
+          // wrote a placeholder ('Appel API automatique… (exemple)') into the frame.
+          // That placeholder could overwrite the real API results that are fetched
+          // just above. We no longer auto-set that placeholder; external code can
+          // still use window.PopupAdapter._interpretationStarter to run custom logic.
 
           // expose selected cards for external usage
           try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = cards.slice(); } catch (e) {}
