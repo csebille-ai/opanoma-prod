@@ -89,6 +89,8 @@
   container.style.textAlign = 'center';
   // small left padding so content is slightly inset but tight to the left
   container.style.padding = '12px 12px 12px 4px';
+  // hide overflow to remove internal scrollbars
+  container.style.overflow = 'hidden';
 
     const title = document.createElement('h2');
     title.className = 'pm-popup-title';
@@ -495,7 +497,7 @@
     container.appendChild(title);
 
     const stage = document.createElement('div');
-    stage.style.display = 'flex';
+  stage.style.display = 'flex';
     stage.style.justifyContent = 'center';
 
     const grid = document.createElement('div');
@@ -582,6 +584,18 @@
       }
     }, 50);
 
+  // restore body overflow when popups close (best-effort) - attach a global listener
+  try {
+    document.addEventListener('click', function (ev) {
+      // if overlay is absent, restore overflowX
+      try {
+        if (!document.querySelector('.pa-deck-overlay-fallback')) {
+          if (document.body && document.body.style) document.body.style.overflowX = '';
+        }
+      } catch (e) {}
+    });
+  } catch (e) {}
+
     return popupHandle;
   }
 
@@ -613,6 +627,8 @@
   stage.style.padding = '12px 0 12px 0';
   // no left padding — cards should hug the left edge
   stage.style.paddingLeft = '0px';
+  // prevent stage from creating scrollbars
+  stage.style.overflow = 'hidden';
 
   const grid = document.createElement('div');
   grid.style.display = 'grid';
@@ -652,10 +668,12 @@
     const verticalPadding = 120; // includes title + top/bottom spacing
 
     // set grid and stage sizes explicitly
-    grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
-    grid.style.gridAutoRows = `${cardH}px`;
-    grid.style.width = gridW + 'px';
-    grid.style.height = gridH + 'px';
+  grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
+  grid.style.gridAutoRows = `${cardH}px`;
+  grid.style.width = gridW + 'px';
+  grid.style.height = gridH + 'px';
+  // hide any overflow to avoid scrollbars
+  grid.style.overflow = 'hidden';
 
       // create slots and fill with verso image; center last row by starting its first slot at column 2
       for (let i = 0; i < total; i++) {
@@ -749,8 +767,10 @@
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px' });
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px', overflow: 'hidden' });
               overlay.appendChild(container);
+              // prevent the page from scrolling horizontally while overlay is open
+              try { document.body.style.overflowX = 'hidden'; } catch (e) {}
               document.body.appendChild(overlay);
             }
           } catch (e) {}
