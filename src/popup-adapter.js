@@ -584,24 +584,31 @@
     try {
       const total = 22;
       // build container ourselves so we can tightly control dimensions
-      const container = document.createElement('div');
-      container.style.textAlign = 'center';
-      container.style.padding = '10px';
+  const container = document.createElement('div');
+  container.style.textAlign = 'center';
+  // increase internal padding so the popup appears less cramped left/right and bottom
+  container.style.padding = '16px';
+  // ask for a slightly larger max width inside the popup frame
+  try { container.style.maxWidth = getMaxFrameWidth(); } catch (e) {}
 
       const title = document.createElement('h3');
       title.className = 'pm-popup-title';
       title.textContent = 'Tirage - Choisissez vos cartes';
       container.appendChild(title);
 
-      const stage = document.createElement('div');
-      stage.style.display = 'flex';
-      stage.style.justifyContent = 'center';
-      stage.style.padding = '6px 0 6px 0';
+  const stage = document.createElement('div');
+  stage.style.display = 'flex';
+  stage.style.justifyContent = 'center';
+  // more vertical padding to add breathing room above/below the grid
+  stage.style.padding = '12px 0 12px 0';
 
-      const grid = document.createElement('div');
-      grid.style.display = 'grid';
-      grid.style.gap = '8px';
-      grid.style.boxSizing = 'content-box';
+  const grid = document.createElement('div');
+  grid.style.display = 'grid';
+  grid.style.gap = '8px';
+  // use border-box so width accounts for padding if we add any later
+  grid.style.boxSizing = 'border-box';
+  // add small bottom margin so cards don't touch the popup edge
+  grid.style.marginBottom = '12px';
 
       // compute available popup width and height and force 4-row layout (6,6,6,4)
       const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
