@@ -648,13 +648,14 @@
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
   container.style.textAlign = 'center';
-  // small left padding so content is slightly inset but tight to the left
-  container.style.padding = '18px 18px 18px 4px';
+  // smaller top padding so title and cards sit higher in the popup (lifted)
+  container.style.padding = '8px 18px 18px 4px';
   // request a larger popup frame from PopupManager (if present)
   try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
   // also set min visual dimensions so a simple container fallback looks bigger
-  container.style.minWidth = '680px';
-  container.style.minHeight = '520px';
+  // increase width/height so the deck popup is large and long enough to contain all cards
+  container.style.minWidth = '820px';
+  container.style.minHeight = '720px';
 
       // dynamic title that shows remaining cards to draw
       const title = document.createElement('h3');
@@ -710,10 +711,10 @@
 
   const stage = document.createElement('div');
   stage.style.display = 'flex';
-  // align grid to the left with a small offset so cards are 'collées' à gauche
+  // align grid to the left but lift content upward so title/cards sit higher
   stage.style.justifyContent = 'flex-start';
-  // more vertical padding to add breathing room above/below the grid
-  stage.style.padding = '12px 0 12px 0';
+  // reduce top padding so grid moves upward inside the popup
+  stage.style.padding = '6px 0 18px 0';
   // no left padding — cards should hug the left edge
   stage.style.paddingLeft = '0px';
   // prevent stage from creating scrollbars
@@ -774,7 +775,8 @@
 
   // breathing space around the grid (padding inside popup)
   const horizontalPadding = 48; // left + right total
-    const verticalPadding = 120; // includes title + top/bottom spacing
+    // increase vertical padding to allow larger visual frame and breathing space
+    const verticalPadding = 160; // includes title + top/bottom spacing
 
     // set grid gap according to computed gap and set grid and stage sizes explicitly
     try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
@@ -886,8 +888,9 @@
   container.appendChild(stage);
 
   // compute desired popup frame dimensions based on grid + breathing
-  const desiredWidth = Math.min(window.innerWidth - 40, gridW + horizontalPadding);
-  const desiredHeight = Math.min(window.innerHeight - 80, gridH + verticalPadding);
+  // aim for a larger desired width/height but clamp to viewport with safe margins
+  const desiredWidth = Math.min(window.innerWidth - 40, Math.max(gridW + horizontalPadding, 840));
+  const desiredHeight = Math.min(window.innerHeight - 80, Math.max(gridH + verticalPadding, 700));
   // remember the deck popup size so interpretation popup can match it
   try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupSize = { width: Math.round(desiredWidth), height: Math.round(desiredHeight) }; } catch (e) {}
   try { container.style.width = desiredWidth + 'px'; } catch (e) {}
@@ -937,22 +940,23 @@
               // create overlay
               const overlay = document.createElement('div');
               overlay.className = 'pa-deck-overlay-fallback';
-              Object.assign(overlay.style, {
-                position: 'fixed',
-                left: '50%',
-        transform: 'translate(-50%,0)',
-                top: '136px', // shifted down by 100px per user request
-                zIndex: 999999,
-                background: 'rgba(255,255,255,0.02)',
-                padding: '12px',
-                borderRadius: '10px',
-                boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
-          width: Math.min(960, desiredWidth + 80) + 'px',
-          maxWidth: 'calc(100vw - 40px)',
-          maxHeight: 'calc(100vh - 160px)',
-          overflow: 'hidden',
-          boxSizing: 'border-box'
-              });
+        Object.assign(overlay.style, {
+    position: 'fixed',
+    left: '50%',
+  transform: 'translate(-50%,0)',
+    // lift overlay a bit so it sits higher on the page
+    top: '100px',
+    zIndex: 999999,
+    background: 'rgba(255,255,255,0.02)',
+    padding: '12px',
+    borderRadius: '10px',
+    boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
+    width: Math.min(1000, desiredWidth + 120) + 'px',
+    maxWidth: 'calc(100vw - 40px)',
+    maxHeight: Math.min(window.innerHeight - 120, (desiredHeight + 120)) + 'px',
+    overflow: 'hidden',
+    boxSizing: 'border-box'
+        });
               // add a close button
               const closeBtn = document.createElement('button');
               closeBtn.textContent = '×';
@@ -961,7 +965,7 @@
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px', overflow: 'hidden', boxSizing: 'border-box', maxWidth: '100%', maxHeight: '100%' });
+              Object.assign(container.style, { width: '100%', minWidth: Math.max(720, desiredWidth) + 'px', minHeight: Math.max(640, desiredHeight) + 'px', padding: '12px 12px 12px 4px', overflow: 'hidden', boxSizing: 'border-box', maxWidth: '100%', maxHeight: '100%' });
               overlay.appendChild(container);
               // prevent the page from scrolling horizontally while overlay is open
               try { document.body.style.overflowX = 'hidden'; } catch (e) {}
