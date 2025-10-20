@@ -9,13 +9,17 @@
       const s = document.createElement('style');
       s.id = 'pa-popup-styles';
       s.textContent = `
-        .pa-popup-open, .pa-popup-open html, .pa-popup-open body { overflow: hidden !important; }
+        /* Force-hide page scrollbars while popup is active */
+        .pa-popup-open, .pa-popup-open html, .pa-popup-open body, html.pa-popup-open, body.pa-popup-open { overflow: hidden !important; height: 100% !important; }
+        /* Hide scrollbars for common engines when popup open */
+        .pa-popup-open * { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+        .pa-popup-open *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
         .pa-deck-overlay-fallback { overflow: hidden !important; }
-        .pa-deck-overlay-fallback::-webkit-scrollbar { display: none; }
-        .pm-popup-msgbox { overflow-x: hidden !important; -ms-overflow-style: none; scrollbar-width: none; }
-        .pm-popup-msgbox::-webkit-scrollbar { display: none; }
-        .pm-card-slot { -ms-overflow-style: none; scrollbar-width: none; }
-        .pm-card-slot::-webkit-scrollbar { display: none; }
+        .pa-deck-overlay-fallback::-webkit-scrollbar { display: none !important; }
+        .pm-popup-msgbox { overflow-x: hidden !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+        .pm-popup-msgbox::-webkit-scrollbar { display: none !important; }
+        .pm-card-slot { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+        .pm-card-slot::-webkit-scrollbar { display: none !important; }
       `;
       (document.head || document.documentElement).appendChild(s);
     }
@@ -29,6 +33,21 @@
     } catch (e) {
       return '720px';
     }
+  }
+
+  // Force-hide page scrollbars (useful when showing modal popups). Use sparingly.
+  function setGlobalNoScroll(on) {
+    try {
+      if (on) {
+        try { document.documentElement.style.overflow = 'hidden'; } catch (e) {}
+        try { document.body.style.overflow = 'hidden'; } catch (e) {}
+        try { document.body.classList.add('pa-popup-open'); } catch (e) {}
+      } else {
+        try { document.documentElement.style.overflow = ''; } catch (e) {}
+        try { document.body.style.overflow = ''; } catch (e) {}
+        try { document.body.classList.remove('pa-popup-open'); } catch (e) {}
+      }
+    } catch (e) { /* ignore */ }
   }
 
   // Preserved raw messages (for compatibility)
@@ -618,8 +637,9 @@
   }
 
   // New: show full deck popup with 22 slots pre-filled with verso image
-  function showDeckPopup(chosenCount) {
+  function showDeckPopup(chosenCount, opts) {
     try {
+      opts = opts || {};
       const total = 22;
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
@@ -632,9 +652,56 @@
   container.style.minWidth = '680px';
   container.style.minHeight = '520px';
 
+      // dynamic title that shows remaining cards to draw
       const title = document.createElement('h3');
       title.className = 'pm-popup-title';
-      title.textContent = 'Tirage - Choisissez vos cartes';
+      // initialize remaining count from chosenCount (fallback to 0)
+      const initialRemaining = (Number(chosenCount) === 3 || Number(chosenCount) === 5) ? Number(chosenCount) : 0;
+      let remaining = initialRemaining;
+      // create title with a span for the numeric counter so we can animate it
+      const numSpan = document.createElement('span');
+      numSpan.className = 'pa-remaining-num';
+      numSpan.textContent = String(remaining);
+      function updateTitle() {
+        try {
+          // build title: Tirez x cartes  (no quotes around x)
+          if (remaining > 0) {
+            title.textContent = 'Tirez ';
+            title.appendChild(numSpan);
+            title.appendChild(document.createTextNode(' cartes'));
+          } else {
+            title.textContent = 'Tirage terminé';
+          }
+          // animate the number: quick scale up then back
+          try {
+            const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!prefersReduced && remaining > 0) {
+              numSpan.classList.remove('pa-remaining-pulse');
+              // force reflow
+              void numSpan.offsetWidth;
+              numSpan.classList.add('pa-remaining-pulse');
+            }
+          } catch (e) {}
+          // update numeric text
+          try { numSpan.textContent = String(remaining); } catch (e) {}
+          // expose remaining for external code
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._remainingCount = remaining; } catch (e) {}
+        } catch (e) {}
+      }
+      // ensure we inject small styles for the number pulse
+      try {
+        if (!document.getElementById('pa-remaining-styles')) {
+          const st = document.createElement('style');
+          st.id = 'pa-remaining-styles';
+          st.textContent = `
+            .pa-remaining-num { font-weight: 700; margin: 0 6px; display: inline-block; transition: transform 220ms ease; }
+            .pa-remaining-pulse { transform: scale(1.22); }
+            @media (prefers-reduced-motion: reduce) { .pa-remaining-num, .pa-remaining-pulse { transition: none !important; transform: none !important; } }
+          `;
+          (document.head || document.documentElement).appendChild(st);
+        }
+      } catch (e) {}
+      updateTitle();
       container.appendChild(title);
 
   const stage = document.createElement('div');
@@ -650,7 +717,8 @@
 
   const grid = document.createElement('div');
   grid.style.display = 'grid';
-  grid.style.gap = '8px';
+  // gap is configured later (depends on computed `gap` variable)
+  grid.style.gap = '0px';
   // use border-box so width accounts for padding if we add any later
   grid.style.boxSizing = 'border-box';
   // add small bottom margin so cards don't touch the popup edge
@@ -661,14 +729,33 @@
       const reserved = (title.getBoundingClientRect ? Math.round(title.getBoundingClientRect().height) : 56) + 24;
       const availH = Math.max(320, window.innerHeight - reserved - 40);
 
-      const gap = 8;
+  // reduce the gap to make cards appear closer and allow a larger enlarge factor
+  const gap = 2; // tighter spacing between cards
+  const enlargeFactor = 1.14; // slightly larger proportional growth for visual weight
+  // tuning: increase width and set heightShrink to 1 so cards use full computed height
+  const widthBoost = 1.12; // widen cards by ~12%
+  const heightShrink = 1.0; // keep full height to balance vertical spacing
       const cardRatio = 3 / 2;
       const cols = 6;
       const rows = 4;
 
-    // compute card size so 6x4 volume is used as base, then add breathing space
-    let cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
-    let cardH = Math.floor(cardW * cardRatio);
+    // compute card size so 6x4 volume is used as base, then attempt a slight enlargement
+    const baseCardW = Math.floor((maxW - (cols - 1) * gap) / cols);
+    // desired width attempts to apply enlargeFactor then widthBoost
+    const desiredW = Math.floor(baseCardW * enlargeFactor * widthBoost);
+    // fallback to base if overflow
+    let cardW = desiredW;
+    let tentativeGridW = (cardW * cols) + ((cols - 1) * gap);
+    if (tentativeGridW > maxW) {
+      cardW = baseCardW;
+      tentativeGridW = (cardW * cols) + ((cols - 1) * gap);
+      // still if base overflows (unlikely), force a fit
+      if (tentativeGridW > maxW) {
+        cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
+      }
+    }
+    // apply a reduced height multiplier to tighten the fit inside the frame
+    let cardH = Math.floor(cardW * cardRatio * heightShrink);
     // compute grid volume exact sizes
     let gridW = (cardW * cols) + ((cols - 1) * gap);
     let gridH = (cardH * rows) + ((rows - 1) * gap);
@@ -681,31 +768,62 @@
       gridH = (cardH * rows) + ((rows - 1) * gap);
     }
 
-    // breathing space around the grid (padding inside popup)
-    const horizontalPadding = 48; // left + right total
+  // breathing space around the grid (padding inside popup)
+  const horizontalPadding = 48; // left + right total
     const verticalPadding = 120; // includes title + top/bottom spacing
 
-    // set grid and stage sizes explicitly
-  grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
-  grid.style.gridAutoRows = `${cardH}px`;
+    // set grid gap according to computed gap and set grid and stage sizes explicitly
+    try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
+    grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
+    grid.style.gridAutoRows = `${cardH}px`;
   grid.style.width = gridW + 'px';
-  grid.style.height = gridH + 'px';
-  // hide any overflow to avoid scrollbars
-  grid.style.overflow = 'hidden';
+    
+    grid.style.height = gridH + 'px';
+    // hide any overflow to avoid scrollbars
+    grid.style.overflow = 'hidden';
 
       // create slots and fill with verso image; center last row by starting its first slot at column 2
+      // We'll also prepare a staggered entrance animation for the verso images: start blurred/faded/scaled
+      // and animate to sharp/opaque/normal. Respect prefers-reduced-motion.
+      // Insert a small style block (id'd) to control animation timing where needed.
+      try {
+        if (!document.getElementById('pa-deck-entrance-styles')) {
+          const st = document.createElement('style');
+          st.id = 'pa-deck-entrance-styles';
+          st.textContent = `
+            .pa-deck-entrance { filter: blur(6px); opacity: 0; transform: scale(0.98) translateY(6px); transition: filter 420ms ease, opacity 420ms ease, transform 420ms ease; }
+            .pa-deck-entrance.pa-deck-entrance--visible { filter: blur(0px); opacity: 1; transform: scale(1) translateY(0px); }
+            @media (prefers-reduced-motion: reduce) {
+              .pa-deck-entrance { transition: none !important; filter: none !important; opacity: 1 !important; transform: none !important; }
+            }
+          `;
+          (document.head || document.documentElement).appendChild(st);
+        }
+      } catch (e) {}
+  // fan option: when opts.fan === true (or a number), apply a small random rotation (-angle..+angle)
+  // and a subtle translateY to create an 'eventail' effect. Respect prefers-reduced-motion.
+  const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fanEnabled = !!opts.fan && !prefersReduced;
+  // fanAngleMax can be a number (degrees) provided via opts.fan or default to 8 degrees
+  const fanAngleMax = (typeof opts.fan === 'number' && isFinite(opts.fan)) ? Math.abs(opts.fan) : 8;
+  // store per-slot fan angles for debugging/external use
+  const fanAngles = [];
       for (let i = 0; i < total; i++) {
         const slot = document.createElement('div');
         slot.className = 'pm-card-slot';
         Object.assign(slot.style, {
           overflow: 'hidden',
-          borderRadius: '6px',
-          background: 'linear-gradient(180deg,#eee,#ddd)',
+          // match the image rounding so no background peeks through
+          borderRadius: '12px',
+          background: 'transparent',
           display: 'flex',
           alignItems: 'center',
-          // align image to left inside slot and add a small left padding
-          justifyContent: 'flex-start',
-          paddingLeft: '0px',
+          // center the image inside the slot (image fills the slot)
+          justifyContent: 'center',
+          // remove any internal padding so the image touches the slot edges
+          padding: '0px',
+          boxSizing: 'border-box',
+          // make the slot slightly larger to accommodate reduced inter-card gap
           width: cardW + 'px',
           height: cardH + 'px'
         });
@@ -717,15 +835,46 @@
           try { slot.style.gridColumnStart = '2'; } catch (e) {}
         }
         // fill image
-        try {
+          try {
           const img = document.createElement('img');
           img.src = './public/img/majors/verso.webp';
           img.alt = 'verso';
+          // ensure the image fills the slot exactly (no inset) and includes borders in sizing
+          try { slot.style.padding = '0px'; slot.style.boxSizing = 'border-box'; } catch (e) {}
+          // image fills the slot's inner box exactly and includes borders in sizing
           img.style.width = '100%';
           img.style.height = '100%';
-          img.style.objectFit = 'cover';
+          img.style.boxSizing = 'border-box';
+          img.style.objectFit = 'contain';
+          // rounded corners to match the card aesthetic (no border/shadow behind images)
+          img.style.borderRadius = '12px';
+          img.style.display = 'block';
+          img.style.background = 'transparent';
+          // ensure the slot clips overflow so rounded corners show correctly
+          slot.style.overflow = 'hidden';
+          // entrance animation class
+          img.classList.add('pa-deck-entrance');
           slot.appendChild(img);
         } catch (e) {}
+        // apply optional fan rotation/offset here (small random per-slot angle + subtle translate)
+        if (fanEnabled) {
+          // angle between -fanAngleMax and +fanAngleMax
+          const angle = (Math.random() * 2 * fanAngleMax) - fanAngleMax;
+          // slight translate to enhance the fanned look (max 6px vertically, and small horizontal jitter)
+          const ty = Math.round((Math.random() * 6) - 3);
+          const tx = Math.round((Math.random() * 6) - 3);
+          // apply transform while keeping the slot centered in its grid cell
+          try {
+            slot.style.transformOrigin = '50% 50%';
+            slot.style.transition = 'transform 320ms ease, box-shadow 260ms ease';
+            // use translate then rotate so rotation pivots around the center
+            slot.style.transform = `translate(${tx}px, ${ty}px) rotate(${angle}deg)`;
+          } catch (e) {}
+          fanAngles.push({ index: i, angle: angle, tx: tx, ty: ty });
+        } else {
+          fanAngles.push({ index: i, angle: 0, tx: 0, ty: 0 });
+        }
+
         grid.appendChild(slot);
       }
 
@@ -740,7 +889,7 @@
 
   const popupHandle = openPopup(container);
   // ensure page hides scrollbars while this popup is active (best-effort)
-  try { document.body.classList.add('pa-popup-open'); } catch (e) {}
+  try { setGlobalNoScroll(true); } catch (e) {}
 
   // If PopupManager returned a wrapper element, attempt to force larger visual
       // dimensions on the wrapper. If that still results in a too-small visual
@@ -769,25 +918,28 @@
               Object.assign(overlay.style, {
                 position: 'fixed',
                 left: '50%',
-                transform: 'translateX(-50%)',
-                    top: '140px', // lower placement
+        transform: 'translate(-50%,0)',
+          top: '120px', // lower placement
                 zIndex: 999999,
                 background: 'rgba(255,255,255,0.02)',
                 padding: '12px',
                 borderRadius: '10px',
                 boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
-                    width: Math.min(960, desiredWidth + 80) + 'px',
-                    maxWidth: 'calc(100% - 40px)'
+          width: Math.min(960, desiredWidth + 80) + 'px',
+          maxWidth: 'calc(100vw - 40px)',
+          maxHeight: 'calc(100vh - 160px)',
+          overflow: 'hidden',
+          boxSizing: 'border-box'
               });
               // add a close button
               const closeBtn = document.createElement('button');
               closeBtn.textContent = '×';
               Object.assign(closeBtn.style, { position: 'absolute', right: '10px', top: '6px', background: 'transparent', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer' });
-              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); document.body.classList.remove('pa-popup-open'); document.body.style.overflowX = ''; } catch (e) {} });
+              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {} });
               overlay.appendChild(closeBtn);
               // move our container inside overlay (detach from previous parent)
               try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px', overflow: 'hidden' });
+              Object.assign(container.style, { width: '100%', minWidth: '640px', minHeight: '520px', padding: '12px 12px 12px 4px', overflow: 'hidden', boxSizing: 'border-box', maxWidth: '100%', maxHeight: '100%' });
               overlay.appendChild(container);
               // prevent the page from scrolling horizontally while overlay is open
               try { document.body.style.overflowX = 'hidden'; } catch (e) {}
@@ -797,22 +949,362 @@
         }, 120);
       } catch (e) {}
 
+  // build a randomized mapping of the 22 major-arcana face images to the slots
+      // so each time the deck popup opens the faces are shuffled and assigned
+      const deckFaceNames = [
+        '00-le-mat.webp','01-le-bateleur.webp','02-la-papesse.webp','03-limperatrice.webp','04-lempereur.webp','05-le-pape.webp',
+        '06-lamoureux.webp','07-le-chariot.webp','08-la-justice.webp','09-lermite.webp','10-la-roue.webp','11-la-force.webp',
+        '12-le-pendu.webp','13-larcane-sans-nom.webp','14-temperance.webp','15-le-diable.webp','16-la-maison-dieu.webp','17-letoile.webp',
+        '18-la-lune.webp','19-le-soleil.webp','20-le-jugement.webp','21-le-monde.webp'
+      ];
+      // shuffle in-place
+      function _shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } }
+      const shuffledFaces = deckFaceNames.slice(); _shuffleArray(shuffledFaces);
+      const deckMapping = new Array(total);
+      for (let i = 0; i < total; i++) deckMapping[i] = './public/img/majors/' + shuffledFaces[i % shuffledFaces.length];
+
+      // track selected cards in selection order so we can display them in the interpretation popup
+      const selectedCards = [];
+
+      // helper to open an interpretation popup showing the chosen cards and a placeholder interpretation frame
+      function showInterpretationPopup(cards) {
+        try {
+          const interp = document.createElement('div');
+          interp.style.textAlign = 'center';
+          // use balanced padding on all sides so inner frames don't touch the popup edges
+          interp.style.padding = '18px';
+          try { interp.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
+          interp.style.minWidth = (container.style && container.style.minWidth) ? container.style.minWidth : '680px';
+          interp.style.minHeight = (container.style && container.style.minHeight) ? container.style.minHeight : '520px';
+          // ensure no scrollbars: content fits inside the popup and overflow is hidden
+          interp.style.overflow = 'hidden';
+
+          // Center the whole popup content using a centered column max-width
+          // similar to the tirage-choice panels: use width 100% and limit maxWidth
+          interp.style.display = 'block';
+          interp.style.width = '100%';
+          try { interp.style.maxWidth = getMaxFrameWidth(); } catch (e) {}
+          interp.style.margin = '0 auto';
+          interp.style.gap = '12px';
+          // small padding so content doesn't touch popup borders
+          interp.style.paddingTop = '10px';
+          interp.style.paddingBottom = '10px';
+          const h = document.createElement('h3'); h.className = 'pm-popup-title'; h.textContent = 'Interprétation du tirage'; interp.appendChild(h);
+
+          // Placeholder interpretation frame — to be replaced by API results later
+          const frame = document.createElement('div');
+          // mark the frame for diagnostic access
+          try { frame.id = 'pa-last-interpretation-frame'; } catch (e) {}
+          // ensure the frame has explicit internal padding and a safe max-width so text won't touch popup edges
+          Object.assign(frame.style, {
+            minHeight: '140px',
+            width: '100%',
+            maxWidth: '760px',
+            borderRadius: '10px',
+            padding: '18px',
+            boxSizing: 'border-box',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
+            color: '#111',
+            margin: '12px auto',
+            overflow: 'hidden',
+            textAlign: 'center'
+          });
+          frame.textContent = 'Interprétation en cours... (sera remplie par une API plus tard)';
+          interp.appendChild(frame);
+          // expose reference for diagnostics
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastInterpFrame = frame; } catch (e) {}
+
+          // action buttons directly under the interpretation frame
+          const btnRow = document.createElement('div');
+          btnRow.style.display = 'flex';
+          btnRow.style.justifyContent = 'center';
+          btnRow.style.gap = '10px';
+          btnRow.style.marginBottom = '12px';
+
+          const btnTirage = document.createElement('button'); btnTirage.textContent = 'Tirage';
+          const btnSave = document.createElement('button'); btnSave.textContent = 'Enregistrer';
+          const btnBack = document.createElement('button'); btnBack.textContent = 'Retour';
+          [btnTirage, btnSave, btnBack].forEach(b => Object.assign(b.style, { padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: '#2b2b2b', color: '#fff' }));
+          btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
+          interp.appendChild(btnRow);
+
+          // Show the selected cards below the buttons in larger format
+          const chosenWrap = document.createElement('div');
+          chosenWrap.style.display = 'flex';
+          chosenWrap.style.flexWrap = 'wrap';
+          chosenWrap.style.gap = '14px';
+          chosenWrap.style.justifyContent = 'center';
+          chosenWrap.style.alignItems = 'center';
+          chosenWrap.style.overflow = 'hidden';
+          // clamp the chosen cards container so cards don't push into popup edges and center it
+          chosenWrap.style.maxWidth = '100%';
+          chosenWrap.style.padding = '6px 12px';
+          chosenWrap.style.margin = '0 auto';
+          cards.forEach((c, idx) => {
+            try {
+              const cardBox = document.createElement('div');
+              // even larger card display
+              cardBox.style.width = '220px';
+              cardBox.style.height = '330px';
+              cardBox.style.borderRadius = '10px';
+              cardBox.style.overflow = 'hidden';
+              cardBox.style.boxSizing = 'border-box';
+              cardBox.style.display = 'flex';
+              cardBox.style.alignItems = 'center';
+              cardBox.style.justifyContent = 'center';
+              cardBox.style.background = 'transparent';
+              cardBox.style.border = '1px solid rgba(0,0,0,0.06)';
+              const im = document.createElement('img');
+              im.src = c.src || c;
+              im.alt = c.alt || ('carte-' + (c.index != null ? c.index : idx));
+              im.style.width = '100%'; im.style.height = '100%'; im.style.objectFit = 'contain'; im.style.borderRadius = '8px';
+              cardBox.appendChild(im);
+              chosenWrap.appendChild(cardBox);
+            } catch (e) {}
+          });
+          interp.appendChild(chosenWrap);
+
+          // wire button behaviors
+          btnTirage.addEventListener('click', function () {
+            try {
+              // reopen a new deck with the same initial chosen count (if available)
+              try { if (typeof showDeckPopup === 'function') showDeckPopup(initialRemaining || 3, { fan: true }); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(initialRemaining || 3, { fan: true }); } catch (e) {}
+            } catch (e) {}
+          });
+
+          btnSave.addEventListener('click', function () {
+            try {
+              // default save behavior: download a JSON file with the selection
+              try {
+                const payload = { date: (new Date()).toISOString(), selection: cards };
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'tirage-' + (new Date()).toISOString().replace(/[:.]/g, '-') + '.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              } catch (e) {
+                // fallback: expose via callback
+                try { if (window.PopupAdapter && typeof window.PopupAdapter._onSaveLastTirage === 'function') window.PopupAdapter._onSaveLastTirage(cards); } catch (ee) {}
+              }
+            } catch (e) {}
+          });
+
+          btnBack.addEventListener('click', function () {
+            try {
+              // close/hide this interpretation popup; best-effort removal
+              try {
+                // if inside a fallback overlay, remove that overlay
+                const overlay = interp.closest('.pa-deck-overlay-fallback');
+                if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
+                // restore any applied transforms
+                try { if (interp && interp.dataset && interp.dataset._pa_fixApplied) { interp.style.transform = interp.dataset._pa_origTransform || ''; delete interp.dataset._pa_fixApplied; delete interp.dataset._pa_origTransform; } } catch (e) {}
+                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {}
+              } catch (e) {}
+            } catch (e) {}
+          });
+
+          // expose starter hook and auto-invoke if present (to allow automatic interpretation later)
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._interpretationStarter = function(cb) { try { if (typeof cb === 'function') cb(cards, frame); } catch (e) {} }; } catch (e) {}
+          // ensure global no-scroll and clamp interp sizes so it won't cause page scrollbars
+          try { setGlobalNoScroll(true); } catch (e) {}
+          try { interp.style.boxSizing = 'border-box'; interp.style.maxWidth = 'calc(100vw - 40px)'; interp.style.maxHeight = 'calc(100vh - 160px)'; interp.style.overflow = 'hidden'; } catch (e) {}
+                  // open the interpretation popup
+                  const handle = openPopup(interp);
+                  // After the popup is visible, measure alignment and apply a corrective translate if needed
+                  try {
+                    setTimeout(() => {
+                      try {
+                        const m = window.PopupAdapter && typeof window.PopupAdapter.measureInterpretationAlignment === 'function' ? window.PopupAdapter.measureInterpretationAlignment(false) : null;
+                        if (m && Math.abs(m.offsetPx) > 2) {
+                          try {
+                            if (!interp.dataset._pa_origTransform) interp.dataset._pa_origTransform = interp.style.transform || '';
+                            interp.style.transform = (interp.style.transform || '') + ` translateX(${ -m.offsetPx }px)`;
+                            interp.dataset._pa_fixApplied = '1';
+                            console && console.log && console.log('[PopupAdapter] applied interp corrective translateX', -m.offsetPx);
+                          } catch (e) {}
+                        }
+                      } catch (e) {}
+                    }, 140);
+                  } catch (e) {}
+                  // inject centering CSS if missing
+                  try {
+                    if (!document.getElementById('pa-popup-center-styles')) {
+                      const st = document.createElement('style');
+                      st.id = 'pa-popup-center-styles';
+                      st.textContent = `
+                        .pa-center-popup { left: 50% !important; transform: translateX(-50%) !important; margin-left: auto !important; margin-right: auto !important; }
+                      `;
+                      (document.head || document.documentElement).appendChild(st);
+                    }
+                  } catch (e) {}
+                  // try to center the wrapper returned by openPopup (best-effort)
+                  try {
+                    const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                    if (wrapper && wrapper.classList) {
+                      wrapper.classList.add('pa-center-popup');
+                      try { wrapper.dataset._pa_centered = '1'; } catch (e) {}
+                    }
+                  } catch (e) {}
+          // auto-invoke interpretation starter if provided by external code
+          try { setTimeout(() => { try { if (window.PopupAdapter && typeof window.PopupAdapter._interpretationStarter === 'function') window.PopupAdapter._interpretationStarter(function(cardsArg, frameEl) { try { if (frameEl) frameEl.textContent = 'Appel API automatique… (exemple)'; } catch (e) {} }); } catch (e) {} }, 120); } catch (e) {}
+
+          // expose selected cards for external usage
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = cards.slice(); } catch (e) {}
+
+          return handle;
+        } catch (e) { console && console.warn && console.warn('interpretation popup error', e); }
+      }
+
+      // expose fan debug flags
+      try {
+        window.PopupAdapter = window.PopupAdapter || {};
+        window.PopupAdapter._fanEnabled = !!fanEnabled;
+        window.PopupAdapter._lastFanAngles = fanAngles.slice();
+      } catch (e) {}
+
+      // attach click handler to each slot to flip and reveal assigned face
+      try {
+        const slotsAll = grid.querySelectorAll('.pm-card-slot');
+        // run a staggered reveal for the entrance: per-image, toggle visible class with small delay
+        try {
+          const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!prefersReduced) {
+            let baseDelay = 80; // ms between each card's entrance
+            // if opts.stagger exists and is a number, use it
+            if (opts && typeof opts.stagger === 'number' && isFinite(opts.stagger)) baseDelay = Math.max(24, Number(opts.stagger));
+            Array.prototype.forEach.call(slotsAll, function (s, idx) {
+              try {
+                const im = s.querySelector('img.pa-deck-entrance');
+                if (!im) return;
+                const jitter = Math.round((Math.random() * 40) - 20); // +/- jitter
+                const delay = baseDelay * idx + jitter;
+                setTimeout(() => { try { im.classList.add('pa-deck-entrance--visible'); } catch (e) {} }, Math.max(0, delay));
+              } catch (e) {}
+            });
+          } else {
+            // prefer reduced motion => remove entrance class immediately
+            Array.prototype.forEach.call(slotsAll, function (s) { try { const im = s.querySelector('img.pa-deck-entrance'); if (im) im.classList.add('pa-deck-entrance--visible'); } catch (e) {} });
+          }
+        } catch (e) {}
+        slotsAll.forEach((slot, si) => {
+          slot.dataset.revealed = '0';
+          slot.style.cursor = 'pointer';
+          slot.addEventListener('click', function _revealHandler(ev) {
+            try {
+              if (slot.dataset.revealed === '1') return;
+              // prevent selecting more cards than initially chosen
+              try {
+                if (typeof initialRemaining === 'number' && initialRemaining > 0 && selectedCards.length >= initialRemaining) {
+                  // visual feedback: pulse the remaining number
+                  try { numSpan && numSpan.classList.add('pa-remaining-pulse'); setTimeout(() => { try { numSpan && numSpan.classList.remove('pa-remaining-pulse'); } catch (e) {} }, 420); } catch (e) {}
+                  return;
+                }
+              } catch (e) {}
+              slot.dataset.revealed = '1';
+              // find existing img (verso) or create one
+              let img = slot.querySelector('img');
+              const faceSrc = deckMapping[si];
+              // animate a simple horizontal flip using scaleX
+              if (img) {
+                img.style.transition = 'transform 220ms ease';
+                // shrink to 0 width
+                img.style.transformOrigin = '50% 50%';
+                img.style.transform = 'scaleX(0)';
+                setTimeout(() => {
+                  try {
+                    img.src = faceSrc;
+                    img.alt = '';
+                    // ensure face image fills slot's inner area exactly
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.boxSizing = 'border-box';
+                    img.style.objectFit = 'contain';
+                    // restore scale to visible
+                    img.style.transform = 'scaleX(1)';
+                  } catch (e) {}
+                }, 240);
+              } else {
+                // no img present — replace slot content
+                slot.innerHTML = '';
+                // ensure slot padding exists so image fits exactly in frame
+                try { slot.style.padding = '4px'; slot.style.boxSizing = 'border-box'; } catch (e) {}
+                img = document.createElement('img');
+                img.src = faceSrc;
+                img.alt = '';
+                img.style.width = '100%'; img.style.height = '100%'; img.style.boxSizing = 'border-box'; img.style.objectFit = 'contain';
+                img.style.borderRadius = '12px';
+                // start visually small then scale in
+                img.style.transform = 'scaleX(0)';
+                img.style.transition = 'transform 260ms ease';
+                slot.appendChild(img);
+                // force reflow then animate in
+                void img.offsetWidth;
+                setTimeout(() => { try { img.style.transform = 'scaleX(1)'; } catch (e) {} }, 20);
+              }
+              // mark slot as revealed visually
+              try { slot.classList.add('pm-card-revealed'); } catch (e) {}
+              // decrement remaining count and update title (if this popup was opened with a chosenCount)
+              try {
+                if (typeof remaining !== 'undefined' && remaining > 0) {
+                  remaining = Math.max(0, remaining - 1);
+                  try { updateTitle(); } catch (e) {}
+                }
+              } catch (e) {}
+              // record selected card info
+              try {
+                const faceSrc = deckMapping[si];
+                selectedCards.push({ index: si, src: faceSrc });
+                try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = selectedCards.slice(); } catch (e) {}
+              } catch (e) {}
+              // when remaining is zero, open the interpretation popup showing chosen cards
+              try {
+                if (typeof remaining !== 'undefined' && remaining === 0) {
+                  try {
+                    const delay = (opts && typeof opts.interpretationDelay === 'number' && isFinite(opts.interpretationDelay)) ? Math.max(0, Number(opts.interpretationDelay)) : 1200;
+                    setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) {} }, delay);
+                  } catch (e) {}
+                }
+              } catch (e) {}
+            } catch (e) { /* ignore reveal errors */ }
+          });
+        });
+      } catch (e) { /* ignore slot wiring errors */ }
+
       // expose helpers
       window.PopupAdapter = window.PopupAdapter || {};
+      // expose the mapping so external code can inspect which face was assigned to which slot
+      try { window.PopupAdapter._lastDeckMapping = deckMapping; } catch (e) {}
       // allow external code to place/clear cards inside this deck popup
-      window.PopupAdapter.placeCardInSlot = function (index, src, alt) {
+        window.PopupAdapter.placeCardInSlot = function (index, src, alt) {
         try {
           const idx = Number(index) || 0;
           const sl = grid.querySelectorAll('.pm-card-slot');
           if (!sl || idx < 0 || idx >= sl.length) return false;
           sl[idx].innerHTML = '';
         if (src) {
-          const im = document.createElement('img'); im.src = src; im.alt = alt || ''; im.style.width = '95%'; im.style.height = '95%'; im.style.objectFit = 'cover'; sl[idx].appendChild(im);
+          const im = document.createElement('img');
+          im.src = src; im.alt = alt || '';
+          // ensure slot has a small inset and uses border-box so image fits exactly
+          try { sl[idx].style.padding = '4px'; sl[idx].style.boxSizing = 'border-box'; sl[idx].style.overflow = 'hidden'; } catch (e) {}
+          im.style.width = '100%';
+          im.style.height = '100%';
+          im.style.boxSizing = 'border-box';
+          im.style.objectFit = 'contain';
+          im.style.borderRadius = '12px';
+          sl[idx].appendChild(im);
           }
           return true;
         } catch (e) { return false; }
       };
       window.PopupAdapter.clearAllSlots = function () { try { grid.querySelectorAll('.pm-card-slot').forEach(s => { s.innerHTML = ''; }); } catch (e) {} };
+
+  // expose the showDeckPopup function so external callers can open the deck with options (e.g., {fan: true})
+  try { window.PopupAdapter.showDeckPopup = function(count, opts) { return showDeckPopup(count, opts); }; } catch (e) {}
 
       return popupHandle;
     } catch (e) { console && console.warn && console.warn('showDeckPopup error', e); }
@@ -1114,6 +1606,71 @@
   // expose rotator controls
   window.PopupAdapter.playThemeMessages = playThemeMessages;
   window.PopupAdapter.stopThemeMessages = stopThemeMessages;
+
+  // Debug helper: show/hide a 1px vertical center guide to verify horizontal centering of popups
+  window.PopupAdapter.showCenterGuide = function (on) {
+    try {
+      let g = document.getElementById('pa-center-guide');
+      if (!on) {
+        if (g && g.parentNode) g.parentNode.removeChild(g);
+        return;
+      }
+      if (!g) {
+        g = document.createElement('div');
+        g.id = 'pa-center-guide';
+        Object.assign(g.style, {
+          position: 'fixed',
+          left: '50%',
+          top: '0',
+          bottom: '0',
+          width: '1px',
+          background: 'rgba(255,0,0,0.85)',
+          zIndex: 2147483647,
+          pointerEvents: 'none'
+        });
+        document.body.appendChild(g);
+      }
+    } catch (e) { /* ignore */ }
+  };
+
+  // Diagnostic: measure interpretation frame alignment vs viewport center
+  window.PopupAdapter.measureInterpretationAlignment = function (showMarkers) {
+    try {
+      const frame = document.getElementById('pa-last-interpretation-frame') || (window.PopupAdapter && window.PopupAdapter._lastInterpFrame);
+      if (!frame) { console && console.warn && console.warn('[PopupAdapter] No interpretation frame found (_lastInterpFrame missing)'); return null; }
+      const r = frame.getBoundingClientRect();
+      const frameCenter = r.left + (r.width / 2);
+      const viewCenter = window.innerWidth / 2;
+      const offsetPx = Math.round(frameCenter - viewCenter);
+      const pxPerCm = 37.7952755906; // approx CSS px per cm
+      const offsetCm = +(offsetPx / pxPerCm).toFixed(2);
+      console.log('[PopupAdapter] interpretation frame center:', Math.round(frameCenter), 'viewport center:', Math.round(viewCenter), 'offsetPx:', offsetPx, 'offsetCm:', offsetCm);
+      if (showMarkers === undefined) showMarkers = true;
+      // draw a green guide at the frame center
+      if (showMarkers) {
+        // remove existing guide
+        try { const old = document.getElementById('pa-frame-center-guide'); if (old && old.parentNode) old.parentNode.removeChild(old); } catch (e) {}
+        const g = document.createElement('div');
+        g.id = 'pa-frame-center-guide';
+        Object.assign(g.style, {
+          position: 'fixed',
+          left: Math.round(frameCenter) + 'px',
+          top: '0',
+          bottom: '0',
+          width: '2px',
+          background: 'rgba(0,255,0,0.9)',
+          zIndex: 2147483646,
+          pointerEvents: 'none'
+        });
+        document.body.appendChild(g);
+      }
+      return { offsetPx: offsetPx, offsetCm: offsetCm, frameCenter: frameCenter, viewCenter: viewCenter };
+    } catch (e) { console && console.warn && console.warn('[PopupAdapter] measure error', e); return null; }
+  };
+
+  window.PopupAdapter.clearCenterGuides = function () { try { const a = document.getElementById('pa-center-guide'); if (a && a.parentNode) a.parentNode.removeChild(a); const b = document.getElementById('pa-frame-center-guide'); if (b && b.parentNode) b.parentNode.removeChild(b); } catch (e) {} };
+
+  
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') attachHeaderHandlers();
   else document.addEventListener('DOMContentLoaded', attachHeaderHandlers);
