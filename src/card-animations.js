@@ -88,8 +88,11 @@ class CardAnimations {
                         }
 
                         // Popup de sélection de cartes (détection par le contenu)
-                        if (node.textContent?.includes('Choisissez vos') && 
-                            (node.textContent?.includes('cartes') || node.querySelector?.('h2')?.textContent?.includes('cartes'))) {
+                        // Support lowercase "choisissez" and previous "Choisissez vos" phrasing
+                        const nodeText = (node.textContent || '').toLowerCase();
+                        const h2Text = (node.querySelector?.('h2')?.textContent || '').toLowerCase();
+                        if (nodeText.includes('choisissez') && 
+                            (nodeText.includes('cartes') || h2Text.includes('cartes'))) {
                             setTimeout(() => {
                                 this.addVideoBackgroundToPopup(node, 'card-selection-popup');
                             }, 100);
@@ -113,11 +116,33 @@ class CardAnimations {
 
         container.classList.add('show');
         
+        // If container has .no-entry-anim, skip the reveal animation to avoid overriding inline test styles
+        if (container.classList?.contains('no-entry-anim') || container.querySelector('.no-entry-anim')) {
+            // Ensure images become visible immediately if inline styles were applied
+            const cardsSkip = container.querySelectorAll('.card-image');
+            cardsSkip.forEach(card => {
+                try {
+                    card.style.transition = '';
+                    card.style.opacity = '1';
+                    card.style.visibility = 'visible';
+                    // Remove any small-scale inline transform that might have been set earlier by animations
+                    // Remove any small-scale inline transform that might have been set earlier by animations
+                    // This helps ensure the image has a real layout size (offsetWidth > 0)
+                    try { card.style.removeProperty('transform'); } catch (e) {}
+                    try { card.style.removeProperty('-webkit-transform'); } catch (e) {}
+                    // Hint to the browser that these properties may change (helps painting)
+                    try { card.style.setProperty('will-change', 'transform, opacity'); } catch (e) {}
+                } catch (e) {}
+            });
+            console.log('animateInterpretationPopup: skipped entry animation due to .no-entry-anim');
+            return;
+        }
+
         const cards = container.querySelectorAll('.card-image');
         cards.forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'scale(0.3) rotateY(180deg)';
-            
+
             setTimeout(() => {
                 card.style.transition = 'all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 card.style.opacity = '1';
@@ -187,55 +212,10 @@ class CardAnimations {
 
     // Méthode pour ajouter la vidéo de fond aux popups de tarot
     addVideoBackgroundToPopup(popupNode, popupType) {
-        try {
-            // Trouve le conteneur de popup correct
-            let popup = popupNode;
-            
-            // Pour les popups classiques avec classe CSS
-            if (popupType !== 'card-selection-popup') {
-                popup = popupNode.classList?.contains(popupType) ? 
-                       popupNode : popupNode.querySelector(`.${popupType}`);
-            }
-            
-            if (!popup) return;
-
-            // Vérifie si la vidéo n'existe pas déjà
-            if (popup.querySelector('.popup-video-background')) return;
-
-            // Détermine la vidéo à utiliser selon le type de popup
-            let videoSrc = './public/roule.mp4'; // Par défaut pour interprétation et sélection de cartes
-            
-            // Si c'est un popup de choix de thèmes/tirages (tarot-popup), utilise hero.mp4
-            if (popupType === 'tarot-popup') {
-                videoSrc = './public/hero.mp4';
-            }
-
-            // Crée l'élément vidéo de fond
-            const video = document.createElement('video');
-            video.className = 'popup-video-background';
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsinline = true;
-
-            // Ajoute la source vidéo
-            const source = document.createElement('source');
-            source.src = videoSrc;
-            source.type = 'video/mp4';
-            video.appendChild(source);
-
-            // Crée l'overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'popup-video-overlay';
-
-            // Insère la vidéo et l'overlay au début du popup
-            popup.insertBefore(overlay, popup.firstChild);
-            popup.insertBefore(video, popup.firstChild);
-
-            console.log(`Vidéo de fond ${videoSrc} ajoutée au popup ${popupType}`);
-        } catch (error) {
-            console.error('Erreur lors de l\'ajout de la vidéo de fond:', error);
-        }
+        // Video backgrounds for popups are disabled.
+        // This method intentionally does nothing to avoid inserting large
+        // fullscreen <video> elements (fond*.mp4) that cover the UI.
+        return;
     }
 }
 

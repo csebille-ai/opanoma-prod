@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Test Popup Adapter</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; padding: 20px; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px }
+    .log { border:1px solid #ddd; padding:8px; height:200px; overflow:auto; background:#fafafa }
+  .popup-mount { position:fixed; left:50%; top:20px; transform:translateX(-50%); z-index:9999; max-width:100%; }
+    .fake-popup { background:#fff; border:1px solid #ccc; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.12); max-width:720px }
+    .pm-popup-title { margin:0 0 8px 0 }
+  </style>
+</head>
+<body>
+  <h1>Test PopupAdapter</h1>
+  <div class="controls">
+    <label><input id="toggleManager" type="checkbox" checked /> Mock PopupManager actif</label>
+    <button id="btnTheme">Ouvrir Choix du thème</button>
+    <button id="btnTirageChoice">Ouvrir Tirage (3)</button>
+    <button id="btnTirageDisplay">Ouvrir Tirage Display (8)</button>
+    <button id="btnPlaceImg">Placer image dans la 1ère case</button>
+    <button id="btnClear">Clear slots</button>
+    <button id="btnInjectMsgs">Injecter messages dans pop1</button>
+    <button id="btnClearMsgs">Vider messages pop1</button>
+    <button id="btnPlaySanté">Lancer rotation Santé (5 msgs)</button>
+    <button id="btnStopPlay">Stop rotation</button>
+  </div>
+
+  <div class="log" id="log"></div>
+  <div class="popup-mount" id="popupMount"></div>
+
+  <script>
+    // small logger
+    function log(msg) { const el = document.getElementById('log'); const d = document.createElement('div'); d.textContent = '['+new Date().toLocaleTimeString()+'] '+msg; el.appendChild(d); el.scrollTop = el.scrollHeight; }
+
+    // simple mock PopupManager that inserts the provided html into the #popupMount
+    function installMockPopupManager() {
+      window.PopupManager = window.PopupManager || {};
+      PopupManager.open = function (opts) {
+        const mount = document.getElementById('popupMount');
+        mount.innerHTML = '';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'fake-popup';
+        // apply requested maxWidth if provided (adapter passes e.g. '720px')
+        try {
+          if (opts && opts.maxWidth) {
+            const mw = String(opts.maxWidth);
+            wrapper.style.maxWidth = mw;
+            // force the wrapper width to the requested maxWidth so it visibly grows
+            wrapper.style.width = mw;
+            wrapper.style.boxSizing = 'border-box';
+          } else {
+            wrapper.style.maxWidth = '720px';
+            wrapper.style.width = '720px';
+          }
+          // keep popup from exceeding viewport height
+          wrapper.style.maxHeight = '80vh';
+          wrapper.style.overflow = 'auto';
+        } catch (e) { /* ignore styling errors */ }
+        if (opts && opts.html) {
+          if (typeof opts.html === 'string') wrapper.innerHTML = opts.html;
+          else wrapper.appendChild(opts.html);
+        }
+        mount.appendChild(wrapper);
+        log('PopupManager.open: mounted popup (maxWidth=' + (opts && opts.maxWidth ? opts.maxWidth : 'default') + ')');
+        return { close: function () { mount.innerHTML = ''; log('PopupManager: closed popup'); } };
+      };
+    }
+
+    function uninstallMockPopupManager() { delete window.PopupManager; }
+
+    // keep checkbox to toggle mock manager
+    document.getElementById('toggleManager').addEventListener('change', function (ev) {
+      if (this.checked) { installMockPopupManager(); log('Mock PopupManager enabled'); }
+      else { uninstallMockPopupManager(); log('Mock PopupManager disabled (fallback to container)'); }
+    });
+
+    // install by default
+    installMockPopupManager();
+
+  </script>
+
+  <!-- include the adapter under test -->
+  <script src="src/popup-adapter.js"></script>
+
+  <script>
+    document.getElementById('btnTheme').addEventListener('click', function () {
+      const popup = window.PopupAdapter && window.PopupAdapter.showThemeChoice ? window.PopupAdapter.showThemeChoice(function (t) { log('Theme chosen: '+t); }) : null;
+      log('showThemeChoice returned: '+(popup? (popup.close? 'handle' : 'element') : 'no api'));
+    });
+
+    document.getElementById('btnTirageChoice').addEventListener('click', function () {
+      const popup = window.PopupAdapter && window.PopupAdapter.showTirageChoicePopup ? window.PopupAdapter.showTirageChoicePopup(function (n) { log('Tirage chosen: '+n); }, { count: 3 }) : null;
+      log('showTirageChoicePopup returned: '+(popup? (popup.close? 'handle' : 'element') : 'no api'));
+    });
+
+    document.getElementById('btnTirageDisplay').addEventListener('click', function () {
+      const popup = window.PopupAdapter && window.PopupAdapter.showTirageDisplay ? window.PopupAdapter.showTirageDisplay(8) : null;
+      log('showTirageDisplay returned: '+(popup? (popup.close? 'handle' : 'element') : 'no api'));
+    });
+
+    document.getElementById('btnPlaceImg').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.placeCardInSlot === 'function') {
+        const ok = window.PopupAdapter.placeCardInSlot(0, 'https://picsum.photos/200/300', 'demo');
+        log('placeCardInSlot -> '+ok);
+      } else log('placeCardInSlot not available');
+    });
+
+    document.getElementById('btnClear').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.clearAllSlots === 'function') {
+        window.PopupAdapter.clearAllSlots(); log('clearAllSlots called');
+      } else log('clearAllSlots not available');
+    });
+
+    document.getElementById('btnInjectMsgs').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.setThemeMessages === 'function') {
+        window.PopupAdapter.setThemeMessages([
+          "Message 1: Ceci est un message de test.",
+          "Message 2: Un autre message pour vérifier l'affichage.",
+          "Message 3: Dernier message."
+        ]);
+        log('Injected 3 messages into pop1');
+      } else log('setThemeMessages not available (open pop1 first)');
+    });
+
+    document.getElementById('btnClearMsgs').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.clearThemeMessages === 'function') {
+        window.PopupAdapter.clearThemeMessages(); log('clearThemeMessages called');
+      } else log('clearThemeMessages not available');
+    });
+
+    document.getElementById('btnPlaySanté').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.playThemeMessages === 'function') {
+        // ensure pop1 is open
+        if (!window.PopupAdapter._lastThemeMsgBox) {
+          window.PopupAdapter.showThemeChoice();
+        }
+        const msgs = [
+          'Santé msg 1: garde une bonne hydratation.',
+          'Santé msg 2: veille à ton sommeil.',
+          'Santé msg 3: pratique une activité régulière.',
+          'Santé msg 4: équilibre ton alimentation.',
+          'Santé msg 5: prends des pauses pour respirer.'
+        ];
+        const ok = window.PopupAdapter.playThemeMessages('Santé', msgs, { delay: 1800 });
+        log('playThemeMessages started: '+ok);
+      } else log('playThemeMessages not available');
+    });
+
+    document.getElementById('btnStopPlay').addEventListener('click', function () {
+      if (window.PopupAdapter && typeof window.PopupAdapter.stopThemeMessages === 'function') {
+        window.PopupAdapter.stopThemeMessages(); log('stopThemeMessages called');
+      } else log('stopThemeMessages not available');
+    });
+  </script>
+</body>
+</html>
