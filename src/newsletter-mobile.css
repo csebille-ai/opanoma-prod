@@ -1,0 +1,17 @@
+/* Restored newsletter-mobile.css */
+body.newsletter-mobile {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #080808;
+  color: #fff;
+}
+.newsletter-header {
+  padding: 14px;
+  text-align: center;
+  background: linear-gradient(180deg,#111,#141414);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.newsletter-content { padding: 18px; }
+.newsletter-cta { display: block; width: 100%; padding: 12px; border-radius: 10px; text-align: center; background: linear-gradient(90deg,#ff9ae0,#9ab0ff); color: #071; text-decoration: none; font-weight: 700; }
+.newsletter-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+.newsletter-footer { padding: 18px; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+@media (max-width:420px) { .newsletter-cta { padding: 14px; } }
