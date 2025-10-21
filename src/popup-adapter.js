@@ -20,9 +20,7 @@
         .pm-popup-msgbox::-webkit-scrollbar { display: none !important; }
         .pm-card-slot { -ms-overflow-style: none !important; scrollbar-width: none !important; }
         .pm-card-slot::-webkit-scrollbar { display: none !important; }
-      `;
-      stage.style.display = 'flex'; 
-      stage.style.justifyContent = 'center';
+  `;
     }
   } catch (e) { /* ignore style injection errors */ }
 
@@ -48,6 +46,9 @@
         try { document.body.style.overflow = ''; } catch (e) {}
         try { document.body.classList.remove('pa-popup-open'); } catch (e) {}
       }
+      const container = document.createElement('div');
+      container.style.textAlign = 'center';
+      container.style.padding = '12px';
     } catch (e) { /* ignore */ }
   }
 
@@ -96,15 +97,17 @@
 
   function attachHeaderHandlers() {
     try {
-      const selectors = ['.header-ia', '#header-ia', '[data-ia-button]'];
-      selectors.forEach(sel => {
-        const el = document.querySelector(sel);
-        if (el && !el.dataset.popupAdapterAttached) {
+      // attach click handlers to elements marked with data-popup-adapter
+      const triggers = document.querySelectorAll('[data-popup-adapter]');
+      Array.prototype.forEach.call(triggers || [], (el) => {
+        try {
+          if (el.dataset && el.dataset.popupAdapterAttached) return;
           el.addEventListener('click', (ev) => { try { showThemeChoice(); } catch (_) {} if (ev && ev.preventDefault) ev.preventDefault(); });
           el.dataset.popupAdapterAttached = '1';
-        }
+        } catch (e) {}
       });
     } catch (e) { /* ignore */ }
+
   }
 
   function openPopup(container) {
@@ -450,7 +453,14 @@
             Object.assign(p3btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p3btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p3btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
-            p3btn.addEventListener('click', function () { try { if (typeof showDeckPopup === 'function') showDeckPopup(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(3); else if (typeof showTirageDisplay === 'function') showTirageDisplay(3); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
+            p3btn.addEventListener('click', function () { try {
+                // close theme popup (if still present)
+                try { const thBox = window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox ? window.PopupAdapter._lastThemeMsgBox : null; if (thBox && thBox.parentNode) {
+                    const p = thBox.closest && thBox.closest('.pm-popup-msgbox') ? thBox.closest('.pm-popup-msgbox') : thBox.parentNode;
+                    try { if (p && p.parentNode) p.parentNode.removeChild(p); } catch (e) {}
+                  } } catch (e) {}
+                if (typeof showDeckPopup === 'function') showDeckPopup(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(3); else if (typeof showTirageDisplay === 'function') showTirageDisplay(3);
+              } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
             panelThree.appendChild(p3h); panelThree.appendChild(p3para); panelThree.appendChild(p3btn);
             // Panel B: 5-card tirage descriptive panel (longer explanatory paragraph provided)
             const panelFive = document.createElement('div');
@@ -479,7 +489,14 @@
             Object.assign(p5btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
             p5btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
             p5btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
-            p5btn.addEventListener('click', function () { try { if (typeof showDeckPopup === 'function') showDeckPopup(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(5); else if (typeof showTirageDisplay === 'function') showTirageDisplay(5); } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
+            p5btn.addEventListener('click', function () { try {
+                // close theme popup (if still present)
+                try { const thBox = window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox ? window.PopupAdapter._lastThemeMsgBox : null; if (thBox && thBox.parentNode) {
+                    const p = thBox.closest && thBox.closest('.pm-popup-msgbox') ? thBox.closest('.pm-popup-msgbox') : thBox.parentNode;
+                    try { if (p && p.parentNode) p.parentNode.removeChild(p); } catch (e) {}
+                  } } catch (e) {}
+                if (typeof showDeckPopup === 'function') showDeckPopup(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(5); else if (typeof showTirageDisplay === 'function') showTirageDisplay(5);
+              } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
             panelFive.appendChild(p5h); panelFive.appendChild(p5para); panelFive.appendChild(p5btn);
 
             grid.appendChild(panelThree); grid.appendChild(panelFive);
@@ -589,7 +606,7 @@
     container.appendChild(title);
 
     const stage = document.createElement('div');
-  stage.style.display = 'flex';
+     stage.style.display = 'block';
     stage.style.justifyContent = 'center';
 
     const grid = document.createElement('div');
@@ -698,21 +715,22 @@
       const total = 22;
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
-  container.style.textAlign = 'center';
-  // minimal top padding so title and cards sit as high as possible in the popup
-  container.style.padding = '4px 18px 12px 4px';
+  container.style.textAlign = 'left';
+  // minimal top/side padding so title and cards sit higher and flush to the left
+  container.style.padding = '0px 12px 8px 0px';
   // request a larger popup frame from PopupManager (if present)
   try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
   // also set min visual dimensions so a simple container fallback looks bigger
   // increase width/height so the deck popup is large and long enough to contain all cards
-  container.style.minWidth = '980px';
-  container.style.minHeight = '820px';
+  // increase min dimensions so the deck popup matches requested larger size
+  container.style.minWidth = '1080px';
+  container.style.minHeight = '920px';
 
       // dynamic title that shows remaining cards to draw
   const title = document.createElement('h3');
   title.className = 'pm-popup-title';
-  // tighten title margins so it doesn't add extra vertical space
-  title.style.marginTop = '4px';
+  // tighten title margins so it doesn't add extra vertical space and sits higher
+  title.style.marginTop = '0px';
   title.style.marginBottom = '6px';
       // initialize remaining count from chosenCount (fallback to 0)
       const initialRemaining = (Number(chosenCount) === 3 || Number(chosenCount) === 5) ? Number(chosenCount) : 0;
@@ -765,13 +783,13 @@
 
   const stage = document.createElement('div');
   stage.style.display = 'flex';
-  // center the grid horizontally so the card block appears centered in the popup
-  stage.style.justifyContent = 'center';
+  // left-align the grid so the card block is glued to the left edge of the popup
+  stage.style.justifyContent = 'flex-start';
   stage.style.alignItems = 'center';
-  // remove top padding so grid moves upward and sits directly under the title
-  stage.style.padding = '0px 0 12px 0';
-  // remove left padding — grid will be centered
-  stage.style.paddingLeft = '0px';
+  // remove top padding and add a small left inset so grid hugs the left edge
+  stage.style.padding = '0px 0 8px 4px';
+  // keep explicit padding-left to enforce the small left gutter (tighter)
+  stage.style.paddingLeft = '4px';
   // prevent stage from creating scrollbars
   stage.style.overflow = 'hidden';
 
@@ -781,8 +799,8 @@
   grid.style.gap = '0px';
   // use border-box so width accounts for padding if we add any later
   grid.style.boxSizing = 'border-box';
-  // center grid and add small bottom margin so cards don't touch the popup edge
-  grid.style.margin = '0 auto 12px';
+  // left-align grid and add small bottom margin so cards don't touch the popup edge
+  grid.style.margin = '0 0 12px 0';
 
       // compute available popup width and height and force 4-row layout (6,6,6,4)
       const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
@@ -829,19 +847,38 @@
     }
 
   // breathing space around the grid (padding inside popup)
-  const horizontalPadding = 48; // left + right total
-    // increase vertical padding to allow larger visual frame and breathing space
-  const verticalPadding = 200; // includes title + top/bottom spacing
+  // tighten paddings so there's more room for the cards inside the popup
+  const horizontalPadding = 24; // left + right total (reduced)
+  const verticalPadding = 120; // top + bottom + title area (reduced)
 
-    // set grid gap according to computed gap and set grid and stage sizes explicitly
-    try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
-    grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
-    grid.style.gridAutoRows = `${cardH}px`;
+  // ensure the grid is scaled to fit the available viewport both horizontally and vertically
+  try {
+    const availPopupW = Math.max(320, Math.min(window.innerWidth - 80, maxW)) - horizontalPadding;
+    const reservedHeight = Math.max(120, window.innerHeight - (availH + reserved));
+    const availPopupH = Math.max(240, Math.min(window.innerHeight - 80, availH + reserved)) - verticalPadding;
+
+    // compute limiting scales
+    let scale = 1;
+    if (gridW > availPopupW || gridH > availPopupH) {
+      const scaleW = availPopupW / gridW;
+      const scaleH = availPopupH / gridH;
+      scale = Math.min(scaleW, scaleH) * 0.98; // small safety margin
+      scale = Math.max(0.45, Math.min(1, scale));
+      cardW = Math.max(32, Math.floor(cardW * scale));
+      cardH = Math.max(44, Math.floor(cardW * cardRatio));
+      gridW = (cardW * cols) + ((cols - 1) * gap);
+      gridH = (cardH * rows) + ((rows - 1) * gap);
+    }
+  } catch (e) {}
+
+  // set grid gap according to computed gap and set grid and stage sizes explicitly
+  try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
+  grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
+  grid.style.gridAutoRows = `${cardH}px`;
   grid.style.width = gridW + 'px';
-    
-    grid.style.height = gridH + 'px';
-    // hide any overflow to avoid scrollbars
-    grid.style.overflow = 'hidden';
+  grid.style.height = gridH + 'px';
+  // hide any overflow to avoid scrollbars inside the grid
+  grid.style.overflow = 'hidden';
 
       // create slots and fill with verso image; center last row by starting its first slot at column 2
       // We'll also prepare a staggered entrance animation for the verso images: start blurred/faded/scaled
@@ -952,6 +989,8 @@
   try { container.style.minHeight = desiredHeight + 'px'; } catch (e) {}
 
   const popupHandle = openPopup(container);
+  // store the last deck popup handle so other flows can remove it (e.g., when opening interpretation)
+  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupHandle = popupHandle; } catch (e) {}
   // ensure page hides scrollbars while this popup is active (best-effort)
   try { setGlobalNoScroll(true); } catch (e) {}
 
@@ -961,14 +1000,60 @@
       try {
         const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
         const measureEl = wrapper || container;
-        if (measureEl && measureEl.getBoundingClientRect) {
+          if (measureEl && measureEl.getBoundingClientRect) {
           const r = measureEl.getBoundingClientRect();
           try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupRect = { width: Math.round(r.width), height: Math.round(r.height), left: Math.round(r.left), top: Math.round(r.top) }; } catch (e) {}
           // also mirror to the older property for compatibility
           try { if (!window.PopupAdapter._lastDeckPopupSize) window.PopupAdapter._lastDeckPopupSize = { width: Math.round(r.width), height: Math.round(r.height) }; } catch (e) {}
+          // capture computed background (color) for compatibility with older logic
+          try {
+            const cs = window.getComputedStyle && window.getComputedStyle(measureEl);
+            if (cs) {
+              try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupBackground = cs.backgroundColor || cs.background || ''; } catch (e) {}
+            }
+          } catch (e) {}
         }
       } catch (e) {}
     }, 220);
+    // second pass: after popup has rendered, measure the wrapper and ensure the grid/slots
+    // are resized to fit entirely inside the visible popup area. This guarantees all 22 cards
+    // are visible even when host managers constrict the frame.
+    try {
+      setTimeout(() => {
+        try {
+          const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
+          const measureEl = wrapper || container;
+          if (!measureEl || !measureEl.getBoundingClientRect) return;
+          const r = measureEl.getBoundingClientRect();
+          const availW = Math.max(240, r.width - (typeof horizontalPadding === 'number' ? horizontalPadding : 24));
+          const availH = Math.max(240, r.height - (typeof verticalPadding === 'number' ? verticalPadding : 120));
+          // compute candidate card width based on available width
+          const candidateW = Math.floor((availW - ((cols - 1) * gap)) / cols);
+          let finalCardW = Math.min(cardW, Math.max(28, candidateW));
+          // compute card height then ensure rows fit vertically
+          let finalCardH = Math.floor(finalCardW * cardRatio);
+          const requiredH = (finalCardH * rows) + ((rows - 1) * gap);
+          if (requiredH > availH) {
+            // scale down by height constraint
+            const scale = Math.max(0.4, (availH - ((rows - 1) * gap)) / (rows * finalCardH));
+            finalCardW = Math.max(24, Math.floor(finalCardW * scale));
+            finalCardH = Math.max(36, Math.floor(finalCardW * cardRatio));
+          }
+          // apply to grid and slots
+          try { grid.style.gridTemplateColumns = `repeat(${cols}, ${finalCardW}px)`; } catch (e) {}
+          try { grid.style.gridAutoRows = `${finalCardH}px`; } catch (e) {}
+          try { grid.style.width = ((finalCardW * cols) + ((cols - 1) * gap)) + 'px'; } catch (e) {}
+          try { grid.style.height = ((finalCardH * rows) + ((rows - 1) * gap)) + 'px'; } catch (e) {}
+          // update individual slots if present
+          try {
+            const slots = grid.querySelectorAll && grid.querySelectorAll('.pm-card-slot');
+            if (slots && slots.length) {
+              slots.forEach(s => { try { s.style.width = finalCardW + 'px'; s.style.height = finalCardH + 'px'; } catch (e) {} });
+            }
+          } catch (e) {}
+        } catch (e) {}
+      }, 320);
+    } catch (e) {}
   } catch (e) {}
 
   // If PopupManager returned a wrapper element, attempt to force larger visual
@@ -1000,14 +1085,15 @@
     left: '50%',
   transform: 'translate(-50%,0)',
   // lift overlay a lot so it sits near the top of the page (minimal blank space)
-  top: '60px',
+  top: '110px',
     zIndex: 999999,
     background: 'rgba(255,255,255,0.02)',
     padding: '12px',
     borderRadius: '10px',
     boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
-    width: Math.min(1000, desiredWidth + 120) + 'px',
-    maxWidth: 'calc(100vw - 40px)',
+  // allow overlay to expand to desiredWidth + padding but never exceed viewport minus margins
+  width: Math.min(window.innerWidth - 40, (desiredWidth || 0) + 120) + 'px',
+  maxWidth: 'calc(100vw - 40px)',
     maxHeight: Math.min(window.innerHeight - 120, (desiredHeight + 120)) + 'px',
     overflow: 'hidden',
     boxSizing: 'border-box'
@@ -1053,7 +1139,8 @@
           const interp = document.createElement('div');
           interp.style.textAlign = 'center';
           // use balanced padding on all sides so inner frames don't touch the popup edges
-          interp.style.padding = '18px';
+          // reduce overall padding so content sits higher in the popup
+          interp.style.padding = '8px';
           try { interp.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
           interp.style.minWidth = (container && container.style && container.style.minWidth) ? container.style.minWidth : '680px';
           // do not inherit a large minHeight from the deck popup — allow the interpretation popup
@@ -1070,9 +1157,12 @@
           interp.style.margin = '0 auto';
           interp.style.gap = '12px';
           // small padding so content doesn't touch popup borders
-          interp.style.paddingTop = '10px';
-          interp.style.paddingBottom = '10px';
-          const h = document.createElement('h3'); h.className = 'pm-popup-title'; h.textContent = 'Interprétation du tirage'; interp.appendChild(h);
+          interp.style.paddingTop = '6px';
+          interp.style.paddingBottom = '6px';
+          const h = document.createElement('h3'); h.className = 'pm-popup-title'; h.textContent = 'Interprétation du tirage';
+          // reduce title margins so it sits higher
+          try { h.style.margin = '6px 0 8px 0'; } catch (e) {}
+          interp.appendChild(h);
 
           // Placeholder interpretation frame — to be replaced by API results later
           const frame = document.createElement('div');
@@ -1093,50 +1183,63 @@
             textAlign: 'center'
           });
           frame.textContent = 'Interprétation en cours...';
-          interp.appendChild(frame);
           // expose reference for diagnostics
           try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastInterpFrame = frame; } catch (e) {}
 
-          // action buttons directly under the interpretation frame
+          // We'll place the chosen cards at the top, then the interpretation frame and buttons below.
+          // action buttons (Tirage / Enregistrer / Retour) and audio control will be placed under the frame.
           const btnRow = document.createElement('div');
           btnRow.style.display = 'flex';
           btnRow.style.justifyContent = 'center';
           btnRow.style.gap = '10px';
-          btnRow.style.marginBottom = '12px';
+          // nudge the buttons slightly lower so they sit a bit below the frame
+          btnRow.style.marginTop = '14px';
 
           const btnTirage = document.createElement('button'); btnTirage.textContent = 'Tirage';
           const btnSave = document.createElement('button'); btnSave.textContent = 'Enregistrer';
           const btnBack = document.createElement('button'); btnBack.textContent = 'Retour';
-          [btnTirage, btnSave, btnBack].forEach(b => Object.assign(b.style, { padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: '#2b2b2b', color: '#fff' }));
-          btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
+          // apply compact site-styled classes
+          try { btnTirage.className = 'pa-action-btn'; } catch (e) {}
+          try { btnSave.className = 'pa-action-btn secondary'; } catch (e) {}
+          try { btnBack.className = 'pa-action-btn secondary'; } catch (e) {}
 
           // add a single audio icon button to control TTS (placed to the right)
           const audioBtn = document.createElement('button');
           audioBtn.title = 'Lire / Couper le son';
-          audioBtn.style.border = 'none';
-          audioBtn.style.background = 'transparent';
-          audioBtn.style.cursor = 'pointer';
-          audioBtn.style.padding = '8px';
-          audioBtn.style.marginLeft = '6px';
-          audioBtn.style.borderRadius = '8px';
-          audioBtn.style.display = 'inline-flex';
-          audioBtn.style.alignItems = 'center';
-          audioBtn.style.justifyContent = 'center';
-          audioBtn.style.fontSize = '18px';
-          audioBtn.style.color = '#fff';
+          audioBtn.className = 'pa-action-btn small';
           audioBtn.style.background = 'linear-gradient(90deg,#ff7a59,#ffb86b)';
-          audioBtn.innerHTML = '🔊';
+          audioBtn.style.marginLeft = '8px';
+          // insert inline SVG icon (speaker)
+          audioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19 8a5 5 0 0 1 0 8"></path></svg>';
           // start disabled until the interpretation is ready
           audioBtn.disabled = true;
-          btnRow.appendChild(audioBtn);
-          interp.appendChild(btnRow);
+
+          // We'll append the buttons after the frame is created/filled below
 
           // wiring: when interpretation content is rendered, the renderInterpretationInto
           // function returns controls which we attach here to toggle audio.
           let _interpControls = null;
+          // helper to stop any playing audio/TTS immediately and update UI
+          function stopPlayback() {
+            try {
+              // stop programmatic controls if available
+              try { if (_interpControls && typeof _interpControls.stop === 'function') { try { _interpControls.stop(); } catch(e){} } } catch (e) {}
+              // stop SpeechSynthesis if active
+              try { if (typeof speechSynthesis !== 'undefined' && speechSynthesis && speechSynthesis.speaking) { try { speechSynthesis.cancel(); } catch(e){} } } catch (e) {}
+              // update audio button icon/state
+              try { setAudioIcon(false); if (audioBtn) { audioBtn.disabled = true; } } catch (e) {}
+            } catch (e) {}
+          }
           // helper to update button icon
           function setAudioIcon(isPlaying) {
-            try { audioBtn.innerHTML = isPlaying ? '⏸️' : '🔊'; } catch (e) {}
+            try {
+              if (!audioBtn) return;
+              if (isPlaying) {
+                audioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h3v14H6z"></path><path d="M15 5h3v14h-3z"></path></svg>';
+              } else {
+                audioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19 8a5 5 0 0 1 0 8"></path></svg>';
+              }
+            } catch (e) {}
           }
           // click toggles play/stop
           audioBtn.addEventListener('click', function(){
@@ -1166,7 +1269,8 @@
           chosenWrap.style.overflow = 'hidden';
           // clamp the chosen cards container so cards don't push into popup edges and center it
           chosenWrap.style.maxWidth = '100%';
-          chosenWrap.style.padding = '6px 12px';
+          // tighten chosen cards padding to free vertical space
+          chosenWrap.style.padding = '4px 8px';
           chosenWrap.style.margin = '0 auto';
           cards.forEach((c, idx) => {
             try {
@@ -1190,7 +1294,11 @@
               chosenWrap.appendChild(cardBox);
             } catch (e) {}
           });
+          // append chosen cards first so they're at the top of the popup
+          // append chosen cards first so they're at the top of the popup
           interp.appendChild(chosenWrap);
+          // then append the frame
+          interp.appendChild(frame);
 
           // fetch and render interpretation from configured API (Cloudflare Workers)
           try {
@@ -1221,6 +1329,28 @@
             // clear previous simple text and append content
             frame.textContent = '';
             frame.appendChild(content);
+            // append control buttons below the frame
+            interp.appendChild(btnRow);
+            btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
+            btnRow.appendChild(audioBtn);
+
+            // post-render: ensure combined heights fit inside popup
+            try {
+              setTimeout(() => {
+                try {
+                  const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
+                  const measureEl = wrapper || interp;
+                  if (!measureEl || !measureEl.getBoundingClientRect) return;
+                  const r = measureEl.getBoundingClientRect();
+                  const chosenH = chosenWrap.getBoundingClientRect ? chosenWrap.getBoundingClientRect().height : 0;
+                  const buttonsH = btnRow.getBoundingClientRect ? btnRow.getBoundingClientRect().height : 56;
+                  const availH = Math.max(220, r.height - 36);
+                  const allowedFrameH = Math.max(100, Math.floor(availH - chosenH - buttonsH - 20));
+                  try { frame.style.maxHeight = allowedFrameH + 'px'; frame.style.height = allowedFrameH + 'px'; } catch (e) {}
+                  try { content.style.maxHeight = Math.max(60, allowedFrameH - 20) + 'px'; } catch (e) {}
+                } catch (e) {}
+              }, 80);
+            } catch (e) {}
 
             // inject small stylesheet for interpretation frame (once)
             try {
@@ -1242,8 +1372,23 @@
                   @keyframes pa-skel { 0% { background-position: -200px 0 } 100% { background-position: 200px 0 } }
                   .pa-interpretation-fadein { animation: pa-fade-in 320ms ease both }
                   @keyframes pa-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity:1; transform:none } }
+                  /* compact action buttons matching site style */
+                  .pa-action-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); background: linear-gradient(180deg,#2b2b2b,#1f1f1f); color: #fff; cursor:pointer; font-size:13px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); transition: transform 140ms ease, box-shadow 140ms ease; }
+                  .pa-action-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.18); }
+                  .pa-action-btn.secondary { background: linear-gradient(180deg,#f6f6f6,#fff); color:#111; border:1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+                  .pa-action-btn.small { padding:4px 8px; font-size:12px; border-radius:7px; }
                 `;
                 (document.head || document.documentElement).appendChild(st);
+              }
+              // overlay styles (ensure present alongside interpretation styles)
+              if (!document.getElementById('pa-interpretation-overlay-styles')) {
+                const ov = document.createElement('style');
+                ov.id = 'pa-interpretation-overlay-styles';
+                ov.textContent = `
+                  .pa-interpretation-overlay { pointer-events: auto; }
+                  .pa-interpretation-overlay::backdrop { background: rgba(0,0,0,0.35); }
+                `;
+                (document.head || document.documentElement).appendChild(ov);
               }
             } catch (e) {}
 
@@ -1618,6 +1763,22 @@
               try { if (typeof showDeckPopup === 'function') showDeckPopup(initialRemaining || 3, { fan: true }); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(initialRemaining || 3, { fan: true }); } catch (e) {}
             } catch (e) {}
           });
+          // Ensure the Back button removes our overlay (if we used it) and stops audio
+          btnBack.addEventListener('click', function () {
+            try {
+              // ensure playback is stopped as soon as the popup is dismissed
+              try { stopPlayback(); } catch (e) {}
+              // close/hide this interpretation popup; best-effort removal
+              try {
+                const overlay = interp.closest('.pa-interpretation-overlay');
+                const backdrop = document.querySelector && document.querySelector('.pa-interpretation-backdrop');
+                if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+                else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
+                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {}
+              } catch (e) {}
+            } catch (e) {}
+          });
 
           btnSave.addEventListener('click', function () {
             try {
@@ -1642,11 +1803,15 @@
 
           btnBack.addEventListener('click', function () {
             try {
+              // ensure playback is stopped as soon as the popup is dismissed
+              try { stopPlayback(); } catch (e) {}
               // close/hide this interpretation popup; best-effort removal
               try {
                 // if inside a fallback overlay, remove that overlay
                 const overlay = interp.closest('.pa-deck-overlay-fallback');
+                const backdrop = document.querySelector && document.querySelector('.pa-interpretation-backdrop');
                 if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
                 else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
                 // restore any applied transforms
                 try { if (interp && interp.dataset && interp.dataset._pa_fixApplied) { interp.style.transform = interp.dataset._pa_origTransform || ''; delete interp.dataset._pa_fixApplied; delete interp.dataset._pa_origTransform; } } catch (e) {}
@@ -1676,11 +1841,388 @@
                               try { interp.style.minHeight = 'auto'; } catch (e) {}
                             }
                           } catch (e) {}
-                          const handle = openPopup(interp);
+                          let _popupHandle = null;
+                          // Try to mount interpretation into a controlled fixed overlay to avoid host popup wrappers
+                          let handle = null;
+                          try {
+                            // create overlay if missing (and ensure a backdrop always exists)
+                            let overlay = document.querySelector('.pa-interpretation-overlay');
+                            // ensure backdrop exists (create if missing)
+                            let bd = document.querySelector('.pa-interpretation-backdrop');
+                            if (!overlay) {
+                              overlay = document.createElement('div');
+                              overlay.className = 'pa-interpretation-overlay';
+                              Object.assign(overlay.style, {
+                                position: 'fixed',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                top: '110px',
+                                zIndex: 2147483646,
+                                background: 'transparent',
+                                boxSizing: 'border-box',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                padding: '8px'
+                              });
+                              // ensure overlay does not capture pointer events except children
+                              overlay.style.pointerEvents = 'auto';
+                            }
+                            // create backdrop if missing
+                            if (!bd) {
+                              bd = document.createElement('div');
+                              bd.className = 'pa-interpretation-backdrop';
+                              Object.assign(bd.style, {
+                                position: 'fixed', left: '0', top: '0', right: '0', bottom: '0',
+                                background: 'rgba(0,0,0,0.36)', zIndex: 2147483645
+                              });
+                              // clicking backdrop closes overlay
+                              bd.addEventListener('click', function () {
+                                try {
+                                  // restore any hidden deck parents
+                                  try { const hidden = document.querySelectorAll('[data-_pa_hiddenByInterp="1"]'); if (hidden && hidden.length) Array.prototype.forEach.call(hidden, h => { try { h.style.visibility = ''; delete h.dataset._pa_hiddenByInterp; } catch (e) {} }); } catch (e) {}
+                                } catch (e) {}
+                                try { const ov = document.querySelector('.pa-interpretation-overlay'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch (e) {}
+                                try { setGlobalNoScroll(false); } catch (e) {}
+                                try { if (typeof stopPlayback === 'function') stopPlayback(); } catch (e) {}
+                                try { if (bd && bd.parentNode) bd.parentNode.removeChild(bd); } catch (e) {}
+                              });
+                            }
+                            // ensure backdrop and overlay are appended (backdrop before overlay)
+                            try {
+                              if (!bd.parentNode) document.body.appendChild(bd);
+                              if (!overlay.parentNode) document.body.appendChild(overlay);
+                              // apply stored deck background to overlay so it's opaque like the deck popup
+                              try {
+                                const bg = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupBackground) ? window.PopupAdapter._lastDeckPopupBackground : '';
+                                // helper: produce a slightly veiled rgba color from various inputs
+                                function veilColor(input) {
+                                  try {
+                                    if (!input) return 'rgba(255,255,255,0.96)';
+                                    const s = String(input).trim();
+                                    if (!s || s === 'transparent') return 'rgba(255,255,255,0.96)';
+                                    // rgb/rgba
+                                    const rgbm = s.match(/rgba?\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*([0-9\.]+))?\s*\)/i);
+                                    if (rgbm) {
+                                      const r = Math.max(0, Math.min(255, parseInt(rgbm[1],10)||255));
+                                      const g = Math.max(0, Math.min(255, parseInt(rgbm[2],10)||255));
+                                      const b = Math.max(0, Math.min(255, parseInt(rgbm[3],10)||255));
+                                      const aIn = (rgbm[4] !== undefined && rgbm[4] !== null) ? parseFloat(rgbm[4]) : 1.0;
+                                      const a = Math.min(0.96, isFinite(aIn) ? aIn : 0.96);
+                                      // ensure veil is slightly transparent even if original fully opaque
+                                      return 'rgba(' + r + ',' + g + ',' + b + ',' + (Math.max(0.36, a * 0.96)).toFixed(2) + ')';
+                                    }
+                                    // hex #rrggbb or #rgb
+                                    const hexm = s.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+                                    if (hexm) {
+                                      let hex = hexm[1];
+                                      if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('');
+                                      const r = parseInt(hex.substring(0,2),16);
+                                      const g = parseInt(hex.substring(2,4),16);
+                                      const b = parseInt(hex.substring(4,6),16);
+                                      return 'rgba(' + r + ',' + g + ',' + b + ',0.94)';
+                                    }
+                                    // fallback: use the string directly but add slight opacity if possible
+                                    return 'rgba(255,255,255,0.96)';
+                                  } catch (e) { return 'rgba(255,255,255,0.96)'; }
+                                }
+                                try { overlay.style.background = veilColor(bg); } catch (e) { overlay.style.background = 'rgba(255,255,255,0.96)'; }
+                              } catch (e) {}
+                            } catch (e) {}
+
+                            // apply measured deck popup size if available so both popups match exactly
+                            const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
+                            if (rect) {
+                              try { overlay.style.width = rect.width + 'px'; } catch (e) {}
+                              try { overlay.style.minWidth = rect.width + 'px'; } catch (e) {}
+                              try { overlay.style.maxHeight = rect.height + 'px'; } catch (e) {}
+                              try { overlay.style.overflow = 'hidden'; } catch (e) {}
+                            }
+
+                            // Before moving interp into overlay, aggressively remove any remaining deck popup elements
+                            try {
+                              // remove the last deck popup handle if still present
+                              try {
+                                const lastHandle = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupHandle) ? window.PopupAdapter._lastDeckPopupHandle : null;
+                                const wrapper = (lastHandle && lastHandle.nodeType === 1) ? lastHandle : (lastHandle && lastHandle.el) ? lastHandle.el : null;
+                                if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+                              } catch (e) {}
+                              // remove any fallback overlays created for the deck
+                              try { const fbs = document.querySelectorAll && document.querySelectorAll('.pa-deck-overlay-fallback'); if (fbs && fbs.length) Array.prototype.forEach.call(fbs, f => { try { if (f && f.parentNode) f.parentNode.removeChild(f); } catch (e) {} }); } catch (e) {}
+                              // remove any legacy deck container id
+                              try { const lastC = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastC && lastC.parentNode) lastC.parentNode.removeChild(lastC); } catch (e) {}
+                            } catch (e) {}
+                            // hide any popup ancestors that contain deck slots so they cannot be seen under the interpretation
+                            try {
+                              const slots = document.querySelectorAll && document.querySelectorAll('.pm-card-slot');
+                              if (slots && slots.length) {
+                                Array.prototype.forEach.call(slots, function(s) {
+                                  try {
+                                    const parent = (s.closest && (s.closest('.pa-deck-overlay-fallback') || s.closest('.pm-popup') || s.closest('.pm-popup-root') || s.closest('.pm-popup-box') || s.closest('#pa-last-deck-container')) ) || s.parentNode;
+                                    if (parent && parent.style && !parent.dataset._pa_hiddenByInterp) {
+                                      parent.dataset._pa_hiddenByInterp = '1';
+                                      parent.style.visibility = 'hidden';
+                                    }
+                                  } catch (e) {}
+                                });
+                              }
+                            } catch (e) {}
+                            // move interp into overlay
+                            try { if (interp.parentNode) interp.parentNode.removeChild(interp); } catch (e) {}
+                            interp.style.width = '100%';
+                            interp.style.boxSizing = 'border-box';
+                            overlay.appendChild(interp);
+                            handle = overlay;
+                          } catch (e) {
+                            // fallback: use openPopup (host PopupManager)
+                            try { handle = openPopup(interp); } catch (er) { handle = interp; }
+                          }
+                          try { _popupHandle = handle; } catch (e) {}
+                          // Diagnostic logger: capture wrapper rects and events for troubleshooting
+                          try {
+                            try { window.__PopupWatcherLogs = window.__PopupWatcherLogs || []; } catch (e) { window.__PopupWatcherLogs = []; }
+                            function _pw_now() { try { return Date.now(); } catch (e) { return +(new Date()); } }
+                            function _pw_rect(n) { try { if (!n || !n.getBoundingClientRect) return null; const r = n.getBoundingClientRect(); return { left: Math.round(r.left), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height), right: Math.round(r.right), bottom: Math.round(r.bottom) }; } catch (e) { return null; } }
+                            function _pw_log(msg, node) { try { window.__PopupWatcherLogs.push({ t: _pw_now(), msg: String(msg || ''), rect: _pw_rect(node), style: node && node.getAttribute ? node.getAttribute('style') : null, class: node && node.className ? node.className : null }); } catch (e) {} }
+                            // attempt to identify the wrapper returned by openPopup
+                            try {
+                              const wrapperNode = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
+                              _pw_log('wrapper-initial', wrapperNode || interp);
+                              // probes at intervals
+                              [60,120,240,480,900].forEach((ms) => setTimeout(() => { try { _pw_log('wrapper-probe+' + ms, wrapperNode || interp); } catch (e) {} }, ms));
+                              // listen for transitionend/animationend
+                              try {
+                                if (wrapperNode) {
+                                  const onEnd = function(ev) { try { _pw_log('wrapper-transitionend:' + (ev && ev.propertyName) , wrapperNode); } catch (e) {} };
+                                  wrapperNode.addEventListener && wrapperNode.addEventListener('transitionend', onEnd);
+                                  wrapperNode.addEventListener && wrapperNode.addEventListener('animationend', onEnd);
+                                }
+                              } catch (e) {}
+                              // observe attribute changes on wrapper for short period
+                              try {
+                                if (wrapperNode && window.MutationObserver) {
+                                  const mo = new MutationObserver(function(list) {
+                                    try { _pw_log('wrapper-mutation', wrapperNode); } catch (e) {}
+                                  });
+                                  try { mo.observe(wrapperNode, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) {}
+                                  setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 1200);
+                                }
+                              } catch (e) {}
+                              // also probe deck slot rects if present (helpful to see source positions)
+                              try {
+                                const deckSlots = document.querySelectorAll && document.querySelectorAll('.pm-card-slot');
+                                if (deckSlots && deckSlots.length) {
+                                  Array.prototype.forEach.call(deckSlots, function(s, idx) { try { _pw_log('deck-slot-' + idx, s); } catch (e) {} });
+                                }
+                              } catch (e) {}
+                            } catch (e) { _pw_log('wrapper-log-setup-failed', interp); }
+                            // expose reader helper
+                            try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter.getPopupWatcherLogs = function() { try { return window.__PopupWatcherLogs || []; } catch (e) { return []; } }; } catch (e) {}
+                          } catch (e) {}
+                          // Try morph transition: clone visible card images from the deck and animate them
+                          try {
+                            // Disable morph by default to avoid visual displacement; can be re-enabled
+                            // by setting window.PopupAdapter.transition = 'morph' at runtime.
+                            const transition = (window.PopupAdapter && window.PopupAdapter.transition) ? window.PopupAdapter.transition : 'none';
+                            const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                            if (transition === 'morph' && !prefersReduced) {
+                              try {
+                                // Try to lock the popup wrapper width to avoid horizontal reflow while morphing.
+                                let _morphLockedWrapper = null;
+                                  try {
+                                    const wrapperNode = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
+                                    if (wrapperNode && wrapperNode.getBoundingClientRect) {
+                                      const wr = wrapperNode.getBoundingClientRect();
+                                      // preserve originals
+                                      try { wrapperNode.dataset._pa_origTransition = wrapperNode.style.transition || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origTransform = wrapperNode.style.transform || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origLeft = wrapperNode.style.left || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origPosition = wrapperNode.style.position || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origWidth = wrapperNode.style.width || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origMinWidth = wrapperNode.style.minWidth || ''; } catch (e) {}
+                                      // disable transitions and enforce centering class
+                                      try { wrapperNode.style.transition = 'none'; } catch (e) {}
+                                      try { wrapperNode.style.width = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) {}
+                                      try { wrapperNode.style.minWidth = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) {}
+                                      try { wrapperNode.classList && wrapperNode.classList.add('pa-center-popup'); } catch (e) {}
+                                      _morphLockedWrapper = wrapperNode;
+                                    }
+                                  } catch (e) {}
+                                // hide interp content until morph completes (use opacity so visibility/layout remains)
+                                try { interp.style.visibility = 'hidden'; interp.style.opacity = '0'; } catch (e) {}
+                                // locate deck slot images by index (if deck still present)
+                                const clones = [];
+                                const body = document.body || document.documentElement;
+                                const deckSlots = (function(){ try { return Array.prototype.slice.call(document.querySelectorAll('.pm-card-slot')); } catch(e){ return []; } })();
+                                // create clones mapped to the chosen cards
+                                cards.forEach((c, i) => {
+                                  try {
+                                    const src = (c && c.src) ? c.src : (typeof c === 'string' ? c : null);
+                                    let sourceImg = null;
+                                    if (typeof c === 'object' && c.index != null && deckSlots && deckSlots.length) {
+                                      const slot = deckSlots[Number(c.index)];
+                                      if (slot) sourceImg = slot.querySelector('img');
+                                    }
+                                    // fallback: try to find any image with matching src
+                                    if (!sourceImg && src) {
+                                      try { sourceImg = document.querySelector('img[src$="' + String(src).split('/').pop() + '"]'); } catch (e) {}
+                                    }
+                                    // build clone element
+                                    const cl = document.createElement('img');
+                                    cl.src = src || (sourceImg && sourceImg.src) || '';
+                                    cl.alt = '';
+                                    cl.style.position = 'fixed';
+                                    cl.style.zIndex = 2147483646;
+                                    cl.style.borderRadius = '12px';
+                                    cl.style.boxShadow = '0 12px 34px rgba(0,0,0,0.28)';
+                                    cl.style.willChange = 'transform, opacity';
+                                    cl.style.transition = 'transform 520ms cubic-bezier(.2,.9,.25,1), opacity 420ms ease';
+                                    // initial placement from source image rect or center fallback
+                                    let sRect = null;
+                                    try { if (sourceImg && sourceImg.getBoundingClientRect) sRect = sourceImg.getBoundingClientRect(); } catch (e) {}
+                                    if (!sRect) {
+                                      sRect = { left: window.innerWidth/2 - 80, top: window.innerHeight/2 - 120, width: 160, height: 240 };
+                                    }
+                                    cl.style.left = (sRect.left) + 'px';
+                                    cl.style.top = (sRect.top) + 'px';
+                                    cl.style.width = (sRect.width) + 'px';
+                                    cl.style.height = (sRect.height) + 'px';
+                                    cl.style.objectFit = 'contain';
+                                    body.appendChild(cl);
+                                    clones.push({ el: cl, sourceRect: sRect, sourceImg: sourceImg });
+                                  } catch (e) {}
+                                });
+
+                                // ensure chosenWrap children exist inside interp; wait for wrapper to stabilize
+                                (function waitAndAnimate() {
+                                  try {
+                                    const wrapperNode = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                                    // helper: wait until getBoundingClientRect stabilizes or timeout
+                                    function waitForStableRect(node, maxMs = 900, interval = 60, stableNeeded = 3) {
+                                      return new Promise((resolve) => {
+                                        if (!node || !node.getBoundingClientRect) return resolve(true);
+                                        try {
+                                          // If the node has a CSS transition on left/top/width/height/transform, wait for transitionend
+                                          const cs = window.getComputedStyle(node);
+                                          const trans = (cs && cs.transition && cs.transition !== 'all 0s ease 0s');
+                                          let resolved = false;
+                                          if (trans) {
+                                            const onEnd = (ev) => {
+                                              try { if (ev && (ev.propertyName === 'left' || ev.propertyName === 'top' || ev.propertyName === 'width' || ev.propertyName === 'height' || ev.propertyName === 'transform')) {
+                                                if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) {} resolve(true); }
+                                              } } catch (e) {}
+                                            };
+                                            try { node.addEventListener('transitionend', onEnd); } catch (e) {}
+                                            // fallback timeout
+                                            setTimeout(() => { if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) {} resolve(true); } }, Math.min(maxMs, 900));
+                                            return;
+                                          }
+                                        } catch (e) {}
+                                        // otherwise poll for stable rect
+                                        let lastKey = null;
+                                        let stable = 0;
+                                        let elapsed = 0;
+                                        const id = setInterval(() => {
+                                          try {
+                                            const r = node.getBoundingClientRect();
+                                            const key = Math.round(r.left) + '|' + Math.round(r.top) + '|' + Math.round(r.width) + '|' + Math.round(r.height);
+                                            if (key === lastKey) stable++; else { stable = 0; lastKey = key; }
+                                            elapsed += interval;
+                                            if (stable >= stableNeeded || elapsed >= maxMs) { clearInterval(id); resolve(true); }
+                                          } catch (e) { clearInterval(id); resolve(true); }
+                                        }, interval);
+                                        // safety: ensure promise eventually resolves
+                                        setTimeout(() => { try { clearInterval(id); resolve(true); } catch (e) { resolve(true); } }, maxMs + 120);
+                                      });
+                                    }
+
+                                    (async function () {
+                                      try {
+                                        await waitForStableRect(wrapperNode, 900, 60, 3);
+                                      } catch (e) {}
+                                      try {
+                                        const targetChildren = interp.querySelectorAll && interp.querySelectorAll('#pa-chosen-wrap > div');
+                                        clones.forEach((cclone, idx) => {
+                                          try {
+                                            // recompute source rect just before animation (in case it moved)
+                                            if (cclone.sourceImg && cclone.sourceImg.getBoundingClientRect) {
+                                              try { cclone.sourceRect = cclone.sourceImg.getBoundingClientRect(); } catch (e) {}
+                                              // apply current source rect to current clone position so transform is correct
+                                              try {
+                                                cclone.el.style.left = (cclone.sourceRect.left) + 'px';
+                                                cclone.el.style.top = (cclone.sourceRect.top) + 'px';
+                                                cclone.el.style.width = (cclone.sourceRect.width) + 'px';
+                                                cclone.el.style.height = (cclone.sourceRect.height) + 'px';
+                                              } catch (e) {}
+                                            }
+                                            const tgt = (targetChildren && targetChildren[idx]) ? targetChildren[idx] : null;
+                                            let tRect = null;
+                                            if (tgt && tgt.getBoundingClientRect) tRect = tgt.getBoundingClientRect();
+                                            if (!tRect) {
+                                              tRect = { left: (window.innerWidth/2 - 110) + (idx*8), top: (window.innerHeight/2 - 160) + (idx*6), width: 220, height: 330 };
+                                            }
+                                            const dx = (tRect.left - (cclone.sourceRect.left || 0));
+                                            const dy = (tRect.top - (cclone.sourceRect.top || 0));
+                                            const sx = (tRect.width || 1) / (cclone.sourceRect.width || 1);
+                                            const sy = (tRect.height || 1) / (cclone.sourceRect.height || 1);
+                                            const s = Math.min(sx, sy);
+                                            // trigger layout before transform
+                                            try { void cclone.el.offsetWidth; } catch (e) {}
+                                            cclone.el.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+                                            cclone.el.style.opacity = '1';
+                                          } catch (e) {}
+                                        });
+                                      } catch (e) {}
+                                    })();
+                                  } catch (e) {}
+                                })();
+
+                                // finish morph: unhide interp after transition and remove clones
+                                setTimeout(() => {
+                                  try {
+                                    // remove clones with a small fade
+                                    clones.forEach(cc => { try { cc.el.style.opacity = '0'; cc.el.style.transition = 'opacity 200ms ease'; } catch (e) {} });
+                                    setTimeout(() => {
+                                      try { clones.forEach(cc => { try { if (cc.el && cc.el.parentNode) cc.el.parentNode.removeChild(cc.el); } catch (e) {} }); } catch (e) {}
+                                      try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) {}
+                                      // restore wrapper width/transition and class if we locked it
+                                      try {
+                                        if (_morphLockedWrapper) {
+                                          try { _morphLockedWrapper.style.width = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origWidth) ? _morphLockedWrapper.dataset._pa_origWidth : ''; } catch (e) {}
+                                          try { _morphLockedWrapper.style.minWidth = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origMinWidth) ? _morphLockedWrapper.dataset._pa_origMinWidth : ''; } catch (e) {}
+                                          try { _morphLockedWrapper.style.transition = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origTransition) ? _morphLockedWrapper.dataset._pa_origTransition : ''; } catch (e) {}
+                                          try { if (_morphLockedWrapper.classList) _morphLockedWrapper.classList.remove('pa-center-popup'); } catch (e) {}
+                                          try { if (_morphLockedWrapper.dataset) { delete _morphLockedWrapper.dataset._pa_origTransition; delete _morphLockedWrapper.dataset._pa_origTransform; delete _morphLockedWrapper.dataset._pa_origLeft; delete _morphLockedWrapper.dataset._pa_origPosition; delete _morphLockedWrapper.dataset._pa_origWidth; delete _morphLockedWrapper.dataset._pa_origMinWidth; } } catch (e) {}
+                                          _morphLockedWrapper = null;
+                                        }
+                                      } catch (e) {}
+                                    }, 220);
+                                  } catch (e) {}
+                                }, 620);
+                              } catch (e) {}
+                            } else {
+                              // not morphing: ensure interp visible
+                              try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) {}
+                            }
+                          } catch (e) {}
+                          // Observe DOM removal of the interpretation node so we can stop audio
+                          try {
+                            // If the popup node is removed by PopupManager or by host, stop playback immediately
+                            const removalObserver = new MutationObserver((mutList) => {
+                              try {
+                                if (!interp || !interp.isConnected) {
+                                  try { stopPlayback(); } catch (e) {}
+                                  try { removalObserver.disconnect(); } catch (e) {}
+                                }
+                              } catch (e) {}
+                            });
+                            // observe document.body subtree for changes; disconnect when interp removed
+                            try { removalObserver.observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+                          } catch (e) {}
                           // robustly enforce wrapper sizing. PopupManager may wrap/override; use immediate + delayed reapply + MutationObserver
                           try {
                             const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
-                            const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                            const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                             if (wrapper && rect) {
                               const applyRect = (w, r) => {
                                 try { w.style.minWidth = r.width + 'px'; } catch (e) {}
@@ -1711,7 +2253,7 @@
                   try {
                     setTimeout(() => {
                       try {
-                        const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                        const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                         const chosenEl = document.getElementById('pa-chosen-wrap');
                         if (!wrapper || !chosenEl) return;
                         const wRect = wrapper.getBoundingClientRect();
@@ -1731,14 +2273,14 @@
                   } catch (e) {}
                   // Force a downward offset of 100px on the wrapper returned by openPopup (some page managers override positioning)
                   try {
-                    const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                            const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                     if (wrapper && wrapper.style) {
                       try {
                         // preserve original transform
                         if (!wrapper.dataset._pa_origTransform) wrapper.dataset._pa_origTransform = wrapper.style.transform || '';
-                        // apply translateY(100px)
-                        wrapper.style.transform = (wrapper.style.transform || '') + ' translateY(100px)';
-                        wrapper.dataset._pa_downshift = '100';
+              // apply a smaller translateY so the popup sits higher on the page
+            wrapper.style.transform = (wrapper.style.transform || '') + ' translateY(40px)';
+            wrapper.dataset._pa_downshift = '40';
                       } catch (e) {}
                     }
                   } catch (e) {}
@@ -1771,10 +2313,43 @@
                   } catch (e) {}
                   // try to center the wrapper returned by openPopup (best-effort)
                   try {
-                    const wrapper = (handle && handle.nodeType === 1) ? handle : (handle && handle.el) ? handle.el : null;
+                    const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                     if (wrapper && wrapper.classList) {
                       wrapper.classList.add('pa-center-popup');
                       try { wrapper.dataset._pa_centered = '1'; } catch (e) {}
+                    }
+                  } catch (e) {}
+                  // Aggressive inline centering enforcement: some hosts reflow/translate the wrapper
+                  // after we open it which causes a micro-offset. Force inline left/transform and
+                  // reapply a few times via MutationObserver to override transient host mutations.
+                  try {
+                    const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
+                    const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : null;
+                    if (wrapper && wrapper.style) {
+                      try { wrapper.style.transition = 'none'; } catch (e) {}
+                      try { wrapper.style.left = '50%'; } catch (e) {}
+                      try { wrapper.style.transform = 'translateX(-50%)'; } catch (e) {}
+                      try { if (rect && rect.width) { wrapper.style.width = rect.width + 'px'; wrapper.style.minWidth = rect.width + 'px'; } } catch (e) {}
+
+                      try {
+                        let attempts = 0;
+                        const mo = new MutationObserver(() => {
+                          try {
+                            attempts++;
+                            if (attempts <= 6) {
+                              wrapper.style.transition = 'none';
+                              wrapper.style.left = '50%';
+                              wrapper.style.transform = 'translateX(-50%)';
+                              if (rect && rect.width) { wrapper.style.width = rect.width + 'px'; wrapper.style.minWidth = rect.width + 'px'; }
+                            } else {
+                              try { mo.disconnect(); } catch (e) {}
+                            }
+                          } catch (e) {}
+                        });
+                        try { mo.observe(wrapper, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) {}
+                        // safety disconnect after short grace period
+                        setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 900);
+                      } catch (e) {}
                     }
                   } catch (e) {}
           // Note: previously we auto-invoked a sample interpretation starter which
@@ -1896,7 +2471,32 @@
                 if (typeof remaining !== 'undefined' && remaining === 0) {
                   try {
                     const delay = (opts && typeof opts.interpretationDelay === 'number' && isFinite(opts.interpretationDelay)) ? Math.max(0, Number(opts.interpretationDelay)) : 1200;
-                    setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) {} }, delay);
+                    // keep the deck visible for a short display duration so users can see the final revealed cards
+                    const displayMs = Math.max(600, Math.min(1800, delay || 1200));
+                    setTimeout(() => {
+                      try {
+                        // remove the deck popup/fallback overlay so it disappears before interpretation opens
+                        try {
+                          const lastHandle = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupHandle) ? window.PopupAdapter._lastDeckPopupHandle : null;
+                          const wrapper = (lastHandle && lastHandle.nodeType === 1) ? lastHandle : (lastHandle && lastHandle.el) ? lastHandle.el : null;
+                          if (wrapper) {
+                            try {
+                              // capture the wrapper background so interpretation overlay can reuse it
+                              try {
+                                const cs = window.getComputedStyle && window.getComputedStyle(wrapper);
+                                if (cs) {
+                                  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupBackground = cs.background || cs.backgroundImage || cs.backgroundColor || ''; } catch (e) {}
+                                }
+                              } catch (e) {}
+                            } catch (e) {}
+                            try { const pf = wrapper.closest && wrapper.closest('.pa-deck-overlay-fallback'); if (pf && pf.parentNode) pf.parentNode.removeChild(pf); } catch (e) {}
+                            try { if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch (e) {}
+                          }
+                        } catch (e) {}
+                        // small gap to let layout settle visually, then open interpretation
+                        setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) {} }, 220);
+                      } catch (e) {}
+                    }, displayMs);
                   } catch (e) {}
                 }
               } catch (e) {}
