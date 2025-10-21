@@ -1199,7 +1199,7 @@
     }
   </style>
 
-  <header class="site-header" role="banner" aria-label="Navigation principale">
+  <header class="site-header" role="banner" aria-label="Navigation principale" style="z-index:99999;" tabindex="-1">
     <div class="container">
       <a class="brand" href="#accueil" aria-label="Accueil Opanoma">
         <img src="./public/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="brand-logo-img" />
@@ -1209,9 +1209,9 @@
         </div>
       </a>
 
-      <nav class="nav" aria-label="Menu professionnel">
-        <a href="#consultations" class="highlight">Consultations</a>
-        <a href="#temoignages">Témoignages</a>
+  <nav class="nav" aria-label="Menu professionnel" style="pointer-events:auto;">
+  <a href="#consultations" class="highlight" onclick="(function(e){e&&e.preventDefault();var s=document.getElementById('consultations-section');if(s){s.scrollIntoView({behavior:'smooth',block:'center'});s.classList.add('consultation-focus');setTimeout(function(){s.classList.remove('consultation-focus');},2000);}return false}).call(this,event)">Consultations</a>
+  <a href="#temoignages" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('temoignages-section');var r=document.getElementById('reservation');if(t){t.style.display='block';if(r&&r.nextElementSibling!==t){r.parentNode.insertBefore(t,r.nextSibling);}var rect=r? (window.pageYOffset + r.getBoundingClientRect().bottom + 12) : null; if(rect){window.scrollTo({top:rect,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">Témoignages</a>
         <a href="#faq">FAQ</a>
       </nav>
 
@@ -1317,6 +1317,33 @@
     </div>
   </header>
 
+  <script>
+    // Ensure header receives focus when the homepage opens so keyboard users start there.
+    (function(){
+      function focusHeader() {
+        try {
+          var header = document.querySelector('.site-header');
+          if (!header) return;
+          // Only focus when document is visible to avoid stealing focus during background loads
+          if (document.visibilityState === 'visible') {
+            header.focus({ preventScroll: true });
+          }
+        } catch (e) {
+          console.warn('header focus failed', e);
+        }
+      }
+
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        focusHeader();
+      } else {
+        document.addEventListener('DOMContentLoaded', focusHeader);
+      }
+
+      // Also focus when coming back from bfcache/navigation (pageshow)
+      window.addEventListener('pageshow', function(ev){ if(ev.persisted) focusHeader(); });
+    })();
+  </script>
+
   <!-- Bouton caché pour compatibilité avec le script existant -->
   <button class="header-btn-ia" style="display: none;">Tirage par IA</button>
 
@@ -1341,7 +1368,7 @@
     <section class="offres-tarifs-section" id="consultations-section">
       <h3 class="offres-tarifs-title">Consultation</h3>
       <div class="offres-tarifs-grid">
-        <div class="offre-tarif-card" data-offre="Tarot">
+  <div class="offre-tarif-card" data-offre="Tarot" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('tarot-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
           <div class="offre-tarif-content">
             <div class="offre-titre">Tarot</div>
             <p class="offre-description">Plongez dans la symbolique des arcanes pour révéler ce qui se joue en profondeur.</p>
@@ -1349,7 +1376,7 @@
             <p class="offre-description">Un outil puissant pour éclairer vos décisions avec clarté.</p>
           </div>
         </div>
-        <div class="offre-tarif-card" data-offre="Pendule">
+  <div class="offre-tarif-card" data-offre="Pendule" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('pendule-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
           <div class="offre-tarif-content">
             <div class="offre-titre">Pendule</div>
             <p class="offre-description">Obtenez des réponses claires grâce à la radiesthésie.</p>
@@ -1357,7 +1384,7 @@
             <p class="offre-description">Des guidances concrètes pour éclairer vos choix avec assurance.</p>
           </div>
         </div>
-        <div class="offre-tarif-card" data-offre="Alignement">
+  <div class="offre-tarif-card" data-offre="Alignement" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('alignement-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
           <div class="offre-tarif-content">
             <div class="offre-titre">Alignement</div>
             <p class="offre-description">Retrouvez un axe clair pour vos décisions, au-delà du doute et de la confusion.</p>
@@ -1401,7 +1428,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Tirage Express">Réserver</button>
+            <button class="offre-btn-small" data-offre="Tirage Express" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1428,7 +1455,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Exploration Complète">Réserver</button>
+            <button class="offre-btn-small" data-offre="Exploration Complète" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1455,7 +1482,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Chemin de Vie">Réserver</button>
+            <button class="offre-btn-small" data-offre="Chemin de Vie" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
       </div>
@@ -1494,7 +1521,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Questions Flash">Réserver</button>
+            <button class="offre-btn-small" data-offre="Questions Flash" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1521,7 +1548,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Recherche Pendulaire">Réserver</button>
+            <button class="offre-btn-small" data-offre="Recherche Pendulaire" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1548,7 +1575,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Bilan Énergétique">Réserver</button>
+            <button class="offre-btn-small" data-offre="Bilan Énergétique" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
       </div>
@@ -1587,7 +1614,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Équilibrage Express">Réserver</button>
+            <button class="offre-btn-small" data-offre="Équilibrage Express" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1614,7 +1641,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Harmonisation Complète">Réserver</button>
+            <button class="offre-btn-small" data-offre="Harmonisation Complète" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
         <div class="offre-tarif-card">
@@ -1641,7 +1668,7 @@
               </div>
             </div>
             
-            <button class="offre-btn-small" data-offre="Transformation Profonde">Réserver</button>
+            <button class="offre-btn-small" data-offre="Transformation Profonde" onclick="(function(e){e&&e.preventDefault();var offre=this.getAttribute('data-offre');var sel=document.getElementById('offre-select');if(offre&&sel){sel.value=offre;}var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)">Réserver</button>
           </div>
         </div>
       </div>
@@ -4057,18 +4084,36 @@ document.addEventListener('DOMContentLoaded', function() {
     temoignagesLinks.forEach(function(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
-        
-        // Toggle de l'affichage de la section témoignages
-        if (temoignagesSection.style.display === 'none' || temoignagesSection.style.display === '') {
-          temoignagesSection.style.display = 'block';
-          
-          // Scroll vers la section témoignages
-          temoignagesSection.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        } else {
-          temoignagesSection.style.display = 'none';
+
+        // Reveal the testimonials section and ensure it appears under the reservation block
+        try {
+          const reservation = document.getElementById('reservation');
+
+          // If there's a reservation block and the testimonials section is not immediately after it,
+          // move the testimonials section to follow the reservation so it appears under the booking area.
+          if (reservation && reservation.nextElementSibling !== temoignagesSection) {
+            reservation.parentNode.insertBefore(temoignagesSection, reservation.nextSibling);
+          }
+
+          // Toggle display (temoignages are hidden by default via CSS)
+          const isHidden = (temoignagesSection.style.display === 'none' || temoignagesSection.style.display === '');
+          if (isHidden) {
+            temoignagesSection.style.display = 'block';
+
+            // Scroll to just below the reservation section so the testimonials appear under it
+            if (reservation) {
+              const rect = reservation.getBoundingClientRect();
+              const targetTop = window.pageYOffset + rect.bottom + 12; // 12px margin
+              window.scrollTo({ top: targetTop, behavior: 'smooth' });
+            } else {
+              // Fallback: scroll testimonials into view
+              temoignagesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          } else {
+            temoignagesSection.style.display = 'none';
+          }
+        } catch (err) {
+          console.warn('Erreur lors de l ouverture des témoignages:', err);
         }
       });
     });
@@ -4186,7 +4231,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ajoute l'effet de focus après un délai pour le scroll
         setTimeout(function() {
           consultationsSection.classList.add('consultation-focus');
-          
+
+          // Si la section Témoignages existe, la révéler (elle est cachée par défaut)
+          try {
+            const temoignages = document.getElementById('temoignages-section');
+            if (temoignages) {
+              // Affiche le cadre de témoignages (CSS le cache avec display:none)
+              temoignages.style.display = 'block';
+              // Ajoute temporairement un effet visuel pour le signaler
+              const prevBox = temoignages.style.boxShadow || '';
+              temoignages.style.boxShadow = '0 12px 40px rgba(0,0,0,0.35)';
+              setTimeout(function() {
+                temoignages.style.boxShadow = prevBox;
+              }, 2000);
+            }
+          } catch (err) {
+            // Défensif : ne pas lever d'erreur si quelque chose manque
+            console.warn('Erreur en révélant les témoignages:', err);
+          }
+
           // Retire l'effet après l'animation (2 secondes)
           setTimeout(function() {
             consultationsSection.classList.remove('consultation-focus');
