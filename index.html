@@ -4218,4 +4218,54 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
   </script>
 </body>
+  
+  <!-- Small wiring script: attach click handlers to page buttons (safe, no markup changes) -->
+  <script>
+    (function () {
+      function safe(fn) { try { return fn(); } catch (e) { console && console.warn && console.warn('wiring error', e); } }
+
+      function onReady(cb) {
+        if (document.readyState === 'complete' || document.readyState === 'interactive') return cb();
+        document.addEventListener('DOMContentLoaded', cb);
+      }
+
+      onReady(function () {
+        // Main Tirage IA buttons (desktop and mobile)
+        safe(function () {
+          var els = Array.from(document.querySelectorAll('.btn-ia, .mobile-btn-ia, .header-btn-ia, .header-btn-ia a'));
+          els.forEach(function (el) {
+            // skip if already wired
+            if (el.__wiredForTirage) return; el.__wiredForTirage = true;
+            el.addEventListener('click', function (ev) { ev.preventDefault && ev.preventDefault(); try { window.triggerTirageIA(); } catch (e) { console && console.warn && console.warn('triggerTirageIA failed', e); } return false; });
+          });
+        });
+
+        // Offer buttons (Réserver) - if they have data-offre, scroll to booking/booking form if present
+        safe(function () {
+          var offers = Array.from(document.querySelectorAll('.offre-btn, .offre-btn-small, button[data-offre]'));
+          offers.forEach(function (btn) {
+            if (btn.__wiredForOffer) return; btn.__wiredForOffer = true;
+            btn.addEventListener('click', function (ev) {
+              try {
+                ev.preventDefault && ev.preventDefault();
+                var form = document.querySelector('form#bookingForm, form[name="booking"], .contact-form');
+                if (form) { form.scrollIntoView({behavior:'smooth', block:'center'}); form.querySelector('input,textarea,button') && form.querySelector('input,textarea,button').focus(); }
+                else { window.location.hash = '#contact'; }
+              } catch (e) { console && console.warn && console.warn('offer button action failed', e); }
+            });
+          });
+        });
+
+        // Newsletter subscription quick anchor
+        safe(function () {
+          var nl = document.querySelectorAll('a[href="#newsletter"], a[href*="newsletter"], .newsletter-link');
+          Array.from(nl).forEach(function (a) {
+            if (a.__wiredNewsletter) return; a.__wiredNewsletter = true;
+            a.addEventListener('click', function (ev) { ev.preventDefault && ev.preventDefault(); var el = document.querySelector('form#newsletter, form[name="newsletter"], .newsletter-form'); if (el) el.scrollIntoView({behavior:'smooth', block:'center'}); else window.location.hash = '#newsletter'; });
+          });
+        });
+
+      });
+    })();
+  </script>
 </html>
