@@ -2089,6 +2089,8 @@
           }
         } catch(e) { console.warn('failed to install closeCrossHandler', e); }
 
+      });
+
         </script>
   <script>
       // Applique immédiatement
@@ -4262,6 +4264,25 @@ document.addEventListener('DOMContentLoaded', function() {
           Array.from(nl).forEach(function (a) {
             if (a.__wiredNewsletter) return; a.__wiredNewsletter = true;
             a.addEventListener('click', function (ev) { ev.preventDefault && ev.preventDefault(); var el = document.querySelector('form#newsletter, form[name="newsletter"], .newsletter-form'); if (el) el.scrollIntoView({behavior:'smooth', block:'center'}); else window.location.hash = '#newsletter'; });
+          });
+        });
+
+        // Small handler: toggle Manon bio on En savoir plus
+        safe(function () {
+          var bioBtn = document.getElementById('btn-bio');
+          if (!bioBtn || bioBtn.__wiredForBio) return; bioBtn.__wiredForBio = true;
+          bioBtn.addEventListener('click', function (ev) {
+            try {
+              ev && ev.preventDefault && ev.preventDefault();
+              var bio = document.getElementById('manon-bio');
+              if (!bio) return;
+              if (bio.style.display === 'none' || bio.style.display === '') {
+                bio.style.display = 'block';
+                bio.scrollIntoView({behavior: 'smooth', block: 'center'});
+              } else {
+                bio.style.display = 'none';
+              }
+            } catch (e) { console && console.warn && console.warn('bio toggle failed', e); }
           });
         });
 
