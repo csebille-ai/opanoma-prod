@@ -1,15 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Accueil - l’Œil d’Opanoma</title>
-  <link rel="stylesheet" href="./src/style.css?v=force-reload-20251013" />
+  <meta name="description" content="L'Œil d'Opanoma — Guidance spirituelle personnalisée. Consultations de tarot, pendule et alignement énergétique. Tirage en ligne gratuit avec interprétation.">
+  <meta property="og:title" content="L'Œil d'Opanoma — Guidance Spirituelle">
+  <meta property="og:description" content="Consultations de tarot, pendule et alignement énergétique. Tirage en ligne gratuit avec interprétation par intelligence artificielle.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opanoma.fr/">
+  <meta property="og:image" content="https://opanoma.fr/img/opalogo.png">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary">
+  <script type="module" src="/src/main.js"></script>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="stylesheet" href="/src/popup.css">
+  <link rel="stylesheet" href="/src/newsletter-mobile.css">
   <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-  
-  <!-- STYLES INLINE POUR FORCER LE LAYOUT DE 5 CARTES DESKTOP (DISABLED) -->
-  <!-- Dev Open PM test removed in feature/popup-rewrite -->
 </head>
 <body>
   <script>window.PopupAdapter = window.PopupAdapter || {};</script>
@@ -69,1140 +77,17 @@
   </script>
   <div class="background-video">
     <video class="hero-video" playsinline autoplay muted loop poster="./hero-poster.jpg">
-      <source src="./public/fond10.mp4" type="video/mp4"/>
+      <source src="/fond10.mp4" type="video/mp4"/>
     </video>
     <div class="hero-overlay"></div>
   </div>
   
   <!-- ===== HEADER uniquement ===== -->
-  <style>
-    /* === MEDIA QUERIES ORGANISÉES === */
-    /* Mobile très petit (max 375px) */
-    @media (max-width: 375px) {
-      .main-header {
-        padding: 0.8em 0.5em;
-        gap: 0.5em;
-        min-height: auto;
-      }
-      .header-left .header-logo {
-        height: 42px;
-        max-width: 130px;
-      }
-      .header-center {
-        gap: 0.5em;
-      }
-      .header-ia {
-        margin: 0 0.3em;
-      }
-      .main-header .header-btn-ia {
-        font-size: 0.55rem;
-        padding: 0.22em 0.45em;
-        letter-spacing: 0.1px;
-        margin: 0 0.03em;
-        min-width: auto;
-        max-width: 60px;
-        width: auto;
-        background: #FF6B35;
-        border: 1px solid #FF6B35;
-        border-radius: 10px;
-        box-shadow: none;
-        text-shadow: none;
-        transform: none;
-      }
-      .main-header .header-btn-ia:hover,
-      .main-header .header-btn-ia:focus {
-        background: #FF6B35;
-        border-color: #FF6B35;
-        transform: none;
-        box-shadow: none;
-      }
-      .manon-title {
-        margin-top: 50px;
-      }
-    }
-
-    /* Tablette et mobile moyen (376px à 980px) */
-    @media (max-width: 980px) and (min-width: 376px) {
-      .main-header {
-        padding: 0.8em 1em;
-        gap: 0.7em;
-      }
-      .header-left .header-logo {
-        height: 48px;
-        max-width: 150px;
-      }
-      .header-center {
-        gap: 0.7em;
-      }
-      .header-ia {
-        margin: 0 0.6em;
-      }
-      .main-header .header-btn-ia {
-        font-size: 0.7rem;
-        padding: 0.3em 0.7em;
-        max-width: 80px;
-        border-radius: 12px;
-      }
-      .manon-title {
-        margin-top: 60px;
-      }
-    }
-
-    /* Desktop (min 981px) */
-    @media (min-width: 981px) {
-      .main-header {
-        padding: 1.2em 2em;
-        gap: 1.2em;
-      }
-      .header-left .header-logo {
-        height: 60px;
-        max-width: 180px;
-      }
-      .header-center {
-        gap: 1.2em;
-      }
-      .header-ia {
-        margin: 0 1em;
-      }
-      .main-header .header-btn-ia {
-        font-size: 1rem;
-        padding: 0.5em 1.2em;
-        max-width: 120px;
-        border-radius: 16px;
-      }
-      .manon-title {
-        margin-top: 140px;
-      }
-    }
-    
-    :root{
-      --brand:#a34d57;           /* Couleur premium (Pro) */
-      --text:#eae7ef;
-      --muted:#b8b3c2;
-      --ia-start:#ff9ae0;        /* Dégradé fun (IA) */
-      --ia-end:#9ab0ff;
-      --glass: rgba(255,255,255,.06);
-      --glass-stroke: rgba(255,255,255,.25);
-    }
-    .site-header{ position:sticky; top:0; z-index:40; backdrop-filter:saturate(140%) blur(8px); background:linear-gradient(180deg, rgba(10,10,14,.82), rgba(10,10,14,.5)); border-bottom:1px solid rgba(255,255,255,.06)}
-    .container{ max-width:1180px; margin:0 auto; padding:12px 22px; display:flex; align-items:center; justify-content:space-between; gap:14px}
-    .brand{ display:flex; align-items:center; gap:12px; color:var(--text); text-decoration:none}
-    .brand-logo{ width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, var(--brand), #6c2230); display:grid; place-items:center; box-shadow:0 8px 30px rgba(163,77,87,.35)}
-    .brand-logo span{ font-family:"Josefin Sans", sans-serif; font-size:22px; font-weight:700; letter-spacing:.5px; color:#fff }
-    .brand-logo-img{ width:60px; height:60px; border-radius:12px; object-fit:contain; background:transparent; box-shadow:0 8px 30px rgba(163,77,87,.35); mix-blend-mode:screen; filter:contrast(1.1) brightness(1.1) }
-    .brand-text{ line-height:1.05 }
-    .brand-title{ font-family:"Josefin Sans", sans-serif; font-weight:700; letter-spacing:.2px; font-size:16px }
-    .brand-sub{ font-size:11px; color:var(--muted) }
-
-    .nav{ display:flex; align-items:center; gap:24px }
-    .nav a{ color:var(--text); text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:400; font-size:15px; letter-spacing:0.2px; padding:8px 0; opacity:.85; transition:all 0.2s ease; position:relative }
-    .nav a:hover{ opacity:1; color:#fff }
-    .nav a::after{ content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:rgba(255,255,255,.6); transition:width 0.3s ease }
-    .nav a:hover::after{ width:100% }
-    .nav a.highlight{ font-weight:500; color:#fff; opacity:1; background:rgba(255,255,255,.1); padding:8px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.2) }
-    .nav a.highlight:hover{ background:rgba(255,255,255,.15); transform:translateY(-1px) }
-
-    .cta-wrap{ display:flex; align-items:center; gap:12px }
-    
-    .social-icons{ display:flex; align-items:center; gap:8px; margin-right:8px }
-    .social-icon{ display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.08); color:#fff; text-decoration:none; transition:all 0.3s ease; border:1px solid rgba(255,255,255,.15) }
-    .social-icon:hover{ background:rgba(255,255,255,.15); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.2) }
-    .social-icon svg{ width:16px; height:16px; fill:currentColor }
-    
-    /* Effet de soleil pour le texte "En savoir plus" */
-    .manon-bio-content {
-      position: relative;
-    }
-    
-    .text-sunshine-effect p {
-      background: linear-gradient(90deg, 
-        currentColor 0%, 
-        currentColor 40%,
-        rgba(255, 215, 0, 0.8) 50%, 
-        currentColor 60%,
-        currentColor 100%);
-      background-size: 300% 100%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      animation: text-shine-sweep 8s ease-in-out infinite;
-    }
-    
-    @keyframes text-shine-sweep {
-      0% {
-        background-position: -300% 0;
-      }
-      50% {
-        background-position: 0% 0;
-      }
-      100% {
-        background-position: 300% 0;
-      }
-    }
-    
-    /* Styles pour la vidéo de fond des popups */
-    .popup-video-background {
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      z-index: 0 !important;
-      opacity: 1 !important;
-    }
-    
-    .popup-video-overlay {
-      display: none !important;
-    }
-    
-    /* Style pour l'overlay de la page d'accueil */
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.1);
-      z-index: 1;
-    }
-    
-    /* Amélioration de la lisibilité sur fond clair */
-    .manon-title {
-      font-family: "Josefin Sans", sans-serif !important;
-      font-size: 4rem !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.3px !important;
-      background: linear-gradient(45deg, 
-        #ff0066 0%,
-        #ff3300 25%, 
-        #ff6600 50%,
-        #ff9900 75%,
-        #ffcc00 100%) !important;
-      background-clip: text !important;
-      -webkit-background-clip: text !important;
-      color: transparent !important;
-      text-shadow: 
-        0 0 40px rgba(255, 0, 102, 0.8),
-        0 0 60px rgba(255, 51, 0, 0.6),
-        0 0 10px rgba(0, 191, 255, 0.3),
-        0 0 20px rgba(0, 191, 255, 0.2) !important;
-      filter: 
-        drop-shadow(0 0 8px rgba(0, 191, 255, 0.4))
-        brightness(1.3)
-        saturate(1.4) !important;
-    }
-    
-    .manon-subtitle {
-      color: #ffffff !important;
-      font-weight: 400 !important;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
-    }
-    
-    .manon-desc {
-      color: #ffffff !important;
-      font-weight: 400 !important;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
-    }
-    
-    /* Boutons plus contrastés */
-    .btn-en-savoir-plus {
-      background: rgba(231, 84, 128, 0.9) !important;
-      border: 2px solid rgba(231, 84, 128, 1) !important;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(231, 84, 128, 0.4) !important;
-    }
-    
-    /* Cadres de consultation plus visibles */
-    .offre-tarif-card {
-      background: rgba(0, 0, 0, 0.25) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      backdrop-filter: blur(8px) !important;
-    }
-    
-    .offre-titre {
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7) !important;
-    }
-    
-    .offre-description {
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
-    }
-    
-    /* Section Témoignages */
-    .temoignages-section{ margin-top:2em; padding:2em 1em; background:rgba(0,0,0,.25); border-radius:16px; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(15px); display:none; box-shadow: 0 8px 25px rgba(0,0,0,.3) }
-    .temoignages-title{ color:#fff; font-family:"Quicksand",sans-serif; font-size:1.8rem; font-weight:600; text-align:center; margin-bottom:1.5em }
-    .temoignages-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5em; max-width:1200px; margin:0 auto }
-    .temoignage-card{ background:rgba(255,255,255,.05); border-radius:12px; padding:1.5em; border:1px solid rgba(255,255,255,.1); transition:all 0.3s ease }
-    .temoignage-card:hover{ background:rgba(255,255,255,.08); transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.2) }
-    .temoignage-header{ display:flex; align-items:center; gap:12px; margin-bottom:1em }
-    .temoignage-avatar{ width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; font-size:14px }
-    .temoignage-info h4{ color:#fff; font-family:"Inter",sans-serif; font-size:14px; font-weight:500; margin:0 }
-    .temoignage-info .platform{ color:rgba(255,255,255,.6); font-size:12px; margin:2px 0 0 0; display:flex; align-items:center; gap:4px }
-    .temoignage-stars{ color:#fbbf24; font-size:14px; margin-bottom:0.5em }
-    .temoignage-text{ color:rgba(255,255,255,.9); font-family:"Inter",sans-serif; font-size:13px; line-height:1.6; font-style:italic }
-    .platform-icon{ width:12px; height:12px; fill:currentColor }
-    
-    /* Section FAQ */
-    .faq-section{ margin-top:2em; padding:2em 1em; background:rgba(0,0,0,.25); border-radius:16px; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(15px); display:none; box-shadow: 0 8px 25px rgba(0,0,0,.3) }
-    .faq-title{ color:#fff; font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif; font-size:1.8rem; font-weight:600; text-align:center; margin-bottom:1.5em }
-    .faq-container{ max-width:800px; margin:0 auto }
-    .faq-item{ margin-bottom:1em; border:1px solid rgba(255,255,255,.1); border-radius:12px; background:rgba(255,255,255,.03); overflow:hidden; transition:all 0.3s ease }
-    .faq-item.active{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.2) }
-    .faq-question{ padding:1.5em; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.3s ease }
-    .faq-question:hover{ background:rgba(255,255,255,.05) }
-    .faq-question h3{ color:#fff; font-family:"Inter",sans-serif; font-size:16px; font-weight:500; margin:0; flex:1; line-height:1.4 }
-    .faq-icon{ width:20px; height:20px; color:rgba(255,255,255,.7); transition:transform 0.3s ease; flex-shrink:0; margin-left:1em }
-    .faq-item.active .faq-icon{ transform:rotate(180deg) }
-    .faq-answer{ padding:0 1.5em; max-height:0; overflow:hidden; transition:all 0.4s ease; background:rgba(255,255,255,.02) }
-    .faq-item.active .faq-answer{ padding:0 1.5em 1.5em; max-height:500px }
-    .faq-answer p{ color:rgba(255,255,255,.85); font-family:"Inter",sans-serif; font-size:14px; line-height:1.6; margin:0; padding-top:1em }
-    .faq-categories{ display:flex; justify-content:center; gap:1em; margin-bottom:2em; flex-wrap:wrap }
-    .faq-category{ padding:8px 16px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:20px; color:rgba(255,255,255,.7); font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif; font-weight:400; font-size:13px; letter-spacing:0.2px; cursor:pointer; transition:all 0.3s ease }
-    .faq-category.active, .faq-category:hover{ background:rgba(255,255,255,.15); color:#fff; border-color:rgba(255,255,255,.3); font-weight:500 }
-    
-    /* Effet de focus sur section Consultation */
-    .consultation-focus{ animation:consultationPulse 2s ease-in-out; position:relative; overflow:hidden }
-    .consultation-focus::before{ content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,255,255,.05)); border:2px solid rgba(255,255,255,.3); border-radius:16px; z-index:1; pointer-events:none; animation:focusBorder 2s ease-in-out }
-    .consultation-focus::after{ content:''; position:absolute; top:50%; left:50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%); transform:translate(-50%, -50%); z-index:2; pointer-events:none; animation:focusGlow 2s ease-in-out }
-    
-    @keyframes consultationPulse {
-      0% { transform:scale(1); }
-      25% { transform:scale(1.02); }
-      50% { transform:scale(1.01); }
-      100% { transform:scale(1); }
-    }
-    
-    @keyframes focusBorder {
-      0% { opacity:0; transform:scale(0.95); }
-      50% { opacity:1; transform:scale(1); }
-      100% { opacity:0; transform:scale(1.05); }
-    }
-    
-    @keyframes focusGlow {
-      0% { opacity:0; transform:translate(-50%, -50%) scale(0.5); }
-      50% { opacity:0.6; transform:translate(-50%, -50%) scale(1); }
-      100% { opacity:0; transform:translate(-50%, -50%) scale(1.5); }
-    }
-    
-    .btn-ia{ position:relative; text-decoration:none; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; font-weight:500; font-size:13px; color:#fff; padding:8px 14px; border-radius:8px; background:rgba(231, 84, 128, 0.9); border:2px solid rgba(231, 84, 128, 1); transition:all 0.2s ease; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(231, 84, 128, 0.4) }
-    .btn-ia:hover{ transform:translateY(-1px); filter:brightness(1.05) }
-    .btn-ia small{ display:inline-flex; align-items:center; gap:6px; font-weight:500; margin-left:8px; color:#222; background:rgba(255,255,255,.6); padding:2px 6px; border-radius:999px; font-size:11px }
-    .fun-dot{ width:6px; height:6px; border-radius:50%; background:#17c964; box-shadow:0 0 0 4px rgba(23,201,100,.15)}
-
-    .tip{ position:absolute; top:110%; right:0; transform:translateY(8px); background:var(--glass); color:var(--text); border:1px solid var(--glass-stroke); padding:10px 12px; border-radius:12px; font-size:12px; width:max-content; max-width:260px; box-shadow:0 10px 30px rgba(0,0,0,.35); opacity:0; visibility:hidden; transition:.2s ease; backdrop-filter: blur(8px) }
-    .btn-ia:hover .tip, .btn-ia:focus .tip{ opacity:1; visibility:visible; transform:translateY(0)}
-
-    .divider{ width:1px; height:28px; background:rgba(255,255,255,.12) }
-
-    .burger{ display:none; width:44px; height:44px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:#fff }
-    
-    .offre-btn{ 
-      background:var(--brand); 
-      color:white; 
-      border:none; 
-      padding:6px 12px; 
-      border-radius:6px; 
-      font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif; 
-      font-weight:500; 
-      font-size:12px; 
-      cursor:pointer; 
-      transition:all 0.2s ease; 
-      margin-top:8px; 
-      width:auto;
-      max-width:80px;
-      align-self:center;
-    }
-    .offre-btn:hover{ 
-      filter:brightness(1.08); 
-      transform:translateY(-1px); 
-    }
-    
-    .tarot-detail-section {
-      margin: 1.5em auto 2em auto;
-      max-width: 1100px;
-      background: rgba(255,255,255,0.13);
-      backdrop-filter: blur(8px) saturate(1.2);
-      border: 1.5px solid rgba(255,255,255,0.18);
-      border-radius: 1.5em;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
-      padding: 1.8em 1.5em 2em 1.5em;
-      text-align: center;
-    }
-    
-    .pendule-detail-section {
-      margin: 1.5em auto 2em auto;
-      max-width: 1100px;
-      background: rgba(255,255,255,0.13);
-      backdrop-filter: blur(8px) saturate(1.2);
-      border: 1.5px solid rgba(255,255,255,0.18);
-      border-radius: 1.5em;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
-      padding: 1.8em 1.5em 2em 1.5em;
-      text-align: center;
-    }
-    
-    .alignement-detail-section {
-      margin: 1.5em auto 2em auto;
-      max-width: 1100px;
-      background: rgba(255,255,255,0.13);
-      backdrop-filter: blur(8px) saturate(1.2);
-      border: 1.5px solid rgba(255,255,255,0.18);
-      border-radius: 1.5em;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
-      padding: 1.8em 1.5em 2em 1.5em;
-      text-align: center;
-    }
-    
-    .tarot-description {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
-      color: #f8f9fa;
-      line-height: 1.6;
-      margin: 1.5em auto 2.5em auto;
-      max-width: 800px;
-      opacity: 0.95;
-    }
-    
-    .offre-btn-small {
-      background: var(--brand);
-      color: white;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-      font-weight: 500;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      opacity: 0.8;
-    }
-    
-    .offre-btn-small:hover {
-      opacity: 1;
-      filter: brightness(1.08);
-      transform: translateY(-1px);
-    }
-    
-    .offre-tarif-content {
-      position: relative;
-      height: 100%;
-      padding-bottom: 35px;
-    }
-    
-    /* === MENU MOBILE === */
-    .mobile-menu {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 100%;
-      height: 100vh;
-      z-index: 50;
-      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .mobile-menu.active {
-      right: 0;
-    }
-    
-    .mobile-menu-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-    }
-    
-    .mobile-menu-content {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 85%;
-      max-width: 380px;
-      height: 100vh;
-      background: linear-gradient(180deg, rgba(26, 35, 126, 0.95), rgba(16, 24, 80, 0.98));
-      backdrop-filter: blur(20px) saturate(1.4);
-      border-left: 1px solid rgba(255, 255, 255, 0.15);
-      overflow-y: auto;
-      padding: 0;
-    }
-    
-    .mobile-menu-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .mobile-menu-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .mobile-brand-logo {
-      width: 45px;
-      height: 45px;
-      border-radius: 12px;
-      object-fit: contain;
-      background: transparent;
-      mix-blend-mode: screen;
-      filter: contrast(1.1) brightness(1.1);
-    }
-    
-    .mobile-brand-text {
-      line-height: 1.1;
-    }
-    
-    .mobile-brand-title {
-      font-family: "Josefin Sans", sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      color: #fff;
-      letter-spacing: 0.3px;
-    }
-    
-    .mobile-brand-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    
-    .mobile-menu-close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-    
-    .mobile-menu-close:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: scale(1.05);
-    }
-    
-    .mobile-nav {
-      padding: 30px 0 20px 0;
-    }
-    
-    .mobile-nav-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 24px;
-      color: #fff;
-      text-decoration: none;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      opacity: 0.9;
-    }
-    
-    .mobile-nav-item:hover {
-      background: rgba(255, 107, 53, 0.1);
-      opacity: 1;
-      transform: translateX(8px);
-    }
-    
-    .mobile-nav-item.highlight {
-      background: rgba(255, 107, 53, 0.15);
-      border-left: 4px solid #FF6B35;
-      opacity: 1;
-      font-weight: 600;
-    }
-    
-    .mobile-nav-item svg {
-      opacity: 0.6;
-      transition: all 0.3s ease;
-    }
-    
-    .mobile-nav-item:hover svg {
-      opacity: 1;
-      transform: translateX(4px);
-    }
-    
-    .mobile-actions {
-      padding: 30px 24px 40px 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 20px;
-    }
-    
-    .mobile-btn-ia {
-      display: block;
-      width: 100%;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, var(--ia-start), var(--ia-end));
-      color: #fff;
-      text-decoration: none;
-      border-radius: 14px;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-      font-weight: 600;
-      font-size: 16px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      margin-bottom: 30px;
-    }
-    
-    .mobile-btn-ia:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-      filter: brightness(1.1);
-    }
-    
-    .mobile-btn-ia small {
-      display: block;
-      font-size: 12px;
-      opacity: 0.8;
-      margin-top: 2px;
-    }
-    
-    .mobile-social {
-      text-align: center;
-    }
-    
-    .mobile-social-label {
-      display: block;
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 16px;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    
-    .mobile-social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-    }
-    
-    .mobile-social-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    
-    .mobile-social-icon:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    }
-    
-    .mobile-social-icon svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-
-    @media (max-width:980px){
-      .nav{ display:none }
-      .burger{ display:grid; place-items:center }
-      .container{ padding:12px 16px }
-      .brand-sub{ display:none }
-      
-      /* Optimisation du bouton Tirage IA en mobile */
-      .btn-ia{ 
-        padding: 6px 10px !important; 
-        font-size: 12px !important;
-        white-space: nowrap;
-      }
-      .btn-ia small{ 
-        margin-left: 6px !important;
-        padding: 1px 4px !important;
-        font-size: 10px !important;
-      }
-      .social-icons{ 
-        display: none; 
-      }
-      .cta-wrap{ 
-        gap: 8px !important; 
-      }
-      
-      /* CORRECTION POPUP D'INTERPRÉTATION POUR MOBILE MOYENS */
-      div[style*="position: fixed"][style*="z-index: 9999"] {
-        padding: 15px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-      
-      .interpretation-popup {
-        max-width: calc(100vw - 30px) !important;
-        width: calc(100vw - 30px) !important;
-        margin: 0 !important;
-        position: static !important;
-        left: auto !important;
-        right: auto !important;
-        transform: none !important;
-        box-sizing: border-box !important;
-      }
-      
-      /* TITRE ET CARTES OPTIMISÉS POUR MOBILE MOYEN */
-      .interpretation-popup div[style*="font-family: 'Revalia'"] {
-        font-size: 1.6rem !important;
-        margin-bottom: 0.8em !important;
-        line-height: 1.2 !important;
-      }
-      
-      .interpretation-popup .cards-container {
-        margin-top: 1em !important;
-        margin-bottom: 1.2em !important;
-      }
-      
-      /* CADRE TEXTE FIXE MOBILE MOYEN */
-      .interpretation-popup #ia-interpretation {
-        height: 18em !important;
-        max-height: 18em !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        scroll-behavior: smooth !important;
-      }
-      
-      /* TAILLE DES CARTES MOBILE MOYEN */
-      .interpretation-popup .card-big {
-        max-width: 95px !important;
-        width: 95px !important;
-      }
-    }
-
-    /* === EFFET PARALLAXE - BACKGROUND ET HEADER FIXES === */
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #1a237e 0%, #000051 50%, #1a237e 100%) fixed !important;
-      background-attachment: fixed !important;
-      min-height: 100vh;
-    }
-    
-    /* Header sticky renforcé pour l'effet parallaxe */
-    .site-header {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      z-index: 50 !important;
-      backdrop-filter: saturate(140%) blur(12px) !important;
-    }
-    
-    /* Contenu principal avec marge pour header fixe */
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-    
-    /* Marge spécifique pour le main pour passer sous le header fixe */
-    main {
-      margin-top: 80px;
-    }
-    
-    /* Espacement du titre principal (marge-top) géré uniquement par media queries */
-    .manon-title {
-      margin-top: 120px;
-      animation: none !important;
-      transition: none !important;
-    }
-    @media (min-width: 981px) {
-      .manon-title {
-        margin-top: 140px;
-      }
-    }
-    @media (max-width: 980px) and (min-width: 481px) {
-      .manon-title {
-        margin-top: 60px;
-      }
-    }
-    @media (max-width: 480px) {
-      .manon-title {
-        margin-top: 50px;
-      }
-    }
-      
-      /* CORRECTION POPUP D'INTERPRÉTATION MOBILE - CENTRAGE PARFAIT */
-      div[style*="position: fixed"][style*="z-index: 9999"] {
-        padding: 20px !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-      
-      .interpretation-popup {
-        max-width: calc(100vw - 40px) !important;
-        width: calc(100vw - 40px) !important;
-        margin: 0 !important;
-        left: auto !important;
-        right: auto !important;
-        top: auto !important;
-        transform: none !important;
-        position: static !important;
-        box-sizing: border-box !important;
-        padding: 1em 0.8em !important;
-      }
-      
-      /* OPTIMISATION TITRE ET CARTES MOBILE */
-      .interpretation-popup div[style*="font-family: 'Revalia'"] {
-        font-size: 1.4rem !important;
-        margin-bottom: 0.6em !important;
-        line-height: 1.2 !important;
-      }
-      
-      .interpretation-popup .cards-container {
-        margin-top: 0.8em !important;
-        margin-bottom: 1em !important;
-      }
-      
-      /* CADRE TEXTE FIXE MOBILE */
-      .interpretation-popup #ia-interpretation {
-        height: 15em !important;
-        max-height: 15em !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        scroll-behavior: smooth !important;
-      }
-      
-      /* TAILLE DES CARTES MOBILE - TRÈS PETITS ÉCRANS */
-      .interpretation-popup .card-big {
-        max-width: 78px !important;
-        width: 78px !important;
-      }
-
-      /* Avoid forcing every child transparent — allow the interpretation frame to keep its own background
-         so the content box and its scroller are visible above the video. */
-      .interpretation-popup {
-        background: transparent !important;
-      }
-
-      /* Allow the IA interpretation frame and its inner content to use their own backgrounds */
-      .interpretation-popup #ia-interpretation,
-      .interpretation-popup #ia-interpretation * {
-        background: initial !important;
-        background-image: initial !important;
-        box-shadow: initial !important;
-      }
-
-      /* Ensure the text frame sits above the video and scrolls internally */
-      .interpretation-popup #ia-interpretation {
-        color: inherit !important;
-        z-index: 2 !important;
-        position: relative !important;
-        padding: 0.6em 0 !important;
-      }
-
-      /* Visual style: make the interpretation frame appear between cards and buttons */
-      .interpretation-popup #ia-interpretation {
-        background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(250,250,255,0.96)) !important;
-        color: #222 !important;
-        padding: 1rem !important;
-        margin: 1rem auto 0.8rem auto !important;
-        border-radius: 12px !important;
-        box-shadow: 0 6px 26px rgba(0,0,0,0.12) !important;
-        width: calc(min(84vw, 760px) - 2.6rem) !important;
-        max-width: calc(92vw - 2.6rem) !important;
-        max-height: 36vh !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        border: 1px solid rgba(26,35,126,0.06) !important;
-      }
-
-      /* Make the inner wrapper a column so actions can be pushed to the bottom */
-      .interp-inner {
-        display: flex !important;
-        flex-direction: column !important;
-        min-height: 12rem !important;
-      }
-
-      /* Action buttons group: push to bottom with a small gap */
-      .interp-inner .action-buttons {
-        margin-top: auto !important;
-        padding-top: 1rem !important;
-        padding-bottom: 0.6rem !important;
-        justify-content: center !important;
-      }
-
-      /* Buttons and action bar must be above the video and transparent behind them */
-      .interpretation-popup .actions-bar,
-      .interpretation-popup .action-buttons,
-      .interpretation-popup .icon-bar {
-        background: transparent !important;
-        z-index: 3 !important;
-      }
-
-      /* Make interactive controls readable: give them slight translucent panels */
-      .interpretation-popup .action-button,
-      .interpretation-popup button[aria-label="Fermer"] {
-        background: rgba(255,255,255,0.12) !important;
-        backdrop-filter: blur(6px) !important;
-        border: 1px solid rgba(255,255,255,0.14) !important;
-        color: #fff !important;
-        z-index: 4 !important;
-      }
-
-      /* Close button specific placement */
-      .interpretation-popup button[aria-label="Fermer"] {
-        background: rgba(0,0,0,0.35) !important;
-        width: 44px !important;
-        height: 44px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 999px !important;
-        color: #FF6B35 !important;
-        z-index: 5 !important;
-      }
-
-      /* CARDS GRID: default layout (desktop) */
-      .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(80px, 1fr));
-        justify-content: center;
-        align-items: start;
-        gap: 1rem;
-        margin: 0 auto;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      /* three-card layout: force single row centered */
-      .cards-grid.three {
-        grid-template-columns: repeat(3, minmax(60px, 1fr));
-        max-width: 780px;
-        justify-items: center;
-        align-items: start;
-      }
-
-      .card-slot {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: auto !important;
-        max-width: 220px !important;
-      }
-
-      .card-img, .card-big {
-        display: block;
-        max-width: 220px !important;
-        width: auto !important;
-        height: auto !important;
-      }
-
-      /* The interpretation box should be centered under the cards and narrower than the popup */
-      .interpretation-popup #ia-interpretation {
-        margin: 1.2em auto 0 auto !important;
-        max-width: 72% !important;
-        width: min(720px, 72%) !important;
-        text-align: left !important;
-        padding: 1em !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Defensive: if any pseudo element paints a strip, hide it */
-      .interpretation-popup::before,
-      .interpretation-popup::after,
-      .interpretation-popup *::before,
-      .interpretation-popup *::after {
-        background: transparent !important;
-        content: none !important;
-      }
-
-    /* ===== LAYOUT DÉ N°5 POUR DESKTOP - DISABLED ===== */
-    /* (original inline 5-card forcing rules removed to allow central styles to apply) */
-
-    /* ===== NEWSLETTER & RESERVATION MOBILE OPTIMIZATION ===== */
-    @media (max-width: 980px) {
-      /* Header mobile - Ajustements pour éviter débordement */
-      .site-header .container {
-        padding: 8px 12px !important;
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 8px !important;
-      }
-      
-      .brand {
-        flex: 0 1 auto !important;
-        min-width: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-      }
-      
-      .brand-logo-img {
-        height: 28px !important;
-        width: auto !important;
-        flex-shrink: 0 !important;
-      }
-      
-      .brand-text {
-        min-width: 0 !important;
-        flex: 1 !important;
-      }
-      
-      .brand-title {
-        font-size: 14px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
-      
-      .brand-sub {
-        font-size: 9px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
-      
-      /* Navigation desktop cachée en mobile */
-      .nav {
-        display: none !important;
-      }
-      
-      .social-icons {
-        display: none !important;
-      }
-      
-      .cta-wrap {
-        flex: 0 0 auto !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-      }
-      
-      .btn-ia {
-        font-size: 10px !important;
-        padding: 4px 8px !important;
-        white-space: nowrap !important;
-        min-width: auto !important;
-        max-width: 60px !important;
-      }
-      
-      .burger {
-        flex-shrink: 0 !important;
-        width: 32px !important;
-        height: 32px !important;
-        padding: 6px !important;
-      }
-
-      /* Newsletter section mobile - COMPACT */
-      .newsletter-section {
-        padding: 15px 10px !important;
-        margin: 15px 8px !important;
-        max-width: calc(100vw - 16px) !important;
-      }
-
-      .newsletter-title {
-        font-size: 16px !important;
-        margin-bottom: 8px !important;
-      }
-
-      .newsletter-desc {
-        font-size: 12px !important;
-        line-height: 1.3 !important;
-        margin-bottom: 10px !important;
-      }
-
-      .newsletter-form {
-        gap: 8px !important;
-        flex-direction: column !important;
-      }
-
-      .newsletter-input {
-        width: 100% !important;
-        padding: 8px 10px !important;
-        font-size: 12px !important;
-        min-height: 35px !important;
-        box-sizing: border-box !important;
-      }
-
-      .newsletter-btn {
-        width: 100% !important;
-        padding: 8px 15px !important;
-        font-size: 12px !important;
-        min-height: 35px !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Reservation section mobile - COMPACT */
-      .reservation-section {
-        padding: 15px 10px !important;
-        margin: 15px 8px !important;
-        max-width: calc(100vw - 16px) !important;
-      }
-
-      .reservation-title {
-        font-size: 16px !important;
-        margin-bottom: 8px !important;
-      }
-
-      .reservation-desc {
-        font-size: 12px !important;
-        line-height: 1.3 !important;
-        margin-bottom: 12px !important;
-      }
-
-      .reservation-form {
-        gap: 8px !important;
-      }
-
-      .reservation-fields {
-        gap: 8px !important;
-        flex-direction: column !important;
-      }
-
-      .reservation-input, #offre-select {
-        width: 100% !important;
-        padding: 8px 10px !important;
-        font-size: 12px !important;
-        min-height: 35px !important;
-        box-sizing: border-box !important;
-      }
-
-      .reservation-btn {
-        width: 100% !important;
-        padding: 10px 15px !important;
-        font-size: 13px !important;
-        min-height: 40px !important;
-        margin-top: 5px !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Mobile responsive adjustments for form containers */
-      .newsletter-form, .reservation-form {
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-      }
-    }
-  </style>
 
   <header class="site-header" role="banner" aria-label="Navigation principale" style="z-index:99999;" tabindex="-1">
     <div class="container">
       <a class="brand" href="#accueil" aria-label="Accueil Opanoma">
-        <img src="./public/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="brand-logo-img" />
+        <img src="/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="brand-logo-img" />
         <div class="brand-text">
           <div class="brand-title">l'Œil d'Opanoma</div>
           <div class="brand-sub">Guidance professionnelle authentique</div>
@@ -1210,8 +95,8 @@
       </a>
 
   <nav class="nav" aria-label="Menu professionnel" style="pointer-events:auto;">
-  <a href="#consultations" class="highlight" onclick="(function(e){e&&e.preventDefault();var s=document.getElementById('consultations-section');if(s){s.scrollIntoView({behavior:'smooth',block:'center'});s.classList.add('consultation-focus');setTimeout(function(){s.classList.remove('consultation-focus');},2000);}return false}).call(this,event)">Consultations</a>
-  <a href="#temoignages" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('temoignages-section');var r=document.getElementById('reservation');if(t){t.style.display='block';if(r&&r.nextElementSibling!==t){r.parentNode.insertBefore(t,r.nextSibling);}var rect=r? (window.pageYOffset + r.getBoundingClientRect().bottom + 12) : null; if(rect){window.scrollTo({top:rect,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">Témoignages</a>
+  <a href="#consultations-section" class="highlight" onclick="event.preventDefault();showConsultations()">Consultations</a>
+  <a href="#temoignages-section" onclick="event.preventDefault();showTemoignages()">Témoignages</a>
         <a href="#faq">FAQ</a>
       </nav>
 
@@ -1233,10 +118,8 @@
             </svg>
           </a>
         </div>
-        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Ouvrir le tirage IA (divertissement)">
-          Tirage IA
-          <small><span class="fun-dot"></span> fun</small>
-          <span class="tip" role="note">Tirage généré automatiquement par IA — <strong>divertissement uniquement</strong>.</span>
+        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Découvrir le tirage guidé par IA">
+          Tirage Guidé
         </a>
         <button class="burger" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1252,7 +135,7 @@
       <div class="mobile-menu-content">
         <div class="mobile-menu-header">
           <div class="mobile-menu-brand">
-            <img src="./public/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="mobile-brand-logo" />
+            <img src="/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="mobile-brand-logo" />
             <div class="mobile-brand-text">
               <div class="mobile-brand-title">l'Œil d'Opanoma</div>
               <div class="mobile-brand-sub">Guidance professionnelle</div>
@@ -1266,13 +149,13 @@
         </div>
 
         <nav class="mobile-nav" aria-label="Navigation mobile">
-          <a href="#consultations" class="mobile-nav-item highlight" onclick="closeMobileMenu()">
+          <a href="#consultations-section" class="mobile-nav-item highlight" onclick="closeMobileMenu();showConsultations()">
             <span>Consultations</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </a>
-          <a href="#temoignages" class="mobile-nav-item" onclick="closeMobileMenu()">
+          <a href="#temoignages-section" class="mobile-nav-item" onclick="closeMobileMenu();showTemoignages()">
             <span>Témoignages</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1288,8 +171,8 @@
 
         <div class="mobile-actions">
           <a class="mobile-btn-ia" href="#" onclick="triggerTirageIA(); closeMobileMenu(); return false;">
-            <span>✨ Tirage IA</span>
-            <small>divertissement</small>
+            <span>&#x2728; Tirage Guidé</span>
+            <small>assisté par IA</small>
           </a>
           
           <div class="mobile-social">
@@ -1344,7 +227,6 @@
     })();
   </script>
 
-  <!-- Bouton caché pour compatibilité avec le script existant -->
   <button class="header-btn-ia" style="display: none;">Tirage par IA</button>
 
   <main>
@@ -1368,7 +250,7 @@
     <section class="offres-tarifs-section" id="consultations-section">
       <h3 class="offres-tarifs-title">Consultation</h3>
       <div class="offres-tarifs-grid">
-  <div class="offre-tarif-card" data-offre="Tarot" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('tarot-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
+  <div class="offre-tarif-card" data-offre="Tarot">
           <div class="offre-tarif-content">
             <div class="offre-titre">Tarot</div>
             <p class="offre-description">Plongez dans la symbolique des arcanes pour révéler ce qui se joue en profondeur.</p>
@@ -1376,7 +258,7 @@
             <p class="offre-description">Un outil puissant pour éclairer vos décisions avec clarté.</p>
           </div>
         </div>
-  <div class="offre-tarif-card" data-offre="Pendule" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('pendule-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
+  <div class="offre-tarif-card" data-offre="Pendule">
           <div class="offre-tarif-content">
             <div class="offre-titre">Pendule</div>
             <p class="offre-description">Obtenez des réponses claires grâce à la radiesthésie.</p>
@@ -1384,7 +266,7 @@
             <p class="offre-description">Des guidances concrètes pour éclairer vos choix avec assurance.</p>
           </div>
         </div>
-  <div class="offre-tarif-card" data-offre="Alignement" onclick="(function(e){e&&e.preventDefault();try{var t=document.getElementById('alignement-detail');var consult=document.getElementById('consultations-section');if(t){t.style.display='block'; if(consult && consult.nextElementSibling!==t){consult.parentNode.insertBefore(t,consult.nextSibling);} var top= consult? (window.pageYOffset + consult.getBoundingClientRect().bottom + 12) : null; if(top){window.scrollTo({top:top,behavior:'smooth'});} else {t.scrollIntoView({behavior:'smooth',block:'start'});} } }catch(err){console.warn(err);}return false}).call(this,event)">
+  <div class="offre-tarif-card" data-offre="Alignement">
           <div class="offre-tarif-content">
             <div class="offre-titre">Alignement</div>
             <p class="offre-description">Retrouvez un axe clair pour vos décisions, au-delà du doute et de la confusion.</p>
@@ -1693,12 +575,24 @@
       </p>
       <form class="reservation-form">
         <div class="reservation-fields">
-          <input type="text" class="reservation-input" id="client-name" placeholder="Votre nom" required>
-          <input type="email" class="reservation-input" id="client-email" placeholder="Votre email" required>
+          <div class="reservation-field-wrapper">
+            <label for="client-name" class="reservation-label">Votre nom</label>
+            <input type="text" class="reservation-input" id="client-name" placeholder="Nom" required>
+          </div>
+          <div class="reservation-field-wrapper">
+            <label for="client-email" class="reservation-label">Votre email</label>
+            <input type="email" class="reservation-input" id="client-email" placeholder="Email" required>
+          </div>
         </div>
         <div class="reservation-fields">
-          <input type="date" class="reservation-input" id="reservation-date" required>
-          <input type="time" class="reservation-input" id="reservation-time" required>
+          <div class="reservation-field-wrapper">
+            <label for="reservation-date" class="reservation-label">Date du rendez-vous</label>
+            <input type="date" class="reservation-input" id="reservation-date" required>
+          </div>
+          <div class="reservation-field-wrapper">
+            <label for="reservation-time" class="reservation-label">Heure souhaitée</label>
+            <input type="time" class="reservation-input" id="reservation-time" required>
+          </div>
         </div>
         <select class="reservation-input" id="offre-select" required>
           <option value="" disabled selected>Choisissez une offre</option>
@@ -1722,6 +616,8 @@
         <button type="button" class="reservation-btn" id="submit-reservation">
           Réserver
         </button>
+        <div id="reservation-status" style="display:none; font-family:'Inter',sans-serif; text-align:center; margin-top:1em; font-size:.9rem; padding:1em; border-radius:8px;"></div>
+        <div id="slots-suggestion" style="display:none; font-family:'Inter',sans-serif; text-align:center; margin-top:.8em;"></div>
       </form>
       <div id="reservation-confirmation" style="display:none; color:#fff; font-family:'Quicksand',sans-serif; text-align:center; margin-top:1.5em; font-size:1.2rem;">
         Merci pour votre réservation ! Vous recevrez une confirmation par email.
@@ -1982,171 +878,37 @@
       </div>
     </section>
   </main>
-
+  <!-- Footer légal -->
+  <footer style="background:#0e0c0a;border-top:1px solid rgba(201,169,110,.1);padding:32px 20px 24px;text-align:center;font-size:.8rem;color:rgba(237,232,227,.35)">
+    <div style="max-width:800px;margin:0 auto">
+      <p style="margin:0 0 8px">&copy; 2026 L&rsquo;&OElig;il d&rsquo;Opanoma &mdash; Tous droits r&eacute;serv&eacute;s</p>
+      <p style="margin:0 0 12px">
+        <a href="#" onclick="document.getElementById('mentions-legales').style.display=document.getElementById('mentions-legales').style.display==='block'?'none':'block';return false" style="color:#c9a96e;text-decoration:none">Mentions l&eacute;gales</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#" onclick="document.getElementById('politique-conf').style.display=document.getElementById('politique-conf').style.display==='block'?'none':'block';return false" style="color:#c9a96e;text-decoration:none">Politique de confidentialit&eacute;</a>
+      </p>
+      <div id="mentions-legales" style="display:none;text-align:left;background:#1a1614;border-radius:10px;padding:24px;margin:16px 0;color:rgba(237,232,227,.7);line-height:1.7">
+        <h3 style="color:#c9a96e;margin:0 0 12px;font-size:1rem">Mentions l&eacute;gales</h3>
+        <p><strong>&Eacute;diteur :</strong> Manon &mdash; L&rsquo;&OElig;il d&rsquo;Opanoma<br>
+        <strong>Activit&eacute; :</strong> Guidance spirituelle, consultations de tarot et bien-&ecirc;tre<br>
+        <strong>Contact :</strong> contact@opanoma.fr<br>
+        <strong>H&eacute;bergeur :</strong> o2switch &mdash; 222 Boulevard Gustave Flaubert, 63000 Clermont-Ferrand, France</p>
+        <p style="font-size:.75rem;margin-top:12px">Les consultations propos&eacute;es sont &agrave; vis&eacute;e de guidance et de d&eacute;veloppement personnel. Elles ne remplacent en aucun cas un avis m&eacute;dical, juridique ou financier professionnel.</p>
+      </div>
+      <div id="politique-conf" style="display:none;text-align:left;background:#1a1614;border-radius:10px;padding:24px;margin:16px 0;color:rgba(237,232,227,.7);line-height:1.7">
+        <h3 style="color:#c9a96e;margin:0 0 12px;font-size:1rem">Politique de confidentialit&eacute;</h3>
+        <p><strong>Donn&eacute;es collect&eacute;es :</strong> Lors d&rsquo;une r&eacute;servation : nom, email, date et heure choisies. Lors de l&rsquo;inscription newsletter : email et pr&eacute;nom.</p>
+        <p><strong>Finalit&eacute; :</strong> Gestion des rendez-vous et envoi de la newsletter hebdomadaire.</p>
+        <p><strong>Conservation :</strong> Vos donn&eacute;es sont conserv&eacute;es tant que votre compte est actif. Vous pouvez demander leur suppression &agrave; tout moment.</p>
+        <p><strong>Droits :</strong> Conform&eacute;ment au RGPD, vous disposez d&rsquo;un droit d&rsquo;acc&egrave;s, de rectification, de suppression et de portabilit&eacute; de vos donn&eacute;es.</p>
+        <p><strong>Contact :</strong> Pour exercer vos droits : contact@opanoma.fr</p>
+        <p><strong>Cookies :</strong> Ce site n&rsquo;utilise pas de cookies de suivi ou publicitaires. Seuls des cookies techniques essentiels au fonctionnement du site sont utilis&eacute;s.</p>
+        <p><strong>Tirages IA :</strong> Les tirages en ligne utilisent l&rsquo;intelligence artificielle via OpenAI. Les questions pos&eacute;es et les cartes tir&eacute;es sont envoy&eacute;es de mani&egrave;re anonyme &agrave; des fins d&rsquo;interpr&eacute;tation uniquement, sans stockage permanent c&ocirc;t&eacute; IA.</p>
+      </div>
+    </div>
+  </footer>
   <!-- Script d'animations pour les cartes -->
   <script src="./src/card-animations.js"></script>
-  
-  <!-- SCRIPT FORCE RELOAD CSS POUR BYPASS CACHE -->
-  <script>
-    // Force le rechargement du CSS pour contourner le cache
-    const linkElement = document.querySelector('link[href*="style.css"]');
-    if (linkElement) {
-      const newLink = linkElement.cloneNode(true);
-      const baseHref = linkElement.getAttribute('href').split('?')[0] || './src/style.css';
-      newLink.href = `${baseHref}?v=${Date.now()}-reposition`;
-      linkElement.parentNode.insertBefore(newLink, linkElement.nextSibling);
-      setTimeout(() => linkElement.remove(), 100);
-    }
-    
-    // FORCE DIRECTE : Layout des cartes seulement
-    document.addEventListener('DOMContentLoaded', function() {
-      // Ne touche QUE au layout des cartes en dé
-      function forceCardLayout() {
-        const containers = document.querySelectorAll('.interpretation-popup .cards-container[style*="relative"]');
-        containers.forEach(container => {
-          // Reset position
-          container.style.setProperty('transform', 'translateY(0px)', 'important');
-        });
-
-        // --- Global fallback: ensure diagnostics and click delegation always available ---
-        try {
-          if (!window.__diagInstalled) {
-            window.__diagInstalled = true;
-
-            window.__diagInterpretationPopup = function() {
-              try {
-                const overlay = document.querySelector('div[data-debug-overlay="true"]');
-                const interp = document.getElementById('ia-interpretation') || document.querySelector('.interpretation-popup #ia-interpretation');
-                const interpContent = document.getElementById('ia-interpretation-content') || document.querySelector('#ia-interpretation-content');
-                const interpInner = document.querySelector('.interp-inner') || document.querySelector('.interpretation-popup');
-                const actions = (interpInner && interpInner.querySelector) ? interpInner.querySelector('.action-buttons') : null;
-                console.group('%cGlobal Diag: interpretation popup', 'color:#1a237e; font-weight:700');
-                console.log(' overlay (data-debug-overlay):', overlay);
-                console.log(' interp element:', interp);
-                if (interp) { console.log('  computed:', getComputedStyle(interp)); try{ console.log('  rect:', interp.getBoundingClientRect()); }catch(e){} }
-                console.log(' interpContent element:', interpContent);
-                if (interpContent) { console.log('  computed:', getComputedStyle(interpContent)); try{ console.log('  rect:', interpContent.getBoundingClientRect()); }catch(e){} }
-                console.log(' interpInner element:', interpInner, interpInner && getComputedStyle(interpInner));
-                console.log(' action-buttons element:', actions, actions && getComputedStyle(actions));
-                console.groupEnd();
-              } catch (e) { console.warn('global diag failed', e); }
-            };
-
-            // Document-level click capture fallback: if overlay exists and clicks are swallowed,
-            // this will attempt to invoke button handlers or call cleanupOverlay if a close is clicked.
-            document.addEventListener('click', function globalOverlayDelegation(e) {
-              try {
-                const overlay = e.target && e.target.closest ? e.target.closest('div[data-debug-overlay="true"]') : null;
-                if (!overlay) return; // not inside our overlay
-
-                // If the click occurred inside the popup content (.tarot-popup or its descendants),
-                // do not intercept — let the normal handlers run. This avoids swallowing button clicks.
-                const popupAncestor = e.target && e.target.closest ? e.target.closest('.tarot-popup, .interpretation-popup, .overlay-content, .ia-theme-question-box, .ia-tirage-box') : null;
-                if (popupAncestor) return;
-
-                // Only handle clicks that target the overlay background or elements outside popup content.
-                const btn = (e.target && e.target.closest) ? e.target.closest('button') : null;
-                if (!btn) return;
-
-                const aria = btn.getAttribute && btn.getAttribute('aria-label');
-                const txt = (btn.textContent || '').trim();
-                if (aria === 'Fermer' || txt === '✕' || txt === 'Fermer') {
-                  try { e.preventDefault(); e.stopPropagation(); if (typeof cleanupOverlay === 'function') cleanupOverlay(); else { try { const ov = document.querySelector('div[data-debug-overlay="true"]'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch(e){} } } catch(e){}
-                  return;
-                }
-
-                if (typeof btn.onclick === 'function') {
-                  try { e.preventDefault(); e.stopPropagation(); btn.onclick(); } catch(e) {}
-                  return;
-                }
-
-                // fallback: synthetic click
-                setTimeout(() => { try { btn.click(); } catch(e){} }, 0);
-              } catch (e) { /* swallow */ }
-            }, true);
-          }
-        } catch (e) { console.warn('failed to install global diag/delegation', e); }
-
-        // Global overlay cleanup helper (fallback)
-        try {
-          if (typeof window._cleanupOverlayGlobal !== 'function') {
-            window._cleanupOverlayGlobal = function() {
-              try { document.body.style.overflow = ''; } catch(e) {}
-              try {
-                const ov = document.querySelector('div[data-debug-overlay="true"]');
-                if (ov) {
-                  // disconnect any stored observers
-                  if (ov._interpObservers && Array.isArray(ov._interpObservers)) {
-                    ov._interpObservers.forEach(o => { try { o.disconnect(); } catch(e){} });
-                    ov._interpObservers = [];
-                  }
-                  if (ov.parentNode) ov.parentNode.removeChild(ov);
-                }
-              } catch(e) { console.warn('global cleanup failed', e); }
-            };
-          }
-        } catch(e) { console.warn('failed to install _cleanupOverlayGlobal', e); }
-
-        // Install a focused document-level handler for the close-cross button so it always works
-        try {
-          if (!window.__closeCrossInstalled) {
-            document.addEventListener('click', function closeCrossHandler(e) {
-              try {
-                // Only act when the click is on a special close button that is NOT inside popup content.
-                const btn = e.target && e.target.closest ? e.target.closest('button[data-close-btn]') : null;
-                if (!btn) return;
-
-                // If this close button lives inside the popup container, don't intercept here —
-                // let the popup's own handler run. This handler is only a safety net for stray buttons
-                // that might live outside the normal popup DOM.
-                const popupAncestor = btn && btn.closest ? btn.closest('.tarot-popup, .interpretation-popup, .overlay-content, .ia-theme-question-box, .ia-tirage-box') : null;
-                if (popupAncestor) return;
-
-                try { e.preventDefault(); e.stopPropagation(); } catch(e){}
-                if (typeof window._cleanupOverlayGlobal === 'function') {
-                  try { window._cleanupOverlayGlobal(); } catch(e) { console.warn('closeCrossHandler: cleanup failed', e); }
-                } else {
-                  try { const ov = document.querySelector('div[data-debug-overlay="true"]'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch(e){}
-                }
-                // focus header button if available
-                try { const hb = document.querySelector('.header-btn-ia'); if (hb) hb.focus(); else window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e){}
-              } catch(e) { /* swallow */ }
-            }, true);
-            window.__closeCrossInstalled = true;
-          }
-        } catch(e) { console.warn('failed to install closeCrossHandler', e); }
-
-      });
-
-        </script>
-  <script>
-      // Applique immédiatement
-      forceCardLayout();
-      
-      // Surveille les nouvelles popups
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          mutation.addedNodes.forEach(function(node) {
-            if (node.nodeType === 1 && (
-                node.classList?.contains('interpretation-popup') || 
-                node.querySelector?.('.interpretation-popup')
-            )) {
-              setTimeout(forceCardLayout, 50);
-            }
-          });
-        });
-      });
-      
-      observer.observe(document.body, { childList: true, subtree: true });
-    
-    // Avoid forcing a synchronous reflow (can cause jank). If a reflow is needed,
-    // schedule a harmless style read in rAF to let layout settle asynchronously.
-    setTimeout(() => {
-      requestAnimationFrame(() => { void document.body.offsetHeight; });
-    }, 200);
-  </script>
-  
-  <!-- Nettoyage : la marge du titre principal est désormais gérée uniquement par CSS (media queries) -->
   
   <!-- SCRIPT MENU MOBILE -->
   <script>
@@ -2171,6 +933,30 @@
         mobileMenu.classList.remove('active');
         document.body.style.overflow = '';
       }
+    }
+
+    function showTemoignages() {
+      var t = document.getElementById('temoignages-section');
+      if (!t) return;
+      t.style.display = 'block';
+      setTimeout(function() { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+    }
+
+    function showConsultations() {
+      var s = document.getElementById('consultations-section');
+      if (!s) return;
+      s.classList.remove('consultation-focus');
+      setTimeout(function() {
+        var isMobile = window.innerWidth <= 980;
+        if (isMobile) {
+          var top = window.pageYOffset + s.getBoundingClientRect().top - 80;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        } else {
+          s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        s.classList.add('consultation-focus');
+        setTimeout(function() { s.classList.remove('consultation-focus'); }, 2000);
+      }, 150);
     }
     
     // Fermer le menu en appuyant sur Echap
@@ -2205,6 +991,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ouvrir le texte
         bio.style.display = 'block';
         this.textContent = 'Fermer';
+        
+        // Scroll vers le texte
+        bio.scrollIntoView({behavior: 'smooth', block: 'center'});
         
         // Appliquer l'effet de soleil sur les lettres uniquement
         setTimeout(() => {
@@ -2330,7 +1119,7 @@ document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card
           document.getElementById('alignement-detail').style.display = 'none';
           
           tarotDetail.style.display = 'block';
-          tarotDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          tarotDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
           tarotDetail.style.display = 'none';
         }
@@ -2348,7 +1137,7 @@ document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card
           document.getElementById('alignement-detail').style.display = 'none';
           
           penduleDetail.style.display = 'block';
-          penduleDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          penduleDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
           penduleDetail.style.display = 'none';
         }
@@ -2366,7 +1155,7 @@ document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card
           document.getElementById('pendule-detail').style.display = 'none';
           
           alignementDetail.style.display = 'block';
-          alignementDetail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          alignementDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
           alignementDetail.style.display = 'none';
         }
@@ -2477,1468 +1266,14 @@ document.querySelector('.newsletter-form').addEventListener('submit', function(e
   });
 });
 
-// Header click handler removed: PopupAdapter attaches header handlers on load.
-  themeBox.style.background = 'transparent';
-  themeBox.style.backdropFilter = 'none';
-  themeBox.style.borderRadius = '0';
-  themeBox.style.boxShadow = 'none';
-  themeBox.style.padding = '1.2em 0.5em 1em 0.5em';
-  themeBox.style.margin = '0 auto 1.5em auto';
-  themeBox.style.display = 'flex';
-  themeBox.style.justifyContent = 'center';
-  themeBox.style.gap = '1em';
-  themeBox.style.maxWidth = '340px';
-
-  const themes = [
-    { label: "Santé", color: "#1a237e" },
-    { label: "Amour", color: "#FF6B35" },
-    { label: "Argent", color: "#ff9800" },
-    { label: "Travail", color: "#009688" }
-  ];
-
-  themes.forEach(theme => {
-    let btn = document.createElement('button');
-    btn.className = 'theme-button'; // Ajoute la classe pour le CSS mobile
-    btn.textContent = theme.label;
-    btn.style.fontFamily = "'Quicksand', sans-serif";
-    btn.style.fontSize = '0.98rem';
-    btn.style.padding = '0.4em 1em';
-    btn.style.borderRadius = '22px';
-    btn.style.border = 'none';
-    btn.style.background = theme.color;
-    btn.style.color = '#fff';
-    btn.style.fontWeight = '700';
-    btn.style.cursor = 'pointer';
-    btn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
-    btn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-    btn.style.opacity = '0.93';
-    btn.style.maxWidth = '180px'; // Limite la largeur
-    btn.style.whiteSpace = 'normal'; // Permet le retour à la ligne si besoin
-    btn.onmouseover = () => btn.style.transform = 'scale(1.08)';
-    btn.onmouseout = () => btn.style.transform = 'none';
-
-    btn.addEventListener('click', function() {
-      // Supprime un éventuel cadre déjà ouvert
-      let old = popup.querySelector('.ia-theme-question-box');
-      if (old) old.remove();
-
-      // Crée le cadre sous les boutons
-      let questionBox = document.createElement('div');
-  // mark as overlay content to avoid global delegation intercepting clicks
-  questionBox.classList.add('overlay-content');
-      questionBox.className = 'ia-theme-question-box';
-      questionBox.style.background = 'transparent';
-      questionBox.style.backdropFilter = 'none';
-      questionBox.style.borderRadius = '0';
-      questionBox.style.boxShadow = 'none';
-      questionBox.style.padding = '1.2em 1em 1em 1em';
-      questionBox.style.margin = '1em auto 0 auto';
-      questionBox.style.maxWidth = '340px';
-      questionBox.style.textAlign = 'center';
-
-      // Titre thème choisi
-      let themeTitle = document.createElement('div');
-      themeTitle.textContent = `Thème choisi : ${theme.label}`;
-      themeTitle.style.fontFamily = "'Revalia', cursive";
-      themeTitle.style.fontSize = '1.1rem';
-      themeTitle.style.color = theme.color;
-      themeTitle.style.marginBottom = '0.7em';
-
-      // Zone question
-      let questionInput = document.createElement('textarea');
-      questionInput.placeholder = "Posez votre question (optionnel)";
-      questionInput.style.width = '90%';
-      questionInput.style.minHeight = '60px';
-      questionInput.style.borderRadius = '0.7em';
-      questionInput.style.border = '1px solid #FF6B35';
-      questionInput.style.padding = '0.7em';
-      questionInput.style.fontFamily = "'Quicksand', sans-serif";
-      questionInput.style.fontSize = '1rem';
-      questionInput.style.marginBottom = '1em';
-      questionInput.style.resize = 'vertical';
-
-      // Boutons valider / pas de question
-      let btnsDiv = document.createElement('div');
-      btnsDiv.style.display = 'flex';
-      btnsDiv.style.justifyContent = 'center';
-      btnsDiv.style.gap = '1em';
-      btnsDiv.style.marginTop = '0.7em';
-
-      let validerBtn = document.createElement('button');
-      validerBtn.textContent = 'Valider';
-      validerBtn.style.fontFamily = "'Quicksand', sans-serif";
-      validerBtn.style.fontSize = '1rem';
-      validerBtn.style.padding = '0.5em 1.3em';
-      validerBtn.style.borderRadius = '22px';
-      validerBtn.style.border = 'none';
-      validerBtn.style.background = theme.color;
-      validerBtn.style.color = '#fff';
-      validerBtn.style.fontWeight = '700';
-      validerBtn.style.cursor = 'pointer';
-      validerBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
-      validerBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-      validerBtn.style.opacity = '0.93';
-
-      let pasQuestionBtn = document.createElement('button');
-      pasQuestionBtn.textContent = 'Pas de question';
-      pasQuestionBtn.style.fontFamily = "'Quicksand', sans-serif";
-      pasQuestionBtn.style.fontSize = '1rem';
-      pasQuestionBtn.style.padding = '0.5em 1.3em';
-      pasQuestionBtn.style.borderRadius = '22px';
-      pasQuestionBtn.style.border = 'none';
-      pasQuestionBtn.style.background = '#bdbdbd';
-      pasQuestionBtn.style.color = '#222';
-      pasQuestionBtn.style.fontWeight = '700';
-      pasQuestionBtn.style.cursor = 'pointer';
-      pasQuestionBtn.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
-      pasQuestionBtn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-      pasQuestionBtn.style.opacity = '0.93';
-
-      btnsDiv.appendChild(validerBtn);
-      btnsDiv.appendChild(pasQuestionBtn);
-
-      questionBox.appendChild(themeTitle);
-      questionBox.appendChild(questionInput);
-      questionBox.appendChild(btnsDiv);
-
-  // Ajoute le cadre sous le themeBox
-  themeBox.after(questionBox);
-  // Ensure the question box is visible and interactive
-  setTimeout(() => { try { questionBox.style.opacity = '1'; questionBox.style.pointerEvents = 'auto'; questionBox.style.zIndex = '10002'; questionBox.style.color = '#ffffff'; } catch(e){} }, 25);
-
-      // Fonction pour ouvrir le cadre tirage
-      function openTirageBox() {
-        // Supprime un éventuel cadre tirage déjà ouvert
-        let oldTirage = popup.querySelector('.ia-tirage-box');
-        if (oldTirage) oldTirage.remove();
-
-        // Crée le cadre tirage
-        let tirageBox = document.createElement('div');
-        tirageBox.className = 'ia-tirage-box';
-        tirageBox.style.background = 'transparent';
-        tirageBox.style.backdropFilter = 'none';
-        tirageBox.style.borderRadius = '0';
-        tirageBox.style.boxShadow = 'none';
-        tirageBox.style.padding = '1.2em 1em 1em 1em';
-        tirageBox.style.margin = '1em auto 0 auto';
-        tirageBox.style.maxWidth = '340px';
-        tirageBox.style.textAlign = 'center';
-
-        // Titre
-        let tirageTitle = document.createElement('div');
-        tirageTitle.textContent = 'Choisir le tirage';
-        tirageTitle.style.fontFamily = "'Revalia', cursive";
-        tirageTitle.style.fontSize = '1.1rem';
-        tirageTitle.style.color = '#1a237e';
-        tirageTitle.style.marginBottom = '0.7em';
-
-        // Boutons tirage
-        let tirageBtnsDiv = document.createElement('div');
-        tirageBtnsDiv.style.display = 'flex';
-        tirageBtnsDiv.style.justifyContent = 'center';
-        tirageBtnsDiv.style.gap = '1em';
-        tirageBtnsDiv.style.marginTop = '0.7em';
-
-        let btn3 = document.createElement('button');
-        btn3.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
-        btn3.textContent = '3 cartes';
-        btn3.style.fontFamily = "'Quicksand', sans-serif";
-        btn3.style.fontSize = '1rem';
-        btn3.style.padding = '0.5em 1.3em';
-        btn3.style.borderRadius = '22px';
-        btn3.style.border = 'none';
-        btn3.style.background = '#FF6B35';
-        btn3.style.color = '#fff';
-        btn3.style.fontWeight = '700';
-        btn3.style.cursor = 'pointer';
-        btn3.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
-        btn3.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-        btn3.style.opacity = '0.93';
-
-        btn3.style.position = 'relative';
-
-        // Création de la bulle d'aide personnalisée
-        function createTooltip(text) {
-          const tooltip = document.createElement('div');
-          tooltip.textContent = text;
-          tooltip.style.position = 'absolute';
-          tooltip.style.bottom = '110%';
-          tooltip.style.left = '50%';
-          tooltip.style.transform = 'translateX(-50%)';
-          tooltip.style.background = 'linear-gradient(90deg, rgba(255, 215, 0, 0.95) 0%, rgba(255, 193, 7, 0.9) 60%, rgba(218, 165, 32, 0.95) 100%)';
-          tooltip.style.color = '#8b4513';
-          tooltip.style.padding = '0.7em 1.1em';
-          tooltip.style.borderRadius = '1em';
-          tooltip.style.boxShadow = '0 4px 16px rgba(30,30,40,0.13)';
-          tooltip.style.fontFamily = "'Quicksand', sans-serif";
-          tooltip.style.fontSize = '0.98rem';
-          tooltip.style.whiteSpace = 'pre-line';
-          tooltip.style.opacity = '0';
-          tooltip.style.pointerEvents = 'none';
-          tooltip.style.transition = 'opacity 0.18s';
-          tooltip.style.zIndex = '10001';
-          tooltip.style.fontWeight = '600';
-          tooltip.style.textAlign = 'center';
-          tooltip.style.textShadow = '0 2px 8px rgba(30,30,40,0.10)';
-          return tooltip;
-        }
-
-        // Ajoute la bulle d'aide au survol du bouton 3 cartes
-        btn3.addEventListener('mouseenter', function() {
-          const tip = createTooltip("Tirage 3 cartes :\nPassé, présent, futur.\nVision synthétique et rapide.");
-          btn3._tooltip = tip;
-          btn3.appendChild(tip);
-          setTimeout(() => { tip.style.opacity = '1'; }, 10);
-        });
-        btn3.addEventListener('mouseleave', function() {
-          if (btn3._tooltip) {
-            btn3._tooltip.style.opacity = '0';
-            setTimeout(() => {
-              if (btn3._tooltip && btn3.contains(btn3._tooltip)) btn3.removeChild(btn3._tooltip);
-              btn3._tooltip = null;
-            }, 180);
-          }
-        });
-
-        let btn5 = document.createElement('button');
-        btn5.className = 'tirage-button'; // Ajoute la classe pour le CSS mobile
-        btn5.textContent = '5 cartes';
-        btn5.style.fontFamily = "'Quicksand', sans-serif";
-        btn5.style.fontSize = '1rem';
-        btn5.style.padding = '0.5em 1.3em';
-        btn5.style.borderRadius = '22px';
-        btn5.style.border = 'none';
-        btn5.style.background = '#ff9800';
-        btn5.style.color = '#fff';
-        btn5.style.fontWeight = '700';
-        btn5.style.cursor = 'pointer';
-        btn5.style.transition = 'transform 0.15s, box-shadow 0.15s, background 0.2s';
-        btn5.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-        btn5.style.opacity = '0.93';
-
-        btn5.style.position = 'relative';
-
-        // Ajoute la bulle d'aide au survol du bouton 5 cartes
-        btn5.addEventListener('mouseenter', function() {
-          const tip = createTooltip("Tirage 5 cartes :\nInfluences, obstacles, conseils, évolution.\nPour une analyse approfondie.");
-          btn5._tooltip = tip;
-          btn5.appendChild(tip);
-          setTimeout(() => { tip.style.opacity = '1'; }, 10);
-        });
-        btn5.addEventListener('mouseleave', function() {
-          if (btn5._tooltip) {
-            btn5._tooltip.style.opacity = '0';
-            setTimeout(() => {
-              if (btn5._tooltip && btn5.contains(btn5._tooltip)) btn5.removeChild(btn5._tooltip);
-              btn5._tooltip = null;
-            }, 180);
-          }
-        });
-
-        tirageBtnsDiv.appendChild(btn3);
-        tirageBtnsDiv.appendChild(btn5);
-
-        tirageBox.appendChild(tirageTitle);
-        tirageBox.appendChild(tirageBtnsDiv);
-
-        // Ajoute le cadre tirage : preferer l'overlay pour un centrage fiable
-        // Ajoute le cadre tirage sous le cadre question (comportement historique)
-        questionBox.after(choixBox);
-        setTimeout(() => { try { choixBox.style.opacity = '1'; } catch(e){} }, 30);
-
-        function showChoixCartesBox(nbCartes) {
-          console.log('[LEGACY] showChoixCartesBox called with', nbCartes, '- legacy popup disabled');
-          return null;
-        }
-        
-
-        btn3.addEventListener('click', function() {
-          btn3.disabled = true;
-          btn5.disabled = true;
-          setTimeout(function() {
-            popup.style.transition = 'opacity 0.7s';
-            popup.style.opacity = '0';
-            setTimeout(() => {
-              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
-              showChoixCartesBox(3);
-            }, 700);
-          }, 600);
-        });
-        btn5.addEventListener('click', function() {
-          btn3.disabled = true;
-          btn5.disabled = true;
-          setTimeout(function() {
-            popup.style.transition = 'opacity 0.7s';
-            popup.style.opacity = '0';
-            setTimeout(() => {
-              if (popup && popup.parentNode) popup.parentNode.removeChild(popup);
-              showChoixCartesBox(5);
-            }, 700);
-          }, 600);
-        });
-      }
-
-      validerBtn.addEventListener('click', function(e) {
-        try { console.log('[DBG] validerBtn clicked'); } catch(e){}
-        e.preventDefault();
-        openTirageBox();
-      });
-      pasQuestionBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openTirageBox();
-      });
-    });
-
-    themeBox.appendChild(btn);
-  });
-
-  popup.appendChild(themeBox);
-
-  overlay.appendChild(popup);
-  try { console.log('[DBG] overlay appendChild(popup)'); } catch(e){}
-  document.body.appendChild(overlay);
-  try {
-    // install a lightweight mutation observer to log overlay child changes for debugging
-    try {
-      const mo = new MutationObserver((m) => { try { console.log('[DBG] overlay mutations', m.map?.(x=>x.type) || m); } catch(e){} });
-      mo.observe(overlay, { childList: true, subtree: true });
-      overlay._dbgMo = mo;
-      try { console.log('[DBG] overlay observer installed'); } catch(e){}
-    } catch(e) { console.warn('failed to install overlay dbg observer', e); }
-  } catch(e){}
-  try { const dbg = document.getElementById('debug-close-overlay-btn'); if (dbg) dbg.style.display = 'block'; } catch (e){}
-});
-
-function showInterpretationBox(cards, overlay) {
-  // Legacy interpretation popup disabled to avoid duplicate/legacy UI.
-  try { console.log('[LEGACY] showInterpretationBox called - legacy popup disabled', { cards: cards || [] }); } catch(e){}
-
-  // If a modern PopupManager is present, delegate display to it for a graceful experience.
-  try {
-    if (window.PopupManager && typeof window.PopupManager.open === 'function') {
-      const content = document.createElement('div');
-      content.style.padding = '1rem';
-      content.style.maxWidth = '900px';
-      content.innerHTML = `<div style="font-weight:700; margin-bottom:.6rem;">Interprétation (ancienne version désactivée)</div><div style="font-size:.95rem; color:#333; white-space:pre-wrap;">${(cards||[]).map(c=>String(c)).join(', ')}</div>`;
-      window.PopupManager.open({ title: 'Interprétation', content });
-      return null;
-    }
-  } catch (e) { console.warn('Delegation to PopupManager failed', e); }
-
-  // Fallback: simple alert/log so the call doesn't throw and no legacy DOM is created
-  try { console.log('showInterpretationBox fallback: cards=', cards); } catch(e){}
-  return null;
-}
-  // Legacy interpretation popup DOM construction removed.
-  // showInterpretationBox now delegates to PopupManager (when available) and returns early.
-  // The previous inline DOM-building code was removed to avoid duplicate/legacy UI and
-  // to prevent insertion of fullscreen background videos. See PopupManager for modern behavior.
-  closeBtn3.style.background = 'none';
-  closeBtn3.style.border = 'none';
-  closeBtn3.style.fontSize = '1.5em';
-  closeBtn3.style.cursor = 'pointer';
-  closeBtn3.style.color = '#FF6B35';
-  closeBtn3.setAttribute('aria-label', 'Fermer');
-  // (no data-close attribute) keep original markup
-  // ensure the close button receives pointer events and sits above other inner content
-  closeBtn3.style.pointerEvents = 'auto';
-  try { closeBtn3.style.zIndex = '10003'; } catch(e) {}
-  closeBtn3.onclick = () => {
-    // Restore original behavior: cancel speech, stop any running typewriter,
-    // unlock background scroll, then remove the overlay via cleanupOverlay.
-    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
-    try { if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout); } catch(e){}
-    try { if (typeof cleanupScrollLock === 'function') cleanupScrollLock(); } catch(e){}
-    try { if (typeof cleanupOverlay === 'function') cleanupOverlay(); } catch(e){}
-    // focus the header button on the homepage if present
-    try { const hb = document.querySelector('.header-btn-ia'); if (hb) hb.focus(); else window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e){}
-  };
-
-  // interpBox.appendChild(soundBtn);
-
-  interpInner.appendChild(closeBtn3);
-  interpInner.appendChild(titreInterp);
-
-  // Grille des cartes tirées (nouvelle approche CSS-first)
-  // Utilise des classes et des slots plutôt que d'injecter des styles inline
-  let interpGrid = document.createElement('div');
-  interpGrid.className = 'cards-grid'; // base class – CSS décidera du rendu en .three/.five
-  // will store computed per-card width for 3-card tirages
-  let computedPerCard = null;
-  // create the variable early so the card-sizing code can reference it safely
-  let iaInterpretBox = null;
-
-  if (cards.length === 5) {
-    interpGrid.classList.add('five');
-  } else if (cards.length === 3) {
-    interpGrid.classList.add('three');
-  } else {
-    interpGrid.classList.add('compact');
-  }
-
-  // Build card slots and images (delegate sizing/position to CSS)
-  cards.forEach((cardName, index) => {
-    const slot = document.createElement('div');
-    slot.className = 'card-slot';
-    slot.setAttribute('data-index', String(index));
-
-    const img = document.createElement('img');
-  img.className = 'card-img card-big';
-    img.src = `./public/img/majors/${cardName}.webp`;
-    img.alt = `Carte ${cardName}`;
-
-    // For 3-card tirages we compute a per-card max width to size the iaInterpretBox later
-    if (cards.length === 3) {
-      try {
-        let frameWidth = null;
-        const frameEl = iaInterpretBox; // use the variable we just created
-        if (frameEl && frameEl.getBoundingClientRect) {
-          const r = frameEl.getBoundingClientRect();
-          frameWidth = Math.max(40, r.width - 32);
-        }
-        if (!frameWidth) frameWidth = Math.round(window.innerWidth * 0.17) - 16;
-
-        // use 120px as a friendly default per previous behavior
-        let perCard = 120;
-        computedPerCard = perCard;
-        try { console.log('[TIRAGE] computedPerCard=', computedPerCard, 'cards.length=', cards.length); } catch(e){}
-
-        img.style.setProperty('max-width', perCard + 'px');
-        img.style.setProperty('width', 'auto');
-      } catch (e) {
-        console.warn('3-card sizing fallback failed', e);
-      }
-    }
-
-    // Strong inline sizing for 5-card layout to override stubborn CSS/inline rules
-    if (cards.length === 5) {
-      try {
-        // set a reasonable max width so cards don't become enormous
-        img.style.setProperty('max-width', '120px', 'important');
-        img.style.setProperty('width', 'auto', 'important');
-        img.style.setProperty('height', 'auto', 'important');
-        // give the slot a matching width so grid sizing is predictable
-        slot.style.setProperty('width', '120px', 'important');
-        slot.style.setProperty('max-width', '120px', 'important');
-      } catch (e) {
-        console.warn('Failed to apply 5-card inline sizing', e);
-      }
-    }
-
-    slot.appendChild(img);
-    interpGrid.appendChild(slot);
-  });
-
-  // Constrain the interpretation box maximum width so it doesn't go full-screen
-  // prefer CSS, but add defensive inline sizing so the popup remains centered and not full-width
-  interpBox.style.setProperty('max-width', '900px');
-  interpBox.style.setProperty('width', 'min(900px, 92vw)');
-  interpBox.style.setProperty('box-sizing', 'border-box');
-  interpBox.style.margin = '1.2em auto';
-
-  interpInner.appendChild(interpGrid);
-
-  // Runtime enforcement: if it's a 3-card tirage, ensure cards are side-by-side
-  if (cards.length === 3) {
-    try {
-      interpGrid.style.setProperty('display', 'grid', 'important');
-      interpGrid.style.setProperty('grid-template-columns', 'repeat(3, minmax(80px, 1fr))', 'important');
-      interpGrid.style.setProperty('gap', '0.6rem', 'important');
-      interpGrid.style.setProperty('justify-items', 'center', 'important');
-      interpGrid.style.setProperty('align-items', 'start', 'important');
-
-      const slots3 = interpGrid.querySelectorAll('.card-slot');
-      slots3.forEach(s => {
-        try { s.style.setProperty('width', 'auto', 'important'); s.style.removeProperty('transform'); } catch(e) {}
-      });
-
-      const imgs3 = interpGrid.querySelectorAll('.card-img, .card-big');
-      imgs3.forEach(img => {
-        try { img.style.setProperty('max-width', '220px', 'important'); img.style.setProperty('width', 'auto', 'important'); } catch(e) {}
-      });
-
-      try { iaInterpretBox.style.setProperty('max-width', '72%', 'important'); iaInterpretBox.style.setProperty('width', 'auto', 'important'); iaInterpretBox.style.setProperty('margin', '1.2em auto 0 auto', 'important'); } catch(e) {}
-    } catch (e) { console.warn('3-card layout enforcement failed', e); }
-  }
-
-  // Defensive reapply for 5-card layout: apply immediately, reapply after a short delay,
-  // and observe mutations so any other script that runs later can't permanently override it.
-  if (cards.length === 5) {
-    try {
-      let __applyFiveLayoutLock = false;
-      const applyFiveLayout = () => {
-        if (__applyFiveLayoutLock) return; // re-entrancy guard
-        __applyFiveLayoutLock = true;
-        try {
-          interpGrid.style.setProperty('display', 'grid', 'important');
-          interpGrid.style.setProperty('grid-template-columns', '120px 120px 120px', 'important');
-          interpGrid.style.setProperty('grid-auto-rows', 'auto', 'important');
-          interpGrid.style.setProperty('gap', '0.6rem 0.8rem', 'important');
-          interpGrid.style.setProperty('width', 'max-content', 'important');
-          interpGrid.style.setProperty('margin', '1.2em auto', 'important');
-
-          const slots = interpGrid.querySelectorAll('.card-slot');
-          slots.forEach(s => {
-            try {
-              s.style.setProperty('justify-self', 'center', 'important');
-              s.style.setProperty('align-self', 'start', 'important');
-              s.style.setProperty('width', '120px', 'important');
-              s.style.setProperty('max-width', '120px', 'important');
-              // place center column cards at the requested vertical rows
-              const idx = s.getAttribute ? s.getAttribute('data-index') : null;
-              if (idx === '2') {
-                s.style.setProperty('grid-column', '2', 'important');
-                s.style.setProperty('grid-row', '1', 'important');
-                // top center: raise higher so its bottom sits near midway between rows
-                s.style.setProperty('transform', 'translateY(-80px)', 'important');
-                s.style.setProperty('z-index', '14', 'important');
-              } else if (idx === '3') {
-                s.style.setProperty('grid-column', '2', 'important');
-                s.style.setProperty('grid-row', '2', 'important');
-                // center: move up so its top is almost touching the bottom of the top card
-                s.style.setProperty('transform', 'translateY(-78px)', 'important');
-                s.style.setProperty('z-index', '13', 'important');
-              } else if (idx === '4') {
-                s.style.setProperty('grid-column', '2', 'important');
-                s.style.setProperty('grid-row', '3', 'important');
-                // bottom: move up so its top is almost touching the bottom of the center card
-                s.style.setProperty('transform', 'translateY(-76px)', 'important');
-                s.style.setProperty('z-index', '12', 'important');
-              }
-            } catch (e) {}
-          });
-        } catch (e) {
-          console.warn('applyFiveLayout error', e);
-        }
-      };
-
-      // initial apply + short delayed reapply
-      applyFiveLayout();
-      setTimeout(() => { __applyFiveLayoutLock = false; applyFiveLayout(); }, 60);
-
-      // MutationObserver to keep enforcing while overlay exists
-      // use a debounced callback to avoid synchronous recursion
-      const mo = new MutationObserver((mutations) => {
-        // schedule a single apply shortly after mutations settle
-        setTimeout(() => { __applyFiveLayoutLock = false; applyFiveLayout(); }, 30);
-      });
-      mo.observe(interpGrid, { attributes: true, subtree: true, childList: true, attributeFilter: ['style', 'class'] });
-
-      // disconnect observer when overlay is removed
-      const cleanupObserver = new MutationObserver(() => {
-        if (!document.body.contains(overlay)) {
-          try { mo.disconnect(); } catch (e) {}
-          try { cleanupObserver.disconnect(); } catch (e) {}
-        }
-      });
-      cleanupObserver.observe(document.body, { childList: true, subtree: true });
-
-    } catch (e) {
-      console.warn('Failed to setup 5-card reapply', e);
-    }
-  }
-
-  
-
-  // Cadre pour l'interprétation IA
-  iaInterpretBox = document.createElement('div');
-  iaInterpretBox.id = 'ia-interpretation';
-  // Use a transparent background so the popup video is the visible background
-  iaInterpretBox.style.background = 'transparent';
-  iaInterpretBox.style.backdropFilter = 'none';
-  iaInterpretBox.style.border = 'none';
-  iaInterpretBox.style.borderRadius = '0.8em';
-  iaInterpretBox.style.boxShadow = 'none';
-  iaInterpretBox.style.padding = '1.2em 0.8em 0.8em 0.8em';
-  iaInterpretBox.style.margin = '1.6em auto 0 auto';
-  // defensive: avoid legacy code forcing a tiny max-width (was 160px)
-  iaInterpretBox.style.maxWidth = 'none';
-  iaInterpretBox.style.fontFamily = "'Quicksand', sans-serif";
-  iaInterpretBox.style.fontSize = '1.15rem';
-  iaInterpretBox.style.color = '#ffffff';
-  iaInterpretBox.style.textAlign = 'left';
-  iaInterpretBox.style.height = '18em';
-  iaInterpretBox.style.maxHeight = '20em';
-  iaInterpretBox.style.overflowY = 'auto';
-  iaInterpretBox.style.overflowX = 'hidden';
-  iaInterpretBox.style.display = 'block';
-  iaInterpretBox.style.scrollBehavior = 'smooth';
-  iaInterpretBox.style.zIndex = '2';
-  // Defensive helper: strip any inline width/max-width that other scripts may apply
-  function stripInlineWidths(rootEl) {
-    if (!rootEl) return;
-    try {
-      const nodes = [rootEl].concat(Array.from(rootEl.querySelectorAll('*')));
-      nodes.forEach(el => {
-        try {
-          if (el.hasAttribute && el.hasAttribute('width')) el.removeAttribute('width');
-          if (el.hasAttribute && el.hasAttribute('max-width')) el.removeAttribute('max-width');
-          if (el.style) {
-            if (el.style.width) el.style.removeProperty('width');
-            if (el.style.maxWidth) el.style.removeProperty('max-width');
-          }
-          const s = el.getAttribute && el.getAttribute('style');
-          if (s && /max-?width\s*:\s*[^;]+/i.test(s)) {
-            const cleaned = s.replace(/\s*max-?width\s*:\s*[^;]+;?/ig, '');
-            if (cleaned.trim() === '') el.removeAttribute('style'); else el.setAttribute('style', cleaned.trim());
-          }
-        } catch (e) {}
-      });
-    } catch (e) { console.warn('stripInlineWidths failed', e); }
-  }
-
-  // run once immediately to clear any narrow inline styling
-  stripInlineWidths(iaInterpretBox);
-
-  // install a MutationObserver on the iaInterpretBox to strip widths if re-applied
-  try {
-    let __stripTimeout = null;
-    const stripObs = new MutationObserver(muts => {
-      // debounce: wait 40ms after the last mutation before stripping
-      try { if (__stripTimeout) clearTimeout(__stripTimeout); } catch(e){}
-      __stripTimeout = setTimeout(() => {
-        try { stripInlineWidths(iaInterpretBox); } catch(e){}
-      }, 40);
-    });
-    stripObs.observe(iaInterpretBox, { attributes: true, attributeFilter: ['style', 'width', 'max-width'], subtree: true, childList: true });
-    overlay._interpObservers = overlay._interpObservers || [];
-    overlay._interpObservers.push(stripObs);
-  } catch (e) {
-    console.warn('stripObs install failed', e);
-  }
-  // If we computed a per-card width for a 3-card tirage, size the interpretation frame
-  // so it exactly contains the three cards (plus small gaps)
-  if (computedPerCard && cards.length === 3) {
-    try {
-      // Build the intended base frame width (px)
-      let baseFramePx;
-      if (computedPerCard === 120) {
-        baseFramePx = 420; // previous fixed frame
-      } else {
-        const gapPx = 12;
-        baseFramePx = (computedPerCard * 3) + (gapPx * 2) + 24; // add small padding
-      }
-
-      // Increase the frame by 25% as requested
-      const enlargedFrame = Math.round(baseFramePx * 1.25);
-      try {
-        // prefer max-width rather than forcing an absolute width
-        const parentW = interpBox && interpBox.getBoundingClientRect ? Math.round(interpBox.getBoundingClientRect().width) : null;
-        let cap = enlargedFrame;
-        if (parentW) cap = Math.min(enlargedFrame, Math.round(parentW * 0.86));
-        iaInterpretBox.style.setProperty('max-width', cap + 'px');
-        iaInterpretBox.style.removeProperty('width');
-      } catch(e) {
-        iaInterpretBox.style.setProperty('max-width', enlargedFrame + 'px');
-      }
-
-      try { console.log('[TIRAGE] baseFramePx=', baseFramePx, 'enlargedFrame=', enlargedFrame, 'oldPerCard=', computedPerCard); } catch(e){}
-
-      // Recompute per-card width based on the enlarged frame and reapply to images
-      try {
-        // Reduce gap so cards can be a bit larger in the same space
-        const gapPx = 6; // smaller horizontal gap
-        const usable = Math.max(80, enlargedFrame - 24); // ensure positive usable area
-        // Compute base per-card and apply a small boost (~12%) to make cards a bit larger
-        const basePer = Math.floor((usable - (gapPx * 2)) / 3);
-        const boostedPer = Math.round(basePer * 1.12);
-        const newPer = Math.max(40, Math.min(boostedPer, Math.floor(usable - (gapPx * 2))));
-        computedPerCard = newPer;
-
-        // Reduce the visual gap on the grid to match gapPx
-        try {
-          interpGrid.style.setProperty('gap', gapPx + 'px');
-        } catch(e) {}
-
-        // Apply to all card images inside interpGrid
-        try {
-          const imgs = interpGrid.querySelectorAll('.card-big');
-          imgs.forEach(img => {
-            img.style.setProperty('max-width', newPer + 'px');
-            img.style.setProperty('width', 'auto');
-          });
-        } catch(e) { console.warn('Failed to reapply per-card widths', e); }
-
-        try { console.log('[TIRAGE] applied newPer=', newPer, 'with gapPx=', gapPx, 'to', (interpGrid.querySelectorAll('.card-big')||[]).length, 'images'); } catch(e){}
-      } catch(e) {
-        console.warn('Failed to recompute/apply per-card width after enlargement', e);
-      }
-    } catch (e) {
-      console.warn('Failed to size iaInterpretBox to cards', e);
-    }
-  }
-  // Agrandir le cadre d'interprétation pour un tirage à 3 cartes (mise en forme précédente)
-  if (cards.length === 3) {
-    try {
-      // Halved expansion per user request
-  // Only apply vw-based fallback when we didn't compute exact per-card px sizes
-  if (!computedPerCard) {
-  iaInterpretBox.style.setProperty('max-width', '17vw');
-  iaInterpretBox.style.setProperty('width', '17vw');
-  }
-  iaInterpretBox.style.setProperty('min-height', '16vh');
-  iaInterpretBox.style.setProperty('max-height', '36vh');
-  iaInterpretBox.style.setProperty('padding', '0.9em');
-  iaInterpretBox.style.setProperty('font-size', '0.92rem');
-  iaInterpretBox.style.setProperty('line-height', '1.3');
-  iaInterpretBox.style.setProperty('border-radius', '1em');
-  iaInterpretBox.style.setProperty('box-shadow', '0 5px 20px rgba(0,0,0,0.12)');
-    } catch (e) {
-      console.warn('iaInterpretBox 3-card expansion failed', e);
-    }
-  }
-  // Message d'attente plus engageant et personnalisé
-  const themeMessages = {
-    "Amour": "💖 Analyse de votre situation amoureuse",
-    "Travail": "💼 Étude de votre chemin professionnel", 
-    "Argent": "💰 Examen de vos finances",
-    "Santé": "🌿 Exploration de votre bien-être",
-    "Spiritualité": "🔮 Révélation de votre évolution spirituelle",
-    "Général": "✨ Découverte de votre guidance générale"
-  };
-  
-  const themeMsg = themeMessages[theme] || "✨ Analyse de votre tirage";
-  
-  iaInterpretBox.innerHTML = `
-    <div style="text-align: center; padding: 0;">
-      <div style="font-size: 1.4em; margin-bottom: 0.6em; color: #fff; animation: pulse 2s infinite;">
-        ✨ ${themeMsg} ✨
-      </div>
-      <div style="font-size: 1.05em; line-height: 1.6; color: rgba(255,255,255,0.92);">
-        Madame IA.RMA connecte les énergies de vos cartes...<br>
-        <span style="font-style: italic; font-size: 0.95em; opacity: 0.9; margin-top: 0.35em; display: inline-block; color: rgba(255,255,255,0.85);">
-          Préparation de votre interprétation structurée
-        </span>
-      </div>
-      <div style="margin-top: 1em; font-size: 1.9em; color: #FFD86B; animation: spin 3s linear infinite;">
-        🔮
-      </div>
-    </div>
-    <style>
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.6; }
-      }
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-    </style>
-  `;
-
-  interpInner.appendChild(iaInterpretBox);
-
-  // --- Boîte d'actions ---
-  let actionsBox = document.createElement('div');
-  actionsBox.className = 'action-buttons'; // Ajout de la classe CSS
-  actionsBox.style.display = 'flex';
-  actionsBox.style.justifyContent = 'center';
-  actionsBox.style.alignItems = 'center';
-  actionsBox.style.gap = '1em';
-  actionsBox.style.marginTop = '1.5em';
-  // make actions fit the popup width
-  actionsBox.style.width = '100%';
-  actionsBox.style.boxSizing = 'border-box';
-  // ensure buttons are clickable even if other layers exist
-  actionsBox.style.pointerEvents = 'auto';
-  try { actionsBox.style.zIndex = '10002'; } catch(e) {}
-
-  // Style commun pour les boutons d'action
-  function styleActionButton(btn, bgColor, textColor) {
-    btn.className = 'action-button'; // Ajout de la classe CSS
-    btn.style.fontFamily = "'Quicksand', sans-serif";
-    btn.style.fontSize = '1rem';
-    btn.style.padding = '0.6em 1.4em';
-    btn.style.borderRadius = '22px';
-    btn.style.border = 'none';
-    btn.style.background = bgColor;
-    btn.style.color = textColor;
-    btn.style.fontWeight = '700';
-    btn.style.cursor = 'pointer';
-    btn.style.transition = 'transform 0.15s, box-shadow 0.15s';
-    btn.style.boxShadow = '0 2px 8px rgba(30,30,40,0.10)';
-  }
-
-  // Si c'est un tirage de 3 cartes, élargir le conteneur pour accueillir de grandes images
-  if (cards.length === 3) {
-    if (screenWidth <= 480) {
-      interpGrid.style.maxWidth = '320px';
-    } else if (screenWidth <= 768) {
-      interpGrid.style.maxWidth = '520px';
-    } else {
-      interpGrid.style.maxWidth = '880px';
-    }
-    interpGrid.style.justifyContent = 'center';
-  }
-
-  // Bouton Recommencer
-  let restartBtn = document.createElement('button');
-  restartBtn.textContent = 'Recommencer';
-  styleActionButton(restartBtn, '#FF6B35', '#fff');
-  restartBtn.onclick = function() {
-    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
-    if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
-    try { if (typeof cleanupScrollLock === 'function') cleanupScrollLock(); } catch(e){}
-    try { cleanupOverlay(); } catch(e){}
-    setTimeout(() => document.querySelector('.header-btn-ia').click(), 100);
-  };
-
-  // Bouton Sauvegarder
-  let emailBtn = document.createElement('button');
-  emailBtn.textContent = 'Sauvegarder';
-  styleActionButton(emailBtn, '#ff9800', '#fff');
-  emailBtn.onclick = function() {
-    alert("Sauvegarde du tirage (fonctionnalité à venir).");
-  };
-
-  // Bouton Retour
-  let backBtn = document.createElement('button');
-  backBtn.textContent = 'Retour';
-  styleActionButton(backBtn, '#bdbdbd', '#222');
-  backBtn.onclick = closeBtn3.onclick; // Réutilise la même logique que le bouton fermer
-
-  // Ajout des boutons à la boîte d'actions
-  actionsBox.appendChild(restartBtn);
-  actionsBox.appendChild(emailBtn);
-  actionsBox.appendChild(backBtn);
-  actionsBox.appendChild(soundBtn); // Ajout du bouton son ici
-
-  interpInner.appendChild(actionsBox);
-  // --- Fin Boîte d'actions ---
-
-  // Create an icon bar container for small action icons (will be populated by the AI callback)
-  let iconBar = document.createElement('div');
-  iconBar.className = 'icon-bar';
-  iconBar.style.display = 'flex';
-  iconBar.style.justifyContent = 'center';
-  iconBar.style.alignItems = 'center';
-  iconBar.style.gap = '1.2em';
-  iconBar.style.margin = '1.2em auto 0 auto';
-  iconBar.style.maxWidth = '760px';
-  iconBar.style.width = '100%';
-  iconBar.style.boxSizing = 'border-box';
-  iconBar.style.pointerEvents = 'auto';
-
-  // attach to interpBox now so callAIInterpretationAPI can populate it
-  interpInner.appendChild(iconBar);
-
-  // finally append the inner wrapper into the outer popup box so the video fills the full area
-  interpBox.appendChild(interpInner);
-
-  // Affiche la popup
-  // Lock page scroll while overlay is visible
-  document.body.style.overflow = 'hidden';
-  overlay.appendChild(interpBox);
-  // Ensure overlay has a delegated click handler so buttons still respond even if some
-  // event paths are blocked by other layers. Installs only once per overlay instance.
-  try {
-    if (!overlay._delegationInstalled) {
-      overlay.addEventListener('click', function delegatedClickHandler(e) {
-        try {
-          // If the click happened inside the popup content, do nothing and let normal handlers run.
-          const inPopup = e.target && e.target.closest ? e.target.closest('.tarot-popup, .interpretation-popup, .overlay-content') : null;
-          if (inPopup) return;
-
-          // find the nearest button clicked (on overlay background)
-          const btn = (e.target && e.target.closest) ? e.target.closest('button') : null;
-          if (!btn) return; // nothing to do
-
-          // If it's a close button (aria-label or text), call the cleanup directly
-          const aria = btn.getAttribute && btn.getAttribute('aria-label');
-          const txt = (btn.textContent || '').trim();
-          if (aria === 'Fermer' || txt === '✕' || txt === 'Fermer') {
-            e.preventDefault(); e.stopPropagation();
-            try { cleanupOverlay(); } catch(err) { console.warn('delegated close failed', err); }
-            return;
-          }
-
-          // If the element has an explicit onclick handler, call it safely.
-          if (typeof btn.onclick === 'function') {
-            try { e.preventDefault(); e.stopPropagation(); btn.onclick(); } catch(err) { console.warn('delegated invoke onclick failed', err); }
-            return;
-          }
-
-          // As a fallback, dispatch a synthetic click on the button (bubble phase) so
-          // any normal listeners added by scripts will run. Use setTimeout to avoid reentrancy.
-          setTimeout(() => { try { btn.click(); } catch(err) { /* swallow */ } }, 0);
-        } catch (e) { /* defensive: never throw from delegated handler */ }
-      }, true /* capture */);
-      overlay._delegationInstalled = true;
-    }
-  } catch(e) { console.warn('failed to install overlay delegation', e); }
-  // Use class-based constraint instead of aggressive inline !important CSS
-  interpBox.classList.add('interp-fixed');
-  // Provide sensible non-important defaults (the CSS class has the !important rules)
-  interpBox.style.maxWidth = '900px';
-  interpBox.style.width = 'min(900px,96vw)';
-  interpBox.style.margin = '1.2em auto';
-  setTimeout(() => { interpBox.style.opacity = '1'; }, 30);
-
-  // Aggressive observer: strip inline width/max-width attributes and style properties
-  // from any element inside the overlay and reapply the popup constraint.
-  // This defends against other scripts that may write inline widths later.
-  try {
-    // aggressiveStrip used to scan the entire subtree which can be blocking.
-    // Keep a small, targeted no-op for safety. Use stripInlineWidths(iaInterpretBox) instead.
-    const aggressiveStrip = (root) => {
-      // intentionally a noop to avoid heavy synchronous scans
-      return;
-    };
-
-    // simple, safe cleanup: remove stray inline widths from the iaInterpretBox (not whole overlay)
-    try {
-      if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox);
-      // reapply defensive constraints on interpBox and iaInterpretBox
-      try { interpBox.style.setProperty('max-width', '900px', 'important'); interpBox.style.setProperty('width', 'min(900px, 92vw)', 'important'); interpBox.style.setProperty('box-sizing','border-box','important'); } catch(e){}
-      try { iaInterpretBox.style.setProperty('width','100%','important'); iaInterpretBox.style.setProperty('max-width','100%','important'); } catch(e){}
-      setTimeout(() => { try { if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox); } catch(e){} }, 220);
-      setTimeout(() => { try { if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox); } catch(e){} }, 900);
-    } catch (e) {}
-  } catch (e) {
-    console.warn('Failed to install aggressiveStrip observer', e);
-  }
-
-  // Transient defensive reapply: run strip and force widths again after short delays
-  try {
-    // immediate attempt to strip any inline widths
-    if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox);
-    // force important popup constraints
-    interpBox.style.setProperty('max-width', '900px', 'important');
-    interpBox.style.setProperty('width', 'min(900px, 92vw)', 'important');
-    interpBox.style.setProperty('box-sizing', 'border-box', 'important');
-    // ensure inner interp frame doesn't hold a large fixed width
-    iaInterpretBox.style.setProperty('width', '100%', 'important');
-    iaInterpretBox.style.setProperty('max-width', '100%', 'important');
-    iaInterpretBox.style.setProperty('box-sizing', 'border-box', 'important');
-
-    // schedule a couple of retries to catch late writers
-    setTimeout(() => {
-      try {
-        if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox);
-        interpBox.style.setProperty('width', '900px', 'important');
-        iaInterpretBox.style.removeProperty('width');
-      } catch (e) {}
-    }, 300);
-
-    setTimeout(() => {
-      try {
-        if (typeof stripInlineWidths === 'function') stripInlineWidths(iaInterpretBox);
-        interpBox.style.setProperty('width', '900px', 'important');
-        iaInterpretBox.style.removeProperty('width');
-      } catch (e) {}
-    }, 1200);
-  } catch (e) {}
-
-  // Appel API IA avec le prompt personnalisé
-  iaInterpretBox.textContent = "Interprétation en cours...";
-
-  // --- Diagnostic helper: logs the state of the interpretation box and related elements
-  // This runs shortly after the popup opens and can be re-run from the console via
-  // `window.__diagInterpretationPopup()`
-  try {
-    window.__diagInterpretationPopup = function() {
-      try {
-        const interp = document.getElementById('ia-interpretation');
-        const interpContent = document.getElementById('ia-interpretation-content');
-        const interpInner = document.querySelector('.interp-inner');
-        const actions = document.querySelector('.interp-inner .action-buttons') || document.querySelector('.action-buttons');
-        console.group('%cDiag: interpretation popup', 'color:#1a237e; font-weight:700');
-        console.log('interp element:', interp);
-        if (interp) {
-          console.log(' computed:', getComputedStyle(interp));
-          try { console.log(' rect:', interp.getBoundingClientRect()); } catch(e) {}
-          console.log(' children:', interp.children && interp.children.length);
-        }
-        console.log('interpContent element:', interpContent);
-        if (interpContent) {
-          console.log(' content text (first 400 chars):', (interpContent.innerText||'').slice(0,400));
-          console.log(' computed:', getComputedStyle(interpContent));
-          try { console.log(' rect:', interpContent.getBoundingClientRect()); } catch(e) {}
-        }
-        console.log('interpInner element:', interpInner, interpInner && getComputedStyle(interpInner));
-        console.log('action-buttons element:', actions, actions && getComputedStyle(actions));
-        console.groupEnd();
-      } catch (e) { console.warn('diag helper failed', e); }
-    };
-
-    // run a delayed diagnostics log to capture initial state (non-blocking)
-    setTimeout(() => {
-      try { if (typeof window.__diagInterpretationPopup === 'function') window.__diagInterpretationPopup(); } catch(e) { console.warn('auto diag failed', e); }
-    }, 180);
-  } catch (e) { console.warn('failed to install diag helper', e); }
-
-  callAIInterpretationAPI(cards, theme, question, function(data) {
-    let txt = data.result || "";
-
-    // Supprime les numéros de cartes entre parenthèses
-    txt = txt.replace(/\s*\(\d{1,2}\)/g, "");
-
-    // Structure l'interprétation selon le thème
-    txt = formatInterpretationByTheme(txt, theme, question);
-
-    // Améliore l'organisation et nettoie le texte
-    txt = improveTextFormatting(txt);
-
-  // We'll render the formatted interpretation as HTML paragraphs
-
-    // Build a rich interpretation display
-    iaInterpretBox.textContent = "";
-
-    // Header
-    const header = document.createElement('div');
-    header.style.display = 'flex';
-    header.style.justifyContent = 'space-between';
-    header.style.alignItems = 'center';
-    header.style.gap = '1em';
-    header.style.marginBottom = '0.6em';
-
-    const title = document.createElement('div');
-    title.innerHTML = '<strong style="font-size:1.15rem;color:#1a237e;">Interprétation des cartes</strong>';
-    header.appendChild(title);
-
-    // Copy button
-    const copyBtn = document.createElement('button');
-    copyBtn.textContent = 'Copier';
-    copyBtn.style.background = '#1a237e';
-    copyBtn.style.color = '#fff';
-    copyBtn.style.border = 'none';
-    copyBtn.style.padding = '0.45em 0.9em';
-    copyBtn.style.borderRadius = '12px';
-    copyBtn.style.cursor = 'pointer';
-    copyBtn.style.fontWeight = '600';
-    copyBtn.onclick = function() {
-      const textToCopy = interpContent.innerText || interpContent.textContent || '';
-      if (!textToCopy.trim()) return;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        copyBtn.textContent = 'Copié ✓';
-        setTimeout(() => copyBtn.textContent = 'Copier', 2000);
-      }).catch(() => {
-        copyBtn.textContent = 'Erreur';
-        setTimeout(() => copyBtn.textContent = 'Copier', 2000);
-      });
-    };
-    header.appendChild(copyBtn);
-
-    // Close button
-    const closeBtnFast = document.createElement('button');
-    closeBtnFast.textContent = 'Fermer';
-    closeBtnFast.style.background = '#fff';
-    closeBtnFast.style.color = '#1a237e';
-    closeBtnFast.style.border = '2px solid #1a237e';
-    closeBtnFast.style.padding = '0.35em 0.7em';
-    closeBtnFast.style.borderRadius = '12px';
-    closeBtnFast.style.cursor = 'pointer';
-    closeBtnFast.onclick = function() {
-      window.speechSynthesis.cancel();
-      if (typeof typeWriterTimeout === 'number') clearTimeout(typeWriterTimeout);
-      cleanupOverlay();
-      if (typeof cleanupScrollLock === 'function') cleanupScrollLock(); else { document.body.style.overflow = ''; document.removeEventListener('wheel', preventBackgroundScroll); document.removeEventListener('touchmove', preventBackgroundScroll); }
-    };
-    header.appendChild(closeBtnFast);
-
-    iaInterpretBox.appendChild(header);
-
-    // Content container (scrollable)
-  const interpContent = document.createElement('div');
-  interpContent.id = 'ia-interpretation-content';
-    interpContent.style.maxHeight = '46vh';
-    interpContent.style.overflowY = 'auto';
-    interpContent.style.padding = '0.6em 0.4em';
-    interpContent.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.6), rgba(243,246,255,0.8))';
-    interpContent.style.border = '1px solid rgba(26,35,126,0.08)';
-    interpContent.style.borderRadius = '10px';
-    interpContent.style.lineHeight = '1.45';
-    interpContent.style.whiteSpace = 'pre-wrap';
-    interpContent.style.fontSize = '1rem';
-    interpContent.style.color = '#222';
-
-    // Split paragraphs and render as <p>
-    const paragraphs = txt.split(/\n\s*\n/);
-    paragraphs.forEach(p => {
-      const el = document.createElement('p');
-      el.style.margin = '0 0 0.9em 0';
-      el.style.padding = '0';
-      el.style.fontFamily = "'Quicksand', sans-serif";
-      el.innerText = p.trim();
-      interpContent.appendChild(el);
-    });
-
-    iaInterpretBox.appendChild(interpContent);
-
-    // Defensive: force interpContent to use the popup's available width (overrides any stray inline width)
-    try {
-      const reapplyInterpContentWidth = () => {
-        try {
-          // Fill the popup inner width; box-sizing ensures padding is handled
-          interpContent.style.setProperty('width', '100%', 'important');
-          interpContent.style.setProperty('max-width', '100%', 'important');
-          interpContent.style.setProperty('box-sizing', 'border-box', 'important');
-        } catch (e) { console.warn('reapplyInterpContentWidth failed', e); }
-      };
-      reapplyInterpContentWidth();
-      setTimeout(reapplyInterpContentWidth, 60);
-    } catch (e) {}
-
-    // Observe mutations and reapply widths if anything overwrites them
-    try {
-      const obs = new MutationObserver(() => reapplyInterpContentWidth());
-      obs.observe(interpContent, { attributes: true, attributeFilter: ['style', 'class'] });
-      // also observe the action-buttons block (if present)
-      const actionButtons = interpBox.querySelector('.action-buttons');
-      if (actionButtons) {
-        const reapplyButtons = () => {
-          try {
-            actionButtons.style.setProperty('width', '100%', 'important');
-            actionButtons.style.setProperty('max-width', '100%', 'important');
-            actionButtons.style.setProperty('box-sizing', 'border-box', 'important');
-          } catch (e) { }
-        };
-        reapplyButtons();
-        setTimeout(reapplyButtons, 60);
-        const obs2 = new MutationObserver(() => reapplyButtons());
-        obs2.observe(actionButtons, { attributes: true, attributeFilter: ['style', 'class'] });
-        // store observers on overlay for cleanup
-        overlay._interpObservers = overlay._interpObservers || [];
-        overlay._interpObservers.push(obs, obs2);
-      } else {
-        overlay._interpObservers = overlay._interpObservers || [];
-        overlay._interpObservers.push(obs);
-      }
-    } catch (e) {}
-
-    // Auto-speak the whole interpretation (optional)
-    if (soundOn) {
-      const fullText = paragraphs.join('\n\n');
-      const utterAll = new SpeechSynthesisUtterance(fullText);
-      utterAll.lang = 'fr-FR';
-      utterAll.rate = 1.05;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterAll);
-    }
-
-    function typeWriterParagraph() {
-      if (paraIndex < paragraphs.length) {
-        let para = paragraphs[paraIndex];
-        let p = document.createElement('p');
-        p.style.margin = '0 0 1.2em 0';
-        p.style.padding = '0';
-        p.style.display = 'block';
-        p.style.lineHeight = '1.6';
-        
-        // Détection des sections importantes (nouvelles phrases d'introduction)
-        if (/^(Concernant votre|Pour votre|Quant à votre|Les influences de|Votre situation|En synthèse|Mes conseils)/i.test(para)) {
-          p.style.fontWeight = 'bold';
-          p.style.fontSize = '1.2em';
-          p.style.color = '#FF6B35';
-          p.style.marginTop = '1.8em';
-          p.style.marginBottom = '1em';
-          p.style.borderLeft = '4px solid #FF6B35';
-          p.style.paddingLeft = '1.2em';
-          p.style.background = 'rgba(255, 107, 53, 0.08)';
-          p.style.borderRadius = '0 8px 8px 0';
-        }
-        
-        // Style spécial pour les questions
-        if (/^Votre question :/.test(para)) {
-          p.style.fontStyle = 'italic';
-          p.style.color = '#1a237e';
-          p.style.background = 'rgba(26, 35, 126, 0.05)';
-          p.style.padding = '1em';
-          p.style.borderRadius = '8px';
-          p.style.marginBottom = '1.5em';
-        }
-        
-        iaInterpretBox.appendChild(p);
-
-        let phraseBuffer = "";
-
-        function typeWriterChar() {
-          if (charIndex < para.length) {
-            let char = para[charIndex];
-            p.textContent += char;
-            phraseBuffer += char;
-            iaInterpretBox.scrollTop = iaInterpretBox.scrollHeight;
-
-            // Si fin de phrase, on lit la phrase immédiatement
-            if (/[.!?…]/.test(char)) {
-              let phraseToSpeak = phraseBuffer.trim();
-              if (phraseToSpeak.length > 2) {
-                speakPhrase(phraseToSpeak);
-              }
-              phraseBuffer = "";
-            }
-
-            charIndex++;
-            typeWriterTimeout = setTimeout(typeWriterChar, 18);
-          } else {
-            // À la fin du paragraphe, s'il reste une phrase non lue
-            let lastPhrase = phraseBuffer.trim();
-            if (lastPhrase.length > 2) {
-              speakPhrase(lastPhrase);
-            }
-            p.style.display = 'block';
-            paraIndex++;
-            charIndex = 0;
-            setTimeout(typeWriterParagraph, 200);
-          }
-        }
-        typeWriterChar();
-      } else {
-        // Quand tout est écrit, active le scroll
-        iaInterpretBox.style.overflowY = 'auto';
-        iaInterpretBox.style.cursor = 'grab';
-      }
-    }
-    typeWriterParagraph();
-  }, interpBox, iconBar);
-}
-
-// Fonction pour améliorer le formatage du texte d'interprétation
-function improveTextFormatting(text) {
-  // 1. Supprime tous les astérisques et autres caractères de formatage
-  text = text.replace(/\*\*([^*]+)\*\*/g, '$1'); // **texte** -> texte
-  text = text.replace(/\*([^*]+)\*/g, '$1'); // *texte* -> texte
-  text = text.replace(/_{1,2}([^_]+)_{1,2}/g, '$1'); // __texte__ ou _texte_ -> texte
-  
-  // 2. Nettoie les caractères indésirables pour la lecture
-  text = text.replace(/[#]+\s*/g, ''); // Supprime les # de titres markdown
-  text = text.replace(/^\s*[-*+]\s*/gm, ''); // Supprime les puces de listes
-  text = text.replace(/`([^`]+)`/g, '$1'); // `code` -> code
-  
-  // 3. Améliore la structure des paragraphes
-  text = text.replace(/\n{3,}/g, '\n\n'); // Limite les sauts de ligne multiples
-  text = text.replace(/^\s+|\s+$/g, ''); // Supprime les espaces en début/fin
-  
-  // 4. Identifie et formate les mots-clés importants (sans astérisques)
-  const keywords = [
-    'PASSÉ', 'PRÉSENT', 'FUTUR', 'CONSEIL', 'GUIDANCE', 'ÉVOLUTION',
-    'INFLUENCES', 'SITUATION', 'DÉFIS', 'OBSTACLES', 'CONSEILS',
-    'amour', 'travail', 'argent', 'santé', 'spiritualité',
-    'carte', 'cartes', 'tarot', 'énergie', 'énergies'
-  ];
-  
-  // Remplace les sections avec émojis par du texte plus naturel
-  text = text.replace(/🕐\s*PASSÉ\s*-\s*Les influences\s*:/gi, 'Concernant votre passé et les influences qui vous ont menée jusqu\'ici :');
-  text = text.replace(/⏰\s*PRÉSENT\s*-\s*Votre situation actuelle\s*:/gi, 'Pour votre situation présente :');
-  text = text.replace(/🔮\s*FUTUR\s*-\s*Ce qui vous attend\s*:/gi, 'Quant à votre avenir :');
-  text = text.replace(/🌅\s*INFLUENCES PASSÉES\s*:/gi, 'Les influences de votre passé révèlent que :');
-  text = text.replace(/⚡\s*SITUATION ACTUELLE\s*:/gi, 'Votre situation actuelle indique que :');
-  text = text.replace(/🚧\s*DÉFIS ET OBSTACLES\s*:/gi, 'Concernant les défis à venir :');
-  text = text.replace(/🎯\s*CONSEILS ET GUIDANCE\s*:/gi, 'Mes conseils pour vous :');
-  text = text.replace(/💫\s*Conseil global\s*:/gi, 'En synthèse :');
-  
-  // 5. Supprime les emojis isolés qui restent
-  text = text.replace(/[🕐⏰🔮🌅⚡🚧🎯💫🔍]/g, '');
-  
-  // 6. Améliore la ponctuation pour une meilleure lecture
-  text = text.replace(/\s*:\s*\n/g, ' :\n'); // Espaces autour des deux-points
-  text = text.replace(/([.!?])\s*\n/g, '$1\n\n'); // Double saut après phrase complète
-  
-  return text;
-}
-
-// Fonction pour obtenir les sections spécialisées selon le thème
-function getThemeSpecificSections(theme, cardCount) {
-  const sections = {
-    "Amour": {
-      3: {
-        section1: "� **Vos ex et tout le tralala :**",
-        section2: "💖 **Votre cœur en ce moment :**", 
-        section3: "� **L'amour qui arrive :**",
-        conseil: "� **Mes tips pour votre cœur :**"
-      },
-      5: {
-        section1: "� **Votre passé amoureux :**",
-        section2: "💓 **Vos sentiments actuels :**",
-        section3: "🤔 **Les galères à éviter :**",
-        section4: "🥰 **Votre futur romantique :**",
-        conseil: "💌 **Mes conseils de cupidonne :**"
-      }
-    },
-    "Travail": {
-      3: {
-        section1: "� **Votre CV en résumé :**",
-        section2: "💼 **Votre boulot actuel :**",
-        section3: "� **Votre carrière qui décolle :**", 
-        conseil: "🏆 **Mes tips de boss :**"
-      },
-      5: {
-        section1: "� **D'où vous venez pro :**",
-        section2: "⚡ **Votre job en ce moment :**",
-        section3: "� **Les galères au boulot :**",
-        section4: "🎯 **Votre avenir de winner :**",
-        conseil: "💡 **Mes astuces de réussite :**"
-      }
-    },
-    "Argent": {
-      3: {
-        section1: "� **Vos anciennes galères de fric :**",
-        section2: "💰 **Votre porte-monnaie aujourd'hui :**",
-        section3: "🤑 **Vos futurs gains :**",
-        conseil: "� **Mes tips de millionnaire :**"
-      },
-      5: {
-        section1: "� **D'où vient votre argent :**",
-        section2: "💵 **Vos finances actuelles :**", 
-        section3: "� **Les pièges à éviter :**",
-        section4: "� **Vos prochains jackpots :**",
-        conseil: "💍 **Mes secrets de prospérité :**"
-      }
-    },
-    "Santé": {
-      3: {
-        section1: "🤒 **Vos anciens bobos :**",
-        section2: "😊 **Votre forme aujourd'hui :**",
-        section3: "✨ **Votre bien-être à venir :**",
-        conseil: "🌱 **Mes tips de pêche :**"
-      },
-      5: {
-        section1: "🧬 **Vos bases santé :**",
-        section2: "💪 **Votre énergie actuelle :**",
-        section3: "� **Les trucs à surveiller :**", 
-        section4: "🌟 **Votre vitalité future :**",
-        conseil: "🥗 **Mes recettes bien-être :**"
-      }
-    },
-    "Spiritualité": {
-      3: {
-        section1: "� **Votre éveil d'avant :**",
-        section2: "🧘 **Votre âme en ce moment :**",
-        section3: "🌌 **Votre spiritualité qui monte :**",
-        conseil: "✨ **Mes tips cosmiques :**"
-      },
-      5: {
-        section1: "🕉️ **Vos racines spirituelles :**",
-        section2: "🔮 **Vos énergies actuelles :**",
-        section3: "🌪️ **Vos blocages à virer :**",
-        section4: "🦋 **Votre transformation à venir :**", 
-        conseil: "� **Mes pratiques magiques :**"
-      }
-    }
-  };
-
-  // Sections par défaut pour "Général" ou thèmes non définis
-  const defaultSections = {
-    3: {
-      section1: "⏪ **Votre passé :**",
-      section2: "⏸️ **Maintenant :**",
-      section3: "⏩ **Bientôt :**",
-      conseil: "� **Mon conseil :**"
-    },
-    5: {
-      section1: "📖 **Votre histoire :**",
-      section2: "📍 **Où vous en êtes :**", 
-      section3: "⚠️ **Les pièges :**",
-      section4: "🎁 **Les surprises :**",
-      conseil: "� **Mes tips de vie :**"
-    }
-  };
-
-  return sections[theme] ? sections[theme][cardCount] : defaultSections[cardCount];
-}
-
-// Fonction pour structurer l'interprétation selon le thème
-function formatInterpretationByTheme(interpretation, theme, question) {
-  // Messages d'introduction personnalisés selon le thème
-  const themeIntros = {
-    "Amour": "💖 **Votre guidance amoureuse** 💖",
-    "Travail": "💼 **Votre chemin professionnel** 💼", 
-    "Argent": "💰 **Votre situation financière** 💰",
-    "Santé": "🌿 **Votre bien-être** 🌿",
-    "Spiritualité": "🔮 **Votre évolution spirituelle** 🔮",
-    "Général": "✨ **Votre guidance générale** ✨"
-  };
-
-  // Structure selon le nombre de cartes tirées
-  const cardCount = window.selectedCards ? window.selectedCards.length : 1;
-  let structuredText = "";
-
-  // Si une question spécifique a été posée
-  if (question && question.trim()) {
-    structuredText += `🔍 **Votre question :** "${question}"\n\n`;
-  }
-
-  // Organisation selon le type de tirage ET le thème
-  if (cardCount === 1) {
-    structuredText += interpretation;
-  } else if (cardCount === 3) {
-    // Tirage 3 cartes avec sections adaptées au thème
-    const sections = interpretation.split(/\n\s*\n/);
-    if (sections.length >= 3) {
-      const themeSections = getThemeSpecificSections(theme, 3);
-      structuredText += `${themeSections.section1}\n` + (sections[0] || "") + "\n\n";
-      structuredText += `${themeSections.section2}\n` + (sections[1] || "") + "\n\n"; 
-      structuredText += `${themeSections.section3}\n` + (sections[2] || "");
-      if (sections.length > 3) {
-        structuredText += `\n\n${themeSections.conseil}\n` + sections.slice(3).join("\n\n");
-      }
-    } else {
-      structuredText += interpretation;
-    }
-  } else if (cardCount === 5) {
-    // Tirage 5 cartes avec sections adaptées au thème
-    const sections = interpretation.split(/\n\s*\n/);
-    if (sections.length >= 4) {
-      const themeSections = getThemeSpecificSections(theme, 5);
-      structuredText += `${themeSections.section1}\n` + (sections[0] || "") + "\n\n";
-      structuredText += `${themeSections.section2}\n` + (sections[1] || "") + "\n\n";
-      structuredText += `${themeSections.section3}\n` + (sections[2] || "") + "\n\n";
-      structuredText += `${themeSections.section4}\n` + (sections[3] || "");
-      if (sections.length > 4) {
-        structuredText += `\n\n${themeSections.conseil}\n` + sections.slice(4).join("\n\n");
-      }
-    } else {
-      structuredText += interpretation;
-    }
-  } else {
-    structuredText += interpretation;
-  }
-
-  return structuredText;
-}
-
-function callAIInterpretationAPI(cards, theme, question, callback, interpBox, iconBar) {
-  // Ensure iconBar is available (populated inside showInterpretationBox)
-  if (iconBar) {
-    iconBar.style.display = 'flex';
-    iconBar.style.justifyContent = 'center';
-    iconBar.style.alignItems = 'center';
-    iconBar.style.gap = '2em';
-    iconBar.style.margin = '2.5em 0 0 0';
-    iconBar.style.background = 'rgba(26,35,126,0.03)';
-    iconBar.style.padding = '12px 0';
-    iconBar.style.borderRadius = '10px';
-    // debug log
-    console.log("iconBar ready:", iconBar);
-  }
-
-// Style commun
-function styleIconBtn(btn) {
-  btn.style.background = 'linear-gradient(120deg, #fff 0%, #1a237e 100%)';
-  btn.style.border = '2px solid #1a237e';
-  btn.style.borderRadius = '50%';
-  btn.style.width = '44px';
-  btn.style.height = '44px';
-  btn.style.display = 'flex';
-  btn.style.alignItems = 'center';
-  btn.style.justifyContent = 'center';
-  btn.style.boxShadow = '0 2px 12px rgba(30,30,40,0.13)';
-  btn.style.cursor = 'pointer';
-  btn.style.transition = 'background 0.2s, border 0.2s';
-  btn.style.padding = '0';
-}
-
-// Legacy small round action buttons removed: encoreBtn, mailBtn, homeBtn and their tooltips/handlers
-// iconBar remains and is appended to interpBox above. Any mail form or save actions should use the action buttons
-// in the actionsBox (already present). Removed to simplify UI per user request.
-
-} // <--- AJOUTE CETTE ACCOLADE pour fermer showInterpretationBox
+// Fonction pour scroll vers réservation
 
 // Fonction pour scroll vers réservation
 function scrollToReservation() {
   const reservation = document.getElementById('reservation');
   if (reservation) {
-    reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var top = window.pageYOffset + reservation.getBoundingClientRect().top - 70;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }
 }
 
@@ -3987,21 +1322,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Bouton "Tirage IA" -> ouvre le popup de choix
-  const btnTirageIA = document.querySelector('.btn-ia');
-  if (btnTirageIA) {
-    btnTirageIA.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Prefer PopupAdapter if present
-      if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-        window.PopupAdapter.showThemeChoice();
-        return;
-      }
-      if (typeof openTirageBox === 'function') {
-        openTirageBox();
-      }
-    });
-  }
+  // Bouton "Tirage IA" -> handled by inline onclick, no duplicate listener needed
+  // (The inline onclick="triggerTirageIA()" on .btn-ia already handles this)
 
   // Tous les boutons "Réserver" des sections de détail -> scroll vers réservation et pré-sélectionne l'offre
   const reservationButtons = document.querySelectorAll('.offre-btn-small');
@@ -4021,58 +1343,102 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Gestion du bouton de réservation final
+  const RESERVATION_API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'https://opanoma.fr/api/reservation.php'
+    : '/api/reservation.php';
   const submitReservationBtn = document.getElementById('submit-reservation');
+  const reservationStatus = document.getElementById('reservation-status');
+  const slotsSuggestion = document.getElementById('slots-suggestion');
+
+  function showStatus(msg, type) {
+    reservationStatus.style.display = 'block';
+    reservationStatus.textContent = msg;
+    reservationStatus.style.background = type === 'success' ? 'rgba(80,180,80,.15)' : type === 'error' ? 'rgba(200,80,80,.15)' : 'rgba(201,169,110,.1)';
+    reservationStatus.style.color = type === 'success' ? '#8f8' : type === 'error' ? '#f88' : '#c9a96e';
+    reservationStatus.style.border = '1px solid ' + (type === 'success' ? 'rgba(80,180,80,.3)' : type === 'error' ? 'rgba(200,80,80,.3)' : 'rgba(201,169,110,.3)');
+  }
+
+  function showNearestSlots(slots, date) {
+    if (!slots || slots.length === 0) {
+      slotsSuggestion.style.display = 'block';
+      slotsSuggestion.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Aucun créneau proche disponible. Essayez une autre date.</p>';
+      return;
+    }
+    var html = '<div style="display:flex;gap:12px;justify-content:center;margin-top:.5em;">';
+    slots.forEach(function(slot, i) {
+      var label = i === 0 && slots.length > 1 ? 'Avant' : slots.length > 1 ? 'Après' : 'Disponible';
+      if (slots.length === 1) label = slot < '12:00' ? 'Avant' : 'Après';
+      html += '<button type="button" onclick="document.getElementById(\'reservation-time\').value=\'' + slot + '\';document.getElementById(\'slots-suggestion\').style.display=\'none\';document.getElementById(\'reservation-status\').style.display=\'none\';" style="background:var(--bg-warm);border:1px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.95rem;font-family:Inter,sans-serif;transition:all .2s;"><span style="display:block;font-size:.7rem;color:var(--text-dim);margin-bottom:2px;">' + label + '</span>' + slot + '</button>';
+    });
+    html += '</div>';
+    slotsSuggestion.style.display = 'block';
+    slotsSuggestion.innerHTML = html;
+  }
+
   if (submitReservationBtn) {
-    submitReservationBtn.addEventListener('click', function(e) {
+    submitReservationBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      
-      // Récupère les valeurs du formulaire
-      const clientName = document.getElementById('client-name').value.trim();
-      const clientEmail = document.getElementById('client-email').value.trim();
-      const reservationDate = document.getElementById('reservation-date').value;
-      const reservationTime = document.getElementById('reservation-time').value;
-      const selectedOffre = document.getElementById('offre-select').value;
-      
-      // Vérifie que tous les champs sont remplis
+      slotsSuggestion.style.display = 'none';
+      reservationStatus.style.display = 'none';
+
+      var clientName = document.getElementById('client-name').value.trim();
+      var clientEmail = document.getElementById('client-email').value.trim();
+      var reservationDate = document.getElementById('reservation-date').value;
+      var reservationTime = document.getElementById('reservation-time').value;
+      var selectedOffre = document.getElementById('offre-select').value;
+
       if (!clientName || !clientEmail || !reservationDate || !reservationTime || !selectedOffre) {
-        alert('Merci de remplir tous les champs pour réserver votre séance.');
+        showStatus('Merci de remplir tous les champs pour réserver votre séance.', 'error');
         return;
       }
-      
-      // Construit l'URL de réservation avec les paramètres
-      const baseUrl = 'https://cal.com/christophe-sebille-yps3zm';
-      
-      // Combine date et heure pour Cal.com (format ISO)
-      const dateTimeString = reservationDate + 'T' + reservationTime + ':00';
-      const startTime = new Date(dateTimeString).toISOString();
-      
-      // Construit l'URL avec les paramètres
-      const params = new URLSearchParams({
-        'date': reservationDate,
-        'time': reservationTime,
-        'duration': '60', // Durée par défaut
-        'prefill[name]': clientName,
-        'prefill[email]': clientEmail,
-        'prefill[notes]': 'Service demandé: ' + selectedOffre
-      });
-      
-      const finalUrl = baseUrl + '?' + params.toString();
-      
-      // Ouvre la page de réservation dans un nouvel onglet
-      window.open(finalUrl, '_blank');
-      
-      // Efface le formulaire après la réservation
-      document.getElementById('client-name').value = '';
-      document.getElementById('client-email').value = '';
-      document.getElementById('reservation-date').value = '';
-      document.getElementById('reservation-time').value = '';
-      document.getElementById('offre-select').value = '';
-      
-      // Scroll vers le haut de la page
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+
+      // Désactive le bouton pendant l'envoi
+      submitReservationBtn.disabled = true;
+      submitReservationBtn.textContent = 'Réservation en cours…';
+
+      try {
+        var resp = await fetch(RESERVATION_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: clientName,
+            email: clientEmail,
+            date: reservationDate,
+            time: reservationTime,
+            offre: selectedOffre
+          })
+        });
+
+        var data = await resp.json();
+
+        if (data.success) {
+          showStatus('✨ ' + data.message, 'success');
+          document.getElementById('client-name').value = '';
+          document.getElementById('client-email').value = '';
+          document.getElementById('reservation-date').value = '';
+          document.getElementById('reservation-time').value = '';
+          document.getElementById('offre-select').value = '';
+        } else if (data.error === 'conflict') {
+          showStatus('Ce créneau est déjà pris.', 'warn');
+          showNearestSlots(data.nearest_slots, reservationDate);
+        } else {
+          showStatus(data.message || 'Une erreur est survenue.', 'error');
+        }
+      } catch (err) {
+        showStatus('Erreur de connexion. Veuillez réessayer.', 'error');
+      } finally {
+        submitReservationBtn.disabled = false;
+        submitReservationBtn.textContent = 'Réserver';
+      }
+    });
+  }
+
+  // Charger les créneaux quand on change la date
+  var dateInput = document.getElementById('reservation-date');
+  if (dateInput) {
+    dateInput.addEventListener('change', function() {
+      slotsSuggestion.style.display = 'none';
+      reservationStatus.style.display = 'none';
     });
   }
 
@@ -4196,72 +1562,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-
-  // Gestion des liens "Consultations" dans le menu (desktop ET mobile)
-  const consultationsLinks = document.querySelectorAll('a[href="#consultations"]');
-  const consultationsSection = document.getElementById('consultations-section');
-  
-  if (consultationsLinks.length > 0 && consultationsSection) {
-    consultationsLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Retire l'effet de focus précédent s'il existe
-        consultationsSection.classList.remove('consultation-focus');
-        
-        // Scroll vers la section consultations - différent selon mobile/desktop
-        const isMobile = window.innerWidth <= 980;
-        if (isMobile) {
-          // Mobile : scroll vers le haut du cadre avec marge pour le header
-          const consultationsRect = consultationsSection.getBoundingClientRect();
-          const offsetTop = window.pageYOffset + consultationsRect.top - 80; // 80px pour le header fixe
-          
-          window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-          });
-        } else {
-          // Desktop : centré comme avant
-          consultationsSection.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-          });
-        }
-        
-        // Ajoute l'effet de focus après un délai pour le scroll
-        setTimeout(function() {
-          consultationsSection.classList.add('consultation-focus');
-
-          // Si la section Témoignages existe, la révéler (elle est cachée par défaut)
-          try {
-            const temoignages = document.getElementById('temoignages-section');
-            if (temoignages) {
-              // Affiche le cadre de témoignages (CSS le cache avec display:none)
-              temoignages.style.display = 'block';
-              // Ajoute temporairement un effet visuel pour le signaler
-              const prevBox = temoignages.style.boxShadow || '';
-              temoignages.style.boxShadow = '0 12px 40px rgba(0,0,0,0.35)';
-              setTimeout(function() {
-                temoignages.style.boxShadow = prevBox;
-              }, 2000);
-            }
-          } catch (err) {
-            // Défensif : ne pas lever d'erreur si quelque chose manque
-            console.warn('Erreur en révélant les témoignages:', err);
-          }
-
-          // Retire l'effet après l'animation (2 secondes)
-          setTimeout(function() {
-            consultationsSection.classList.remove('consultation-focus');
-          }, 2000);
-        }, 500);
-      });
-    });
-  }
 });
 </script>
   <!-- PopupManager includes (feature/popup-rewrite) -->
-  <link rel="stylesheet" href="./src/popup.css">
   <script>
     (function(){
       function loadScript(src, cb){
@@ -4330,24 +1633,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         });
 
-        // Small handler: toggle Manon bio on En savoir plus
-        safe(function () {
-          var bioBtn = document.getElementById('btn-bio');
-          if (!bioBtn || bioBtn.__wiredForBio) return; bioBtn.__wiredForBio = true;
-          bioBtn.addEventListener('click', function (ev) {
-            try {
-              ev && ev.preventDefault && ev.preventDefault();
-              var bio = document.getElementById('manon-bio');
-              if (!bio) return;
-              if (bio.style.display === 'none' || bio.style.display === '') {
-                bio.style.display = 'block';
-                bio.scrollIntoView({behavior: 'smooth', block: 'center'});
-              } else {
-                bio.style.display = 'none';
-              }
-            } catch (e) { console && console.warn && console.warn('bio toggle failed', e); }
-          });
-        });
+        // Bio toggle handled by main DOMContentLoaded handler above
 
       });
     })();

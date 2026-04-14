@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – L'Œil d'Opanoma</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter','Segoe UI',sans-serif;background:#0e0c0a;color:#ede8e3;min-height:100vh}
+  
+  /* Login */
+  .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .login-box{background:#1a1614;border:1px solid rgba(201,169,110,.2);border-radius:14px;padding:40px 32px;max-width:360px;width:100%;text-align:center}
+  .login-box h1{font-family:'Cinzel',serif;color:#c9a96e;font-size:1.4rem;margin-bottom:8px}
+  .login-box p{color:rgba(237,232,227,.5);font-size:.85rem;margin-bottom:24px}
+  .login-box input{width:100%;padding:12px 16px;background:#0e0c0a;border:1px solid rgba(201,169,110,.2);border-radius:8px;color:#ede8e3;font-size:.95rem;margin-bottom:16px;outline:none}
+  .login-box input:focus{border-color:#c9a96e}
+  .login-box button{width:100%;padding:12px;background:#c9a96e;color:#0e0c0a;border:none;border-radius:8px;font-weight:600;font-size:.95rem;cursor:pointer;transition:background .2s}
+  .login-box button:hover{background:#d4af37}
+  .login-error{color:#ff6b6b;font-size:.85rem;margin-top:8px;display:none}
+
+  /* Layout */
+  .app{display:none}
+  header{background:#1a1614;border-bottom:1px solid rgba(201,169,110,.15);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+  header h1{font-family:'Cinzel',serif;color:#c9a96e;font-size:1.1rem}
+  .logout-btn{background:none;border:1px solid rgba(201,169,110,.3);color:#c9a96e;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:.8rem}
+  .logout-btn:hover{background:rgba(201,169,110,.1)}
+
+  /* Navigation tabs */
+  .tabs{display:flex;gap:0;background:#1a1614;border-bottom:1px solid rgba(201,169,110,.1);overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{padding:12px 20px;color:rgba(237,232,227,.5);cursor:pointer;font-size:.85rem;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+  .tab:hover{color:#ede8e3}
+  .tab.active{color:#c9a96e;border-bottom-color:#c9a96e}
+
+  /* Content */
+  .content{padding:24px;max-width:1100px;margin:0 auto}
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* Stats cards */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+  .stat-card{background:#1a1614;border:1px solid rgba(201,169,110,.12);border-radius:10px;padding:20px;text-align:center}
+  .stat-value{font-size:2rem;font-weight:700;color:#c9a96e;margin-bottom:4px}
+  .stat-label{font-size:.8rem;color:rgba(237,232,227,.5);text-transform:uppercase;letter-spacing:.05em}
+
+  /* Tables */
+  .table-wrap{overflow-x:auto;margin-top:16px}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{text-align:left;padding:10px 12px;color:#c9a96e;border-bottom:1px solid rgba(201,169,110,.2);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+  td{padding:10px 12px;border-bottom:1px solid rgba(201,169,110,.06);color:rgba(237,232,227,.8)}
+  tr:hover td{background:rgba(201,169,110,.03)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600}
+  .badge-active{background:rgba(76,175,80,.15);color:#66bb6a}
+  .badge-cancelled{background:rgba(244,67,54,.12);color:#ef5350}
+  .badge-past{background:rgba(158,158,158,.12);color:#9e9e9e}
+
+  /* Action buttons */
+  .btn{padding:6px 14px;border-radius:6px;border:1px solid rgba(201,169,110,.2);background:none;color:#c9a96e;cursor:pointer;font-size:.78rem;transition:all .15s}
+  .btn:hover{background:rgba(201,169,110,.1)}
+  .btn-danger{border-color:rgba(244,67,54,.3);color:#ef5350}
+  .btn-danger:hover{background:rgba(244,67,54,.1)}
+
+  /* Form rows */
+  .form-row{display:flex;gap:12px;align-items:end;margin-bottom:16px;flex-wrap:wrap}
+  .form-group{display:flex;flex-direction:column;gap:4px}
+  .form-group label{font-size:.75rem;color:rgba(237,232,227,.5);text-transform:uppercase}
+  .form-group input,.form-group select{padding:8px 12px;background:#0e0c0a;border:1px solid rgba(201,169,110,.2);border-radius:6px;color:#ede8e3;font-size:.85rem}
+  .form-group input:focus{border-color:#c9a96e;outline:none}
+
+  /* Section titles */
+  .section-title{font-family:'Cinzel',serif;color:#c9a96e;font-size:1.1rem;margin-bottom:16px}
+  .section-subtitle{color:rgba(237,232,227,.5);font-size:.85rem;margin-bottom:20px}
+  
+  /* Themes chart */
+  .themes-chart{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .theme-bar{background:#1a1614;border:1px solid rgba(201,169,110,.1);border-radius:8px;padding:12px 16px;min-width:120px;text-align:center}
+  .theme-bar .count{font-size:1.5rem;font-weight:700;color:#c9a96e}
+  .theme-bar .name{font-size:.75rem;color:rgba(237,232,227,.5);margin-top:2px}
+
+  /* Empty state */
+  .empty{text-align:center;padding:48px 20px;color:rgba(237,232,227,.3);font-style:italic}
+
+  /* Responsive */
+  @media(max-width:600px){
+    .content{padding:16px 12px}
+    .form-row{flex-direction:column}
+    .stats-grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>L'Œil d'Opanoma</h1>
+    <p>Espace administration</p>
+    <input type="password" id="loginPass" placeholder="Mot de passe" autofocus>
+    <button onclick="doLogin()">Connexion</button>
+    <div class="login-error" id="loginError">Mot de passe incorrect</div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app" id="app">
+  <header>
+    <h1>Admin Opanoma</h1>
+    <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
+  </header>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="stats">Statistiques</div>
+    <div class="tab" data-tab="reservations">Réservations</div>
+    <div class="tab" data-tab="creneaux">Créneaux</div>
+    <div class="tab" data-tab="newsletter">Newsletter</div>
+    <div class="tab" data-tab="tirages">Tirages</div>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="panel active" id="panel-stats">
+      <div class="stats-grid" id="statsGrid"></div>
+      <h3 class="section-title">Tirages par thème</h3>
+      <div class="themes-chart" id="themesChart"></div>
+    </div>
+
+    <!-- Réservations -->
+    <div class="panel" id="panel-reservations">
+      <h3 class="section-title">Réservations</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Heure</th><th>Nom</th><th>Email</th><th>Offre</th><th>Statut</th><th></th></tr></thead>
+        <tbody id="reservationsBody"></tbody>
+      </table></div>
+      <div class="empty" id="reservationsEmpty" style="display:none">Aucune réservation</div>
+    </div>
+
+    <!-- Créneaux -->
+    <div class="panel" id="panel-creneaux">
+      <h3 class="section-title">Créneaux bloqués</h3>
+      <p class="section-subtitle">Bloquez des créneaux pour empêcher les réservations</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="blockDate">
+        </div>
+        <div class="form-group">
+          <label>Heure (vide = journée entière)</label>
+          <input type="time" id="blockTime">
+        </div>
+        <div class="form-group">
+          <label>Raison</label>
+          <input type="text" id="blockReason" placeholder="Ex: Congé, Jour férié...">
+        </div>
+        <button class="btn" onclick="addBlockedSlot()">Bloquer</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Heure</th><th>Raison</th><th>Créé le</th><th></th></tr></thead>
+        <tbody id="blockedBody"></tbody>
+      </table></div>
+      <div class="empty" id="blockedEmpty" style="display:none">Aucun créneau bloqué</div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="panel" id="panel-newsletter">
+      <h3 class="section-title">Abonnés Newsletter</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Email</th><th>Prénom</th><th>Inscrit le</th><th>Actif</th></tr></thead>
+        <tbody id="newsletterBody"></tbody>
+      </table></div>
+      <div class="empty" id="newsletterEmpty" style="display:none">Aucun abonné</div>
+    </div>
+
+    <!-- Tirages -->
+    <div class="panel" id="panel-tirages">
+      <h3 class="section-title">Historique des tirages</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Thème</th><th>Type</th><th>Question</th><th>Cartes</th></tr></thead>
+        <tbody id="tiragesBody"></tbody>
+      </table></div>
+      <div class="empty" id="tiragesEmpty" style="display:none">Aucun tirage enregistré</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = (() => {
+  const h = location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1') return 'https://opanoma.fr/api/admin.php';
+  return '/api/admin.php';
+})();
+
+let token = sessionStorage.getItem('admin_token') || '';
+
+// ── Auth ──
+function doLogin() {
+  const pass = document.getElementById('loginPass').value;
+  fetch(API + '?action=login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({password: pass}) })
+    .then(r => { if (!r.ok) throw new Error('bad'); return r.json(); })
+    .then(d => {
+      token = d.token;
+      sessionStorage.setItem('admin_token', token);
+      showApp();
+    })
+    .catch(() => { document.getElementById('loginError').style.display = 'block'; });
+}
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  token = '';
+  sessionStorage.removeItem('admin_token');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function authHeaders() { return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }; }
+
+function apiFetch(action, opts) {
+  return fetch(API + '?action=' + action, Object.assign({ headers: authHeaders() }, opts || {}))
+    .then(r => { if (r.status === 401) { doLogout(); throw new Error('auth'); } return r.json(); });
+}
+
+// ── App init ──
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadStats();
+  loadReservations();
+  loadBlocked();
+  loadNewsletter();
+  loadTirages();
+}
+
+// Auto-login if token saved
+if (token) showApp();
+
+// ── Tabs ──
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+  });
+});
+
+// ── Stats ──
+function loadStats() {
+  apiFetch('stats').then(d => {
+    const g = document.getElementById('statsGrid');
+    g.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${d.reservations?.total || 0}</div><div class="stat-label">Réservations</div></div>
+      <div class="stat-card"><div class="stat-value">${d.reservations?.today || 0}</div><div class="stat-label">Aujourd'hui</div></div>
+      <div class="stat-card"><div class="stat-value">${d.tirages?.total || 0}</div><div class="stat-label">Tirages total</div></div>
+      <div class="stat-card"><div class="stat-value">${d.tirages?.this_week || 0}</div><div class="stat-label">Tirages semaine</div></div>
+    `;
+    const c = document.getElementById('themesChart');
+    const themes = d.tirages?.by_theme || {};
+    if (Object.keys(themes).length === 0) { c.innerHTML = '<div class="empty">Pas encore de données</div>'; return; }
+    c.innerHTML = Object.entries(themes).map(([name, count]) =>
+      `<div class="theme-bar"><div class="count">${count}</div><div class="name">${name}</div></div>`
+    ).join('');
+  }).catch(() => {});
+}
+
+// ── Réservations ──
+function loadReservations() {
+  apiFetch('reservations').then(d => {
+    const body = document.getElementById('reservationsBody');
+    const empty = document.getElementById('reservationsEmpty');
+    if (!d.bookings || d.bookings.length === 0) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    body.innerHTML = d.bookings.map(b => {
+      const isPast = new Date(b.date + 'T' + b.time) < new Date();
+      const status = b.status === 'cancelled' ? 'cancelled' : isPast ? 'past' : 'active';
+      const badge = status === 'cancelled' ? '<span class="badge badge-cancelled">Annulée</span>' :
+                    status === 'past' ? '<span class="badge badge-past">Passée</span>' :
+                    '<span class="badge badge-active">Confirmée</span>';
+      const cancelBtn = status === 'active' ? `<button class="btn btn-danger" onclick="cancelReservation('${b.id}')">Annuler</button>` : '';
+      return `<tr><td>${b.date || ''}</td><td>${b.time || ''}</td><td>${esc(b.name || '')}</td><td>${esc(b.email || '')}</td><td>${esc(b.offre || '')}</td><td>${badge}</td><td>${cancelBtn}</td></tr>`;
+    }).join('');
+  }).catch(() => {});
+}
+
+function cancelReservation(id) {
+  if (!confirm('Annuler cette réservation ?')) return;
+  apiFetch('reservation-cancel', { method: 'POST', body: JSON.stringify({id}) })
+    .then(() => loadReservations())
+    .catch(() => alert('Erreur'));
+}
+
+// ── Créneaux ──
+function loadBlocked() {
+  apiFetch('blocked-slots').then(d => {
+    const body = document.getElementById('blockedBody');
+    const empty = document.getElementById('blockedEmpty');
+    if (!d.slots || d.slots.length === 0) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    body.innerHTML = d.slots.map((s, i) =>
+      `<tr><td>${s.date}</td><td>${s.time || 'Journée'}</td><td>${esc(s.reason || '')}</td><td>${s.created_at || ''}</td><td><button class="btn btn-danger" onclick="removeBlocked(${i})">Supprimer</button></td></tr>`
+    ).join('');
+  }).catch(() => {});
+}
+
+function addBlockedSlot() {
+  const date = document.getElementById('blockDate').value;
+  const time = document.getElementById('blockTime').value;
+  const reason = document.getElementById('blockReason').value;
+  if (!date) { alert('Date requise'); return; }
+  apiFetch('blocked-slots', { method: 'POST', body: JSON.stringify({date, time, reason}) })
+    .then(() => { loadBlocked(); document.getElementById('blockDate').value = ''; document.getElementById('blockTime').value = ''; document.getElementById('blockReason').value = ''; });
+}
+
+function removeBlocked(idx) {
+  if (!confirm('Débloquer ce créneau ?')) return;
+  apiFetch('blocked-slots', { method: 'DELETE', body: JSON.stringify({index: idx}) }).then(() => loadBlocked());
+}
+
+// ── Newsletter ──
+function loadNewsletter() {
+  apiFetch('newsletter').then(d => {
+    const body = document.getElementById('newsletterBody');
+    const empty = document.getElementById('newsletterEmpty');
+    if (!d.subscribers || d.subscribers.length === 0) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    body.innerHTML = d.subscribers.map(s =>
+      `<tr><td>${esc(s.email)}</td><td>${esc(s.first_name || '')}</td><td>${s.subscribed_at || ''}</td><td>${s.is_active ? '<span class="badge badge-active">Oui</span>' : '<span class="badge badge-cancelled">Non</span>'}</td></tr>`
+    ).join('');
+  }).catch(() => {});
+}
+
+// ── Tirages ──
+function loadTirages() {
+  apiFetch('tirages').then(d => {
+    const body = document.getElementById('tiragesBody');
+    const empty = document.getElementById('tiragesEmpty');
+    if (!d.tirages || d.tirages.length === 0) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    body.innerHTML = d.tirages.map(t =>
+      `<tr><td>${t.timestamp || ''}</td><td>${esc(t.theme || '')}</td><td>${esc(t.type || '')}</td><td>${esc((t.question || '').substring(0, 60))}</td><td>${Array.isArray(t.cards) ? t.cards.map(c => esc(typeof c === 'string' ? c : c.name || '')).join(', ') : ''}</td></tr>`
+    ).join('');
+  }).catch(() => {});
+}
+
+// ── Helpers ──
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+</body>
+</html>

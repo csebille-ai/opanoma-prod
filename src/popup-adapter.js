@@ -38,13 +38,13 @@
   function setGlobalNoScroll(on) {
     try {
       if (on) {
-        try { document.documentElement.style.overflow = 'hidden'; } catch (e) {}
-        try { document.body.style.overflow = 'hidden'; } catch (e) {}
-        try { document.body.classList.add('pa-popup-open'); } catch (e) {}
+        try { document.documentElement.style.overflow = 'hidden'; } catch (e) { console.warn('[PA]', e); }
+        try { document.body.style.overflow = 'hidden'; } catch (e) { console.warn('[PA]', e); }
+        try { document.body.classList.add('pa-popup-open'); } catch (e) { console.warn('[PA]', e); }
       } else {
-        try { document.documentElement.style.overflow = ''; } catch (e) {}
-        try { document.body.style.overflow = ''; } catch (e) {}
-        try { document.body.classList.remove('pa-popup-open'); } catch (e) {}
+        try { document.documentElement.style.overflow = ''; } catch (e) { console.warn('[PA]', e); }
+        try { document.body.style.overflow = ''; } catch (e) { console.warn('[PA]', e); }
+        try { document.body.classList.remove('pa-popup-open'); } catch (e) { console.warn('[PA]', e); }
       }
       const container = document.createElement('div');
       container.style.textAlign = 'center';
@@ -102,9 +102,9 @@
       Array.prototype.forEach.call(triggers || [], (el) => {
         try {
           if (el.dataset && el.dataset.popupAdapterAttached) return;
-          el.addEventListener('click', (ev) => { try { showThemeChoice(); } catch (_) {} if (ev && ev.preventDefault) ev.preventDefault(); });
+          el.addEventListener('click', (ev) => { try { showThemeChoice(); } catch (e) { console.warn('[PA]', e); } if (ev && ev.preventDefault) ev.preventDefault(); });
           el.dataset.popupAdapterAttached = '1';
-        } catch (e) {}
+        } catch (e) { console.warn('[PA]', e); }
       });
     } catch (e) { /* ignore */ }
 
@@ -128,15 +128,17 @@
   function showThemeChoice(onDone) {
   const container = document.createElement('div');
   container.style.textAlign = 'center';
-  // small left padding so content is slightly inset but tight to the left
-  container.style.padding = '12px 12px 12px 4px';
-  // hide overflow to remove internal scrollbars
-  container.style.overflow = 'hidden';
+  container.style.padding = '12px';
 
     const title = document.createElement('h2');
     title.className = 'pm-popup-title';
     title.textContent = 'Choix du thème';
     container.appendChild(title);
+
+    const disclaimer = document.createElement('p');
+    disclaimer.style.cssText = 'font-size:12px;color:rgba(201,169,110,.5);font-style:italic;margin:4px 0 10px;line-height:1.4;font-family:"Quicksand",sans-serif';
+    disclaimer.textContent = 'Ce tirage est généré par intelligence artificielle à titre indicatif. Il ne remplace pas une consultation personnalisée.';
+    container.appendChild(disclaimer);
 
     const row = document.createElement('div');
     row.style.display = 'flex';
@@ -159,16 +161,17 @@
   // textarea with prompt as placeholder
   const qInput = document.createElement('textarea');
   qInput.placeholder = 'Posez votre question (facultatif) :';
-  Object.assign(qInput.style, { width: '92%', minHeight: '56px', padding: '8px', borderRadius: '6px', border: '1px solid #ccc', resize: 'vertical' });
+  qInput.className = 'pm-question-box';
+  Object.assign(qInput.style, { width: '92%', minHeight: '56px', resize: 'vertical' });
     // action buttons container
     const qActions = document.createElement('div');
     Object.assign(qActions.style, { marginTop: '8px', display: 'flex', gap: '8px', justifyContent: 'center' });
     const btnValider = document.createElement('button');
     btnValider.textContent = 'Valider';
-    Object.assign(btnValider.style, { padding: '8px 12px', borderRadius: '8px', cursor: 'pointer' });
+    btnValider.className = 'pm-theme-btn selected';
     const btnPasser = document.createElement('button');
     btnPasser.textContent = 'Passer';
-    Object.assign(btnPasser.style, { padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', background: '#eee' });
+    btnPasser.className = 'pm-close-btn';
     qActions.appendChild(btnValider);
     qActions.appendChild(btnPasser);
   questionWrap.appendChild(qInput);
@@ -180,35 +183,33 @@
 
     themes.forEach(t => {
       const b = document.createElement('button');
-      b.className = 'theme-choice-btn';
+      b.className = 'pm-theme-btn';
       b.textContent = t;
-      const info = themeColors[t] || { bg: '#666', color: '#fff' };
-      Object.assign(b.style, {
-        background: info.bg,
-        color: info.color,
-        border: 'none',
-        padding: '10px 14px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontWeight: '700'
-      });
       // store reference
       themeButtons[t] = b;
       b.addEventListener('click', () => {
         try {
           // stop any running rotation immediately so only theme messages will run after validation
-          try { if (typeof stopThemeMessages === 'function') stopThemeMessages(); } catch (e) {}
+          try { if (typeof stopThemeMessages === 'function') stopThemeMessages(); } catch (e) { console.warn('[PA]', e); }
           // reveal question area and focus input
           _selectedTheme = t;
           questionWrap.style.display = 'flex';
           qInput.value = '';
-          setTimeout(() => { try { qInput.focus(); } catch (e) {} }, 60);
+          setTimeout(() => { try { qInput.focus(); } catch (e) { console.warn('[PA]', e); } }, 60);
           // visually mark selected but keep buttons active (less vivid): selected stays normal, others dim
           try {
             Object.keys(themeButtons).forEach(k => {
-              try { themeButtons[k].style.opacity = (k === t) ? '1' : '0.6'; } catch (e) {}
+              try {
+                if (k === t) {
+                  themeButtons[k].classList.add('selected');
+                  themeButtons[k].classList.remove('dimmed');
+                } else {
+                  themeButtons[k].classList.remove('selected');
+                  themeButtons[k].classList.add('dimmed');
+                }
+              } catch (e) { console.warn('[PA]', e); }
             });
-          } catch (e) {}
+          } catch (e) { console.warn('[PA]', e); }
           // start playing theme messages here (Step 2): show rotating messages for the selected theme
           try {
             const themeMsgs = (window.PopupAdapter && window.PopupAdapter._autoThemeMessages && window.PopupAdapter._autoThemeMessages[t]) || rawMessages[t] || [];
@@ -218,10 +219,10 @@
                 if (themeMsgs && themeMsgs.length && typeof playThemeMessages === 'function') {
                   playThemeMessages(t, themeMsgs, { exitEffect: (window.PopupAdapter && window.PopupAdapter._defaultExitEffect) || 'wipe', loop: true });
                 }
-              } catch (e) {}
+              } catch (e) { console.warn('[PA]', e); }
             }, 160);
-          } catch (e) {}
-        } catch (_) {}
+          } catch (e) { console.warn('[PA]', e); }
+        } catch (e) { console.warn('[PA]', e); }
       });
       row.appendChild(b);
     });
@@ -231,33 +232,16 @@
     const msgBox = document.createElement('div');
     msgBox.className = 'pm-popup-msgbox';
     Object.assign(msgBox.style, {
-      marginTop: '18px',
-      minHeight: '160px',
-      padding: '12px',
+      marginTop: '12px',
+      minHeight: '0',
+      padding: '0 12px',
       borderRadius: '8px',
       background: 'transparent',
       overflow: 'hidden',
       position: 'relative',
       width: '100%'
     });
-  // small visible debug badge to surface internal state without DevTools
-  const debugBadge = document.createElement('div');
-  debugBadge.className = 'pm-debug-badge';
-  Object.assign(debugBadge.style, {
-    position: 'absolute',
-    left: '8px',
-    bottom: '8px',
-    padding: '6px 8px',
-    background: 'rgba(0,0,0,0.6)',
-    color: '#fff',
-    fontSize: '12px',
-    borderRadius: '6px',
-    zIndex: '9999',
-    pointerEvents: 'none'
-  });
-  debugBadge.textContent = 'debug: idle';
-  // position relative to msgBox so it stays inside the popup
-  msgBox.appendChild(debugBadge);
+  const debugBadge = null;
   // Insert questionWrap before the message box so it appears under the buttons
   container.appendChild(questionWrap);
   container.appendChild(msgBox);
@@ -277,13 +261,12 @@
         });
       } catch (e) { /* ignore */ }
     };
-    const clearThemeMessages = function () { try { msgBox.innerHTML = ''; } catch (e) {} };
+    const clearThemeMessages = function () { try { msgBox.innerHTML = ''; } catch (e) { console.warn('[PA]', e); } };
 
   const handle = openPopup(container);
-  // pre-populate with a fixed test message as requested
-  try { setThemeMessages([ 'test message' ]); } catch (e) { /* ignore */ }
     // attach helpers to global API so external code can call them
     window.PopupAdapter = window.PopupAdapter || {};
+    window.PopupAdapter._lastThemePopupHandle = handle;
     window.PopupAdapter.setThemeMessages = setThemeMessages;
     window.PopupAdapter.clearThemeMessages = clearThemeMessages;
     // also expose a reference to the box (read-only)
@@ -315,13 +298,13 @@
 
         // find candidates: recent interp frame, any .pa-deck-overlay-fallback, or last opened container
         const candidates = [];
-        try { const w = document.querySelector('.pa-deck-overlay-fallback'); if (w) candidates.push(w); } catch (e) {}
-        try { const lastDeck = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastDeck) candidates.push(lastDeck); } catch (e) {}
-        try { const popupNodes = document.querySelectorAll && document.querySelectorAll('.pm-popup, .pm-popup-root, .pm-popup-box'); if (popupNodes && popupNodes.length) popupNodes.forEach(n => candidates.push(n)); } catch (e) {}
+        try { const w = document.querySelector('.pa-deck-overlay-fallback'); if (w) candidates.push(w); } catch (e) { console.warn('[PA]', e); }
+        try { const lastDeck = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastDeck) candidates.push(lastDeck); } catch (e) { console.warn('[PA]', e); }
+        try { const popupNodes = document.querySelectorAll && document.querySelectorAll('.pm-popup, .pm-popup-inner'); if (popupNodes && popupNodes.length) popupNodes.forEach(n => candidates.push(n)); } catch (e) { console.warn('[PA]', e); }
 
         // fallback: use body children that match inline-style width/height hints
         if (!candidates.length) {
-          try { Array.from(document.body.children).slice(-6).forEach(n => candidates.push(n)); } catch (e) {}
+          try { Array.from(document.body.children).slice(-6).forEach(n => candidates.push(n)); } catch (e) { console.warn('[PA]', e); }
         }
 
         // apply to found candidates
@@ -332,31 +315,43 @@
             node.style.width = rect.width + 'px';
             node.style.minWidth = rect.width + 'px';
             node.style.maxWidth = rect.width + 'px';
-            // set maxHeight to measured height and let content flow
-            node.style.maxHeight = rect.height + 'px';
+            // let content expand freely
+            node.style.maxHeight = 'none';
             node.style.height = 'auto';
             node.style.minHeight = 'auto';
             applied++;
-          } catch (e) {}
+          } catch (e) { console.warn('[PA]', e); }
         });
         return { ok: true, applied: applied, rect: rect };
       } catch (e) { return { ok: false, reason: 'exception' }; }
     };
-  } catch (e) {}
+  } catch (e) { console.warn('[PA]', e); }
 
     // helper to start playing messages for a specific theme
     function startThemePlay(themeKey, questionText) {
       try {
-        try { if (typeof stopThemeMessages === 'function') stopThemeMessages(); } catch (e) {}
+        // Store theme and question so the API call can read them
+        window.PopupAdapter = window.PopupAdapter || {};
+        window.PopupAdapter.currentTheme = themeKey || '';
+        window.PopupAdapter.currentQuestion = questionText || '';
+        try { if (typeof stopThemeMessages === 'function') stopThemeMessages(); } catch (e) { console.warn('[PA]', e); }
         const msgs = (window.PopupAdapter && window.PopupAdapter._autoThemeMessages && window.PopupAdapter._autoThemeMessages[themeKey]) || rawMessages[themeKey] || [];
   console && console.log && console.log('[PopupAdapter] startThemePlay', themeKey, 'msgs=', msgs && msgs.length);
-  try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = 'theme=' + themeKey + ' msgs=' + (msgs && msgs.length || 0); } catch (e) {}
+        // Hide the question area, theme row and title so only the 3/5 panels are visible
+        try { questionWrap.style.display = 'none'; } catch (e) { console.warn('[PA]', e); }
+        try { row.style.display = 'none'; } catch (e) { console.warn('[PA]', e); }
+        try { title.style.display = 'none'; } catch (e) { console.warn('[PA]', e); }
         // Instead of immediately playing the rotating theme messages, replace the message box
         // with two panels offering a choice: Tirage 3 cartes or Tirage 5 cartes.
         try {
           if (window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox) {
             const box = window.PopupAdapter._lastThemeMsgBox;
             box.innerHTML = ''; // clear existing messages
+            // Add a heading for the choice screen
+            const choiceTitle = document.createElement('h3');
+            choiceTitle.textContent = 'Choisissez votre tirage';
+            Object.assign(choiceTitle.style, { textAlign: 'center', color: '#c9a96e', fontFamily: '"Cinzel", serif', fontSize: '1.2rem', margin: '8px 0 16px', letterSpacing: '0.04em' });
+            box.appendChild(choiceTitle);
             // create container
             const grid = document.createElement('div');
             grid.style.display = 'flex';
@@ -388,7 +383,7 @@
               const para = document.createElement('div'); para.innerHTML = String(explText);
               Object.assign(para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.9)', flex: '1 1 auto', fontFamily: forcedFont });
               const btn = document.createElement('button'); btn.textContent = 'Choisir ' + count + ' cartes';
-              try { btn.setAttribute('data-pa-choose', String(count)); } catch (e) {}
+              try { btn.setAttribute('data-pa-choose', String(count)); } catch (e) { console.warn('[PA]', e); }
               Object.assign(btn.style, {
                 padding: '4px 8px',
                 borderRadius: '8px',
@@ -406,18 +401,17 @@
                 alignSelf: 'flex-start'
               });
               // subtle hover lift
-              btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
-              btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
+              btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch (e) { console.warn('[PA]', e); } });
+              btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch (e) { console.warn('[PA]', e); } });
               btn.addEventListener('click', function () {
                 try {
-                  // open the tirage display for the chosen count
-                  // open the full 22-card deck popup and mark the chosen draw count
+                  // Close theme popup before opening deck
+                  try { if (window.PopupAdapter && window.PopupAdapter._lastThemePopupHandle) { var h = window.PopupAdapter._lastThemePopupHandle; if (h.close) h.close(); else if (typeof PopupManager !== 'undefined' && PopupManager.close) PopupManager.close(h); else { var overlay = (h.el || h).closest && (h.el || h).closest('.pm-overlay'); if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); else if (h.parentNode) h.parentNode.removeChild(h); } window.PopupAdapter._lastThemePopupHandle = null; } } catch (e) { console.warn('[PA]', e); }
                   if (typeof showDeckPopup === 'function') {
                       showDeckPopup(count);
                   } else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') {
                       window.PopupAdapter.showDeckPopup(count);
                   } else if (typeof showTirageDisplay === 'function') {
-                      // fallback: open tirage with given count
                       showTirageDisplay(count);
                   }
                 } catch (e) { console && console.warn && console.warn('open tirage error', e); }
@@ -426,94 +420,80 @@
               return p;
             }
 
-            // Panel A: Tirage 3 cartes — descriptive paragraph and choose button
+            // Panel A: Tirage 3 cartes
             const panelThree = document.createElement('div');
             Object.assign(panelThree.style, {
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flex: '1 1 300px',
-              minWidth: '260px',
-              maxWidth: '520px',
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.62), rgba(0,0,0,0.48))',
-              borderRadius: '8px',
-              padding: '12px',
-              boxSizing: 'border-box',
-              color: '#fff',
-              border: '1px solid rgba(255,255,255,0.06)',
-              boxShadow: '0 8px 22px rgba(0,0,0,0.5)'
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
+              flex: '1 1 260px', minWidth: '220px', maxWidth: '380px',
+              background: 'linear-gradient(180deg, rgba(20,16,14,0.92), rgba(12,10,9,0.88))',
+              borderRadius: '12px', padding: '20px 18px', boxSizing: 'border-box',
+              color: '#ede8e3', border: '1px solid rgba(201,169,110,0.12)',
+              boxShadow: '0 8px 22px rgba(0,0,0,0.5)', textAlign: 'center'
             });
+            const p3icon = document.createElement('div');
+            p3icon.innerHTML = '&#x2728;&#x2728;&#x2728;';
+            Object.assign(p3icon.style, { fontSize: '24px', marginBottom: '10px', letterSpacing: '6px' });
             const p3h = document.createElement('h4'); p3h.textContent = 'Tirage 3 cartes';
-            Object.assign(p3h.style, { margin: '0 0 8px 0', fontSize: '16px', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontWeight: '600' });
+            Object.assign(p3h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#c9a96e', letterSpacing: '0.04em' });
             const p3para = document.createElement('div');
-            p3para.innerHTML = `Le tirage à trois cartes offre une lecture claire et rapide d’une situation. Il met en lumière le passé ou le contexte, le défi présent et la tendance à venir. Cette méthode simple permet d’obtenir une réponse précise tout en ouvrant une réflexion plus profonde. Chaque carte dialogue avec les autres pour révéler les influences en jeu et les pistes d’évolution possibles. C’est un tirage idéal pour éclairer une question ciblée ou prendre une décision en conscience.`;
-            Object.assign(p3para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
-            const p3btn = document.createElement('button'); p3btn.textContent = 'Choisir 3 cartes';
-            try { p3btn.setAttribute('data-pa-choose', '3'); } catch (e) {}
-            Object.assign(p3btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
-            p3btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
-            p3btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
+            p3para.innerHTML = '<span style="color:rgba(237,232,227,0.65)">Pass\u00e9 \u00b7 Pr\u00e9sent \u00b7 Futur</span><br>Rapide et \u00e9clairant \u2014 id\u00e9al pour une question pr\u00e9cise.';
+            Object.assign(p3para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(237,232,227,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
+            const p3btn = document.createElement('button'); p3btn.textContent = '\u2726  3 cartes';
+            try { p3btn.setAttribute('data-pa-choose', '3'); } catch (e) { console.warn('[PA]', e); }
+            Object.assign(p3btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(201,169,110,0.3)', background: 'rgba(201,169,110,0.1)', color: '#c9a96e', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
+            p3btn.addEventListener('mouseenter', function(){ try { this.style.background = '#c9a96e'; this.style.color = '#0c0a09'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(201,169,110,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            p3btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(201,169,110,0.1)'; this.style.color = '#c9a96e'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
             p3btn.addEventListener('click', function () { try {
-                // close theme popup (if still present)
-                try { const thBox = window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox ? window.PopupAdapter._lastThemeMsgBox : null; if (thBox && thBox.parentNode) {
-                    const p = thBox.closest && thBox.closest('.pm-popup-msgbox') ? thBox.closest('.pm-popup-msgbox') : thBox.parentNode;
-                    try { if (p && p.parentNode) p.parentNode.removeChild(p); } catch (e) {}
-                  } } catch (e) {}
+                // Close the theme popup entirely before opening the deck
+                try { if (window.PopupAdapter && window.PopupAdapter._lastThemePopupHandle) { var h = window.PopupAdapter._lastThemePopupHandle; if (h.close) h.close(); else if (typeof PopupManager !== 'undefined' && PopupManager.close) PopupManager.close(h); else { var overlay = (h.el || h).closest && (h.el || h).closest('.pm-overlay'); if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); else if (h.el && h.el.parentNode) h.el.parentNode.removeChild(h.el); else if (h.parentNode) h.parentNode.removeChild(h); } window.PopupAdapter._lastThemePopupHandle = null; } } catch (e) { console.warn('close theme popup failed', e); }
                 if (typeof showDeckPopup === 'function') showDeckPopup(3); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(3); else if (typeof showTirageDisplay === 'function') showTirageDisplay(3);
               } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
-            panelThree.appendChild(p3h); panelThree.appendChild(p3para); panelThree.appendChild(p3btn);
-            // Panel B: 5-card tirage descriptive panel (longer explanatory paragraph provided)
+            panelThree.appendChild(p3icon); panelThree.appendChild(p3h); panelThree.appendChild(p3para); panelThree.appendChild(p3btn);
+            // Panel B: Tirage 5 cartes
             const panelFive = document.createElement('div');
             Object.assign(panelFive.style, {
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flex: '1 1 300px',
-              minWidth: '260px',
-              maxWidth: '520px',
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.62), rgba(0,0,0,0.48))',
-              borderRadius: '8px',
-              padding: '12px',
-              boxSizing: 'border-box',
-              color: '#fff',
-              border: '1px solid rgba(255,255,255,0.06)',
-              boxShadow: '0 8px 22px rgba(0,0,0,0.5)'
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
+              flex: '1 1 260px', minWidth: '220px', maxWidth: '380px',
+              background: 'linear-gradient(180deg, rgba(20,16,14,0.92), rgba(12,10,9,0.88))',
+              borderRadius: '12px', padding: '20px 18px', boxSizing: 'border-box',
+              color: '#ede8e3', border: '1px solid rgba(201,169,110,0.12)',
+              boxShadow: '0 8px 22px rgba(0,0,0,0.5)', textAlign: 'center'
             });
+            const p5icon = document.createElement('div');
+            p5icon.innerHTML = '&#x2728;&#x2728;&#x2728;&#x2728;&#x2728;';
+            Object.assign(p5icon.style, { fontSize: '24px', marginBottom: '10px', letterSpacing: '6px' });
             const p5h = document.createElement('h4'); p5h.textContent = 'Tirage 5 cartes';
-            Object.assign(p5h.style, { margin: '0 0 8px 0', fontSize: '16px', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontWeight: '600' });
+            Object.assign(p5h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#c9a96e', letterSpacing: '0.04em' });
             const p5para = document.createElement('div');
-            p5para.innerHTML = 'Le tirage à cinq cartes offre une vision complète d’une situation en explorant plusieurs niveaux d\’influence. Chaque carte éclaire un aspect distinct : les forces favorables, les obstacles, les causes profondes, la tendance à venir et la synthèse ou le conseil final. Ce tirage met en lumière le jeu des équilibres, des tensions et des prises de conscience nécessaires pour avancer. Plus détaillé qu’un tirage simple, il permet d’obtenir une lecture nuancée et stratégique, alliant intuition et analyse.';
-            Object.assign(p5para.style, { fontSize: '13px', marginBottom: '10px', color: 'rgba(255,255,255,0.95)', flex: '1 1 auto', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
-            const p5btn = document.createElement('button'); p5btn.textContent = 'Choisir 5 cartes';
-            try { p5btn.setAttribute('data-pa-choose', '5'); } catch (e) {}
-            Object.assign(p5btn.style, { padding: '4px 8px', borderRadius: '8px', cursor: 'pointer', border: 'none', background: 'linear-gradient(90deg,#ff7a59,#ffb86b)', color: '#fff', fontWeight: '600', boxShadow: '0 5px 12px rgba(0,0,0,0.28)', transition: 'transform 160ms ease, box-shadow 160ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.85rem', display: 'inline-block', whiteSpace: 'nowrap', alignSelf: 'flex-start' });
-            p5btn.addEventListener('mouseenter', function(){ try { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 12px 28px rgba(0,0,0,0.45)'; } catch(e){} });
-            p5btn.addEventListener('mouseleave', function(){ try { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)'; } catch(e){} });
+            p5para.innerHTML = '<span style="color:rgba(237,232,227,0.65)">Forces \u00b7 Obstacles \u00b7 Conseil \u00b7 \u00c9volution \u00b7 Synth\u00e8se</span><br>Approfondi et strat\u00e9gique \u2014 pour une vision compl\u00e8te.';
+            Object.assign(p5para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(237,232,227,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
+            const p5btn = document.createElement('button'); p5btn.textContent = '\u2726  5 cartes';
+            try { p5btn.setAttribute('data-pa-choose', '5'); } catch (e) { console.warn('[PA]', e); }
+            Object.assign(p5btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(201,169,110,0.3)', background: 'rgba(201,169,110,0.1)', color: '#c9a96e', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
+            p5btn.addEventListener('mouseenter', function(){ try { this.style.background = '#c9a96e'; this.style.color = '#0c0a09'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(201,169,110,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            p5btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(201,169,110,0.1)'; this.style.color = '#c9a96e'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
             p5btn.addEventListener('click', function () { try {
-                // close theme popup (if still present)
-                try { const thBox = window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox ? window.PopupAdapter._lastThemeMsgBox : null; if (thBox && thBox.parentNode) {
-                    const p = thBox.closest && thBox.closest('.pm-popup-msgbox') ? thBox.closest('.pm-popup-msgbox') : thBox.parentNode;
-                    try { if (p && p.parentNode) p.parentNode.removeChild(p); } catch (e) {}
-                  } } catch (e) {}
+                // Close the theme popup entirely before opening the deck
+                try { if (window.PopupAdapter && window.PopupAdapter._lastThemePopupHandle) { var h = window.PopupAdapter._lastThemePopupHandle; if (h.close) h.close(); else if (typeof PopupManager !== 'undefined' && PopupManager.close) PopupManager.close(h); else { var overlay = (h.el || h).closest && (h.el || h).closest('.pm-overlay'); if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); else if (h.el && h.el.parentNode) h.el.parentNode.removeChild(h.el); else if (h.parentNode) h.parentNode.removeChild(h); } window.PopupAdapter._lastThemePopupHandle = null; } } catch (e) { console.warn('close theme popup failed', e); }
                 if (typeof showDeckPopup === 'function') showDeckPopup(5); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(5); else if (typeof showTirageDisplay === 'function') showTirageDisplay(5);
               } catch (e) { console && console.warn && console.warn('open tirage error', e); } });
-            panelFive.appendChild(p5h); panelFive.appendChild(p5para); panelFive.appendChild(p5btn);
+            panelFive.appendChild(p5icon); panelFive.appendChild(p5h); panelFive.appendChild(p5para); panelFive.appendChild(p5btn);
 
             grid.appendChild(panelThree); grid.appendChild(panelFive);
             box.appendChild(grid);
-            try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = 'theme=' + themeKey + ' choose tirage'; } catch (e) {}
+            try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = 'theme=' + themeKey + ' choose tirage'; } catch (e) { console.warn('[PA]', e); }
           }
-        } catch (e) { /* ignore UI build errors */ }
+        } catch (e) { console.error('[PopupAdapter] UI build error in startThemePlay:', e); }
         // ensure selected button stays normal while others are dimmed
         try {
           if (window.PopupAdapter && window.PopupAdapter._themeButtons) {
-            Object.keys(window.PopupAdapter._themeButtons).forEach(k => { try { window.PopupAdapter._themeButtons[k].style.opacity = (k === themeKey) ? '1' : '0.6'; } catch (e) {} });
+            Object.keys(window.PopupAdapter._themeButtons).forEach(k => { try { window.PopupAdapter._themeButtons[k].style.opacity = (k === themeKey) ? '1' : '0.6'; } catch (e) { console.warn('[PA]', e); } });
           }
-        } catch (e) {}
+        } catch (e) { console.warn('[PA]', e); }
         if (typeof onDone === 'function') {
-          try { onDone(themeKey, questionText); } catch (e) {}
+          try { onDone(themeKey, questionText); } catch (e) { console.warn('[PA]', e); }
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) { console.error('[PopupAdapter] startThemePlay error:', e); }
     }
 
     // wire Valider and Passer
@@ -541,7 +521,7 @@
       Object.keys(autoAll).forEach(k => { if (!rawMessages[k] && Array.isArray(autoAll[k])) autoAll[k].forEach(t => msgs.push({ text: String(t), theme: k })); });
       if (msgs && msgs.length) {
         if (typeof playThemeMessages === 'function') {
-          setTimeout(() => { try { playThemeMessages('global', msgs, { delay: 1800, exitEffect: 'wipe' }); } catch (e) {} }, 120);
+          setTimeout(() => { try { playThemeMessages('global', msgs, { delay: 1800, exitEffect: 'wipe' }); } catch (e) { console.warn('[PA]', e); } }, 120);
         } else {
           setThemeMessages(msgs);
         }
@@ -583,7 +563,7 @@
         boxShadow: '0 6px 18px rgba(0,0,0,0.08)',
         cursor: 'pointer'
       });
-      c.addEventListener('click', () => { try { if (typeof onDone === 'function') onDone(i + 1); } catch (_) {} });
+      c.addEventListener('click', () => { try { if (typeof onDone === 'function') onDone(i + 1); } catch (e) { console.warn('[PA]', e); } });
       row.appendChild(c);
     }
 
@@ -701,9 +681,9 @@
         if (!document.querySelector('.pa-deck-overlay-fallback')) {
           if (document.body && document.body.style) document.body.style.overflowX = '';
         }
-      } catch (e) {}
+      } catch (e) { console.warn('[PA]', e); }
     });
-  } catch (e) {}
+  } catch (e) { console.warn('[PA]', e); }
 
     return popupHandle;
   }
@@ -715,420 +695,127 @@
       const total = 22;
       // build container ourselves so we can tightly control dimensions
   const container = document.createElement('div');
-  container.style.textAlign = 'left';
-  // minimal top/side padding so title and cards sit higher and flush to the left
-  container.style.padding = '0px 12px 8px 0px';
-  // request a larger popup frame from PopupManager (if present)
-  try { container.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
-  // also set min visual dimensions so a simple container fallback looks bigger
-  // increase width/height so the deck popup is large and long enough to contain all cards
-  // increase min dimensions so the deck popup matches requested larger size
-  container.style.minWidth = '1080px';
-  container.style.minHeight = '920px';
+  container.className = 'pa-deck-container';
+  try { container.dataset.maxWidth = '920px'; } catch (e) { console.warn('[PA]', e); }
 
       // dynamic title that shows remaining cards to draw
   const title = document.createElement('h3');
-  title.className = 'pm-popup-title';
-  // tighten title margins so it doesn't add extra vertical space and sits higher
-  title.style.marginTop = '0px';
-  title.style.marginBottom = '6px';
-      // initialize remaining count from chosenCount (fallback to 0)
+  title.className = 'pm-popup-title pa-deck-title';
       const initialRemaining = (Number(chosenCount) === 3 || Number(chosenCount) === 5) ? Number(chosenCount) : 0;
       let remaining = initialRemaining;
-      // create title with a span for the numeric counter so we can animate it
       const numSpan = document.createElement('span');
       numSpan.className = 'pa-remaining-num';
       numSpan.textContent = String(remaining);
       function updateTitle() {
         try {
-          // build title: Tirez x cartes  (no quotes around x)
           if (remaining > 0) {
-            title.textContent = 'Tirez ';
+            title.textContent = '';
+            title.appendChild(document.createTextNode('Choisissez '));
             title.appendChild(numSpan);
-            title.appendChild(document.createTextNode(' cartes'));
+            title.appendChild(document.createTextNode(remaining === 1 ? ' carte' : ' cartes'));
           } else {
-            title.textContent = 'Tirage terminé';
+            title.textContent = 'Tirage termin\u00e9';
           }
-          // animate the number: quick scale up then back
-          try {
-            const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (!prefersReduced && remaining > 0) {
-              numSpan.classList.remove('pa-remaining-pulse');
-              // force reflow
-              void numSpan.offsetWidth;
-              numSpan.classList.add('pa-remaining-pulse');
-            }
-          } catch (e) {}
-          // update numeric text
-          try { numSpan.textContent = String(remaining); } catch (e) {}
-          // expose remaining for external code
-          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._remainingCount = remaining; } catch (e) {}
-        } catch (e) {}
+          try { numSpan.textContent = String(remaining); } catch (e) { console.warn('[PA]', e); }
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._remainingCount = remaining; } catch (e) { console.warn('[PA]', e); }
+        } catch (e) { console.warn('[PA]', e); }
       }
-      // ensure we inject small styles for the number pulse
       try {
         if (!document.getElementById('pa-remaining-styles')) {
           const st = document.createElement('style');
           st.id = 'pa-remaining-styles';
-          st.textContent = `
-            .pa-remaining-num { font-weight: 700; margin: 0 6px; display: inline-block; transition: transform 220ms ease; }
-            .pa-remaining-pulse { transform: scale(1.22); }
-            @media (prefers-reduced-motion: reduce) { .pa-remaining-num, .pa-remaining-pulse { transition: none !important; transform: none !important; } }
-          `;
+          st.textContent = '.pa-remaining-num { font-weight: 700; color: #c9a96e; margin: 0 4px; display: inline-block; transition: transform 220ms ease; } .pa-remaining-pulse { transform: scale(1.3); } @media (prefers-reduced-motion: reduce) { .pa-remaining-num, .pa-remaining-pulse { transition: none !important; transform: none !important; } }';
           (document.head || document.documentElement).appendChild(st);
         }
-      } catch (e) {}
+      } catch (e) { console.warn('[PA]', e); }
+      // Subtitle hint
+      const subtitle = document.createElement('p');
+      subtitle.className = 'pa-deck-subtitle';
+      subtitle.textContent = '\u00c9coutez votre intuition\u2026';
       updateTitle();
       container.appendChild(title);
+      container.appendChild(subtitle);
 
-  const stage = document.createElement('div');
-  stage.style.display = 'flex';
-  // left-align the grid so the card block is glued to the left edge of the popup
-  stage.style.justifyContent = 'flex-start';
-  stage.style.alignItems = 'center';
-  // remove top padding and add a small left inset so grid hugs the left edge
-  stage.style.padding = '0px 0 8px 4px';
-  // keep explicit padding-left to enforce the small left gutter (tighter)
-  stage.style.paddingLeft = '4px';
-  // prevent stage from creating scrollbars
-  stage.style.overflow = 'hidden';
+  // Responsive grid: adapt columns to viewport
+  const vw = window.innerWidth;
+  const cols = vw <= 480 ? 5 : vw <= 768 ? 6 : 11;
+  const rows = Math.ceil(total / cols);
+  const gap = vw <= 480 ? 6 : 10;
+  // Card size: fill available width nicely (420×630 = 2:3 ratio)
+  const popupMaxW = Math.min(880, vw - 32);
+  const cardW = Math.max(52, Math.floor((popupMaxW - (cols - 1) * gap) / cols));
+  const cardH = Math.floor(cardW * 1.5);
 
   const grid = document.createElement('div');
-  grid.style.display = 'grid';
-  // gap is configured later (depends on computed `gap` variable)
-  grid.style.gap = '0px';
-  // use border-box so width accounts for padding if we add any later
-  grid.style.boxSizing = 'border-box';
-  // left-align grid and add small bottom margin so cards don't touch the popup edge
-  grid.style.margin = '0 0 12px 0';
+  grid.className = 'pa-deck-grid';
+  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+  grid.style.gap = gap + 'px';
+  grid.style.maxWidth = (cols * cardW + (cols - 1) * gap + 8) + 'px';
 
-      // compute available popup width and height and force 4-row layout (6,6,6,4)
-      const maxW = parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g, ''), 10) || Math.max(420, window.innerWidth - 40);
-      const reserved = (title.getBoundingClientRect ? Math.round(title.getBoundingClientRect().height) : 56) + 24;
-      const availH = Math.max(320, window.innerHeight - reserved - 40);
-
-  // reduce the gap to make cards appear closer and allow a larger enlarge factor
-  const gap = 2; // tighter spacing between cards
-  const enlargeFactor = 1.14; // slightly larger proportional growth for visual weight
-  // tuning: increase width and set heightShrink to 1 so cards use full computed height
-  const widthBoost = 1.12; // widen cards by ~12%
-  const heightShrink = 1.0; // keep full height to balance vertical spacing
-      const cardRatio = 3 / 2;
-      const cols = 6;
-      const rows = 4;
-
-    // compute card size so 6x4 volume is used as base, then attempt a slight enlargement
-    const baseCardW = Math.floor((maxW - (cols - 1) * gap) / cols);
-    // desired width attempts to apply enlargeFactor then widthBoost
-    const desiredW = Math.floor(baseCardW * enlargeFactor * widthBoost);
-    // fallback to base if overflow
-    let cardW = desiredW;
-    let tentativeGridW = (cardW * cols) + ((cols - 1) * gap);
-    if (tentativeGridW > maxW) {
-      cardW = baseCardW;
-      tentativeGridW = (cardW * cols) + ((cols - 1) * gap);
-      // still if base overflows (unlikely), force a fit
-      if (tentativeGridW > maxW) {
-        cardW = Math.floor((maxW - (cols - 1) * gap) / cols);
-      }
-    }
-    // apply a reduced height multiplier to tighten the fit inside the frame
-    let cardH = Math.floor(cardW * cardRatio * heightShrink);
-    // compute grid volume exact sizes
-    let gridW = (cardW * cols) + ((cols - 1) * gap);
-    let gridH = (cardH * rows) + ((rows - 1) * gap);
-    // if vertical space is limited, scale both dimensions down proportionally
-    if (gridH > availH) {
-      const scale = Math.max(0.45, (availH / gridH) * 0.95);
-      cardW = Math.max(36, Math.floor(cardW * scale));
-      cardH = Math.max(48, Math.floor(cardW * cardRatio));
-      gridW = (cardW * cols) + ((cols - 1) * gap);
-      gridH = (cardH * rows) + ((rows - 1) * gap);
-    }
-
-  // breathing space around the grid (padding inside popup)
-  // tighten paddings so there's more room for the cards inside the popup
-  const horizontalPadding = 24; // left + right total (reduced)
-  const verticalPadding = 120; // top + bottom + title area (reduced)
-
-  // ensure the grid is scaled to fit the available viewport both horizontally and vertically
-  try {
-    const availPopupW = Math.max(320, Math.min(window.innerWidth - 80, maxW)) - horizontalPadding;
-    const reservedHeight = Math.max(120, window.innerHeight - (availH + reserved));
-    const availPopupH = Math.max(240, Math.min(window.innerHeight - 80, availH + reserved)) - verticalPadding;
-
-    // compute limiting scales
-    let scale = 1;
-    if (gridW > availPopupW || gridH > availPopupH) {
-      const scaleW = availPopupW / gridW;
-      const scaleH = availPopupH / gridH;
-      scale = Math.min(scaleW, scaleH) * 0.98; // small safety margin
-      scale = Math.max(0.45, Math.min(1, scale));
-      cardW = Math.max(32, Math.floor(cardW * scale));
-      cardH = Math.max(44, Math.floor(cardW * cardRatio));
-      gridW = (cardW * cols) + ((cols - 1) * gap);
-      gridH = (cardH * rows) + ((rows - 1) * gap);
-    }
-  } catch (e) {}
-
-  // set grid gap according to computed gap and set grid and stage sizes explicitly
-  try { grid.style.gap = (typeof gap === 'number' ? gap : 4) + 'px'; } catch (e) {}
-  grid.style.gridTemplateColumns = `repeat(${cols}, ${cardW}px)`;
-  grid.style.gridAutoRows = `${cardH}px`;
-  grid.style.width = gridW + 'px';
-  grid.style.height = gridH + 'px';
-  // hide any overflow to avoid scrollbars inside the grid
-  grid.style.overflow = 'hidden';
-
-      // create slots and fill with verso image; center last row by starting its first slot at column 2
-      // We'll also prepare a staggered entrance animation for the verso images: start blurred/faded/scaled
-      // and animate to sharp/opaque/normal. Respect prefers-reduced-motion.
-      // Insert a small style block (id'd) to control animation timing where needed.
+      // entrance animation styles
       try {
         if (!document.getElementById('pa-deck-entrance-styles')) {
           const st = document.createElement('style');
           st.id = 'pa-deck-entrance-styles';
-          st.textContent = `
-            .pa-deck-entrance { filter: blur(6px); opacity: 0; transform: scale(0.98) translateY(6px); transition: filter 420ms ease, opacity 420ms ease, transform 420ms ease; }
-            .pa-deck-entrance.pa-deck-entrance--visible { filter: blur(0px); opacity: 1; transform: scale(1) translateY(0px); }
-            @media (prefers-reduced-motion: reduce) {
-              .pa-deck-entrance { transition: none !important; filter: none !important; opacity: 1 !important; transform: none !important; }
-            }
-          `;
+          st.textContent = '.pa-deck-entrance { opacity: 0; transform: translateY(12px) scale(0.88); transition: opacity 400ms ease, transform 400ms cubic-bezier(.2,.9,.3,1); } .pa-deck-entrance.pa-deck-entrance--visible { opacity: 1; transform: translateY(0) scale(1); } @media (prefers-reduced-motion: reduce) { .pa-deck-entrance { transition: none !important; opacity: 1 !important; transform: none !important; } }';
           (document.head || document.documentElement).appendChild(st);
         }
-      } catch (e) {}
-  // fan option: when opts.fan === true (or a number), apply a small random rotation (-angle..+angle)
-  // and a subtle translateY to create an 'eventail' effect. Respect prefers-reduced-motion.
+      } catch (e) { console.warn('[PA]', e); }
+
   const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fanEnabled = !!opts.fan && !prefersReduced;
-  // fanAngleMax can be a number (degrees) provided via opts.fan or default to 8 degrees
-  const fanAngleMax = (typeof opts.fan === 'number' && isFinite(opts.fan)) ? Math.abs(opts.fan) : 8;
-  // store per-slot fan angles for debugging/external use
+  const fanEnabled = false;
   const fanAngles = [];
+
       for (let i = 0; i < total; i++) {
         const slot = document.createElement('div');
-        slot.className = 'pm-card-slot';
-        Object.assign(slot.style, {
-          overflow: 'hidden',
-          // match the image rounding so no background peeks through
-          borderRadius: '12px',
-          background: 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          // center the image inside the slot (image fills the slot)
-          justifyContent: 'center',
-          // remove any internal padding so the image touches the slot edges
-          padding: '0px',
-          boxSizing: 'border-box',
-          // make the slot slightly larger to accommodate reduced inter-card gap
-          width: cardW + 'px',
-          height: cardH + 'px'
-        });
+        slot.className = 'pa-deck-card';
         slot.dataset.slotIndex = i;
-        // if first of last row, offset to center (for 6-columns layout and 22 cards)
-        const firstOfLastRowIndex = cols * (rows - 1); // 6 * 3 = 18
-        if (i === firstOfLastRowIndex && (total % cols) !== 0) {
-          // start at column 2 so 4 cards sit in columns 2..5 (centered)
-          try { slot.style.gridColumnStart = '2'; } catch (e) {}
-        }
-        // fill image
-          try {
-          const img = document.createElement('img');
-          img.src = './public/img/majors/verso.webp';
-          img.alt = 'verso';
-          // ensure the image fills the slot exactly (no inset) and includes borders in sizing
-          try { slot.style.padding = '0px'; slot.style.boxSizing = 'border-box'; } catch (e) {}
-          // image fills the slot's inner box exactly and includes borders in sizing
-          img.style.width = '100%';
-          img.style.height = '100%';
-          img.style.boxSizing = 'border-box';
-          img.style.objectFit = 'contain';
-          // rounded corners to match the card aesthetic (no border/shadow behind images)
-          img.style.borderRadius = '12px';
-          img.style.display = 'block';
-          img.style.background = 'transparent';
-          // ensure the slot clips overflow so rounded corners show correctly
-          slot.style.overflow = 'hidden';
-          // entrance animation class
-          img.classList.add('pa-deck-entrance');
-          slot.appendChild(img);
-        } catch (e) {}
-        // apply optional fan rotation/offset here (small random per-slot angle + subtle translate)
-        if (fanEnabled) {
-          // angle between -fanAngleMax and +fanAngleMax
-          const angle = (Math.random() * 2 * fanAngleMax) - fanAngleMax;
-          // slight translate to enhance the fanned look (max 6px vertically, and small horizontal jitter)
-          const ty = Math.round((Math.random() * 6) - 3);
-          const tx = Math.round((Math.random() * 6) - 3);
-          // apply transform while keeping the slot centered in its grid cell
-          try {
-            slot.style.transformOrigin = '50% 50%';
-            slot.style.transition = 'transform 320ms ease, box-shadow 260ms ease';
-            // use translate then rotate so rotation pivots around the center
-            slot.style.transform = `translate(${tx}px, ${ty}px) rotate(${angle}deg)`;
-          } catch (e) {}
-          fanAngles.push({ index: i, angle: angle, tx: tx, ty: ty });
-        } else {
-          fanAngles.push({ index: i, angle: 0, tx: 0, ty: 0 });
+
+        // Center last row if incomplete
+        const lastRowStart = cols * (rows - 1);
+        const lastRowCount = total - lastRowStart;
+        if (i === lastRowStart && lastRowCount < cols) {
+          slot.style.gridColumnStart = String(Math.floor((cols - lastRowCount) / 2) + 1);
         }
 
+        try {
+          const img = document.createElement('img');
+          img.src = '/img/majors/verso.webp?v=2';
+          img.alt = 'Carte face cach\u00e9e';
+          img.className = 'pa-deck-entrance';
+          img.draggable = false;
+          slot.appendChild(img);
+        } catch (e) { console.warn('[PA]', e); }
+        fanAngles.push({ index: i, angle: 0, tx: 0, ty: 0 });
         grid.appendChild(slot);
       }
 
-  stage.appendChild(grid);
-  container.appendChild(stage);
+  container.appendChild(grid);
 
-  // compute desired popup frame dimensions based on grid + breathing
-  // aim for a larger desired width/height but clamp to viewport with safe margins
-  const desiredWidth = Math.min(window.innerWidth - 40, Math.max(gridW + horizontalPadding, 960));
-  const desiredHeight = Math.min(window.innerHeight - 80, Math.max(gridH + verticalPadding, 780));
-  // remember the deck popup size so interpretation popup can match it
-  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupSize = { width: Math.round(desiredWidth), height: Math.round(desiredHeight) }; } catch (e) {}
-  try { container.style.width = desiredWidth + 'px'; } catch (e) {}
-  try { container.style.minHeight = desiredHeight + 'px'; } catch (e) {}
+  // compute desired popup frame dimensions
+  const gridW = cols * cardW + (cols - 1) * gap;
+  const gridH = rows * cardH + (rows - 1) * gap;
+  const desiredWidth = Math.min(vw - 24, Math.max(gridW + 48, 420));
+  const desiredHeight = Math.min(window.innerHeight - 60, gridH + 140);
+  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupSize = { width: Math.round(desiredWidth), height: Math.round(desiredHeight) }; } catch (e) { console.warn('[PA]', e); }
+  try { container.style.width = desiredWidth + 'px'; } catch (e) { console.warn('[PA]', e); }
 
   const popupHandle = openPopup(container);
-  // store the last deck popup handle so other flows can remove it (e.g., when opening interpretation)
-  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupHandle = popupHandle; } catch (e) {}
-  // ensure page hides scrollbars while this popup is active (best-effort)
-  try { setGlobalNoScroll(true); } catch (e) {}
-
-  // after a short delay, measure the actual rendered wrapper rect and store it
-  try {
-    setTimeout(() => {
-      try {
-        const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
-        const measureEl = wrapper || container;
-          if (measureEl && measureEl.getBoundingClientRect) {
-          const r = measureEl.getBoundingClientRect();
-          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupRect = { width: Math.round(r.width), height: Math.round(r.height), left: Math.round(r.left), top: Math.round(r.top) }; } catch (e) {}
-          // also mirror to the older property for compatibility
-          try { if (!window.PopupAdapter._lastDeckPopupSize) window.PopupAdapter._lastDeckPopupSize = { width: Math.round(r.width), height: Math.round(r.height) }; } catch (e) {}
-          // capture computed background (color) for compatibility with older logic
-          try {
-            const cs = window.getComputedStyle && window.getComputedStyle(measureEl);
-            if (cs) {
-              try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupBackground = cs.backgroundColor || cs.background || ''; } catch (e) {}
-            }
-          } catch (e) {}
-        }
-      } catch (e) {}
-    }, 220);
-    // second pass: after popup has rendered, measure the wrapper and ensure the grid/slots
-    // are resized to fit entirely inside the visible popup area. This guarantees all 22 cards
-    // are visible even when host managers constrict the frame.
-    try {
-      setTimeout(() => {
-        try {
-          const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
-          const measureEl = wrapper || container;
-          if (!measureEl || !measureEl.getBoundingClientRect) return;
-          const r = measureEl.getBoundingClientRect();
-          const availW = Math.max(240, r.width - (typeof horizontalPadding === 'number' ? horizontalPadding : 24));
-          const availH = Math.max(240, r.height - (typeof verticalPadding === 'number' ? verticalPadding : 120));
-          // compute candidate card width based on available width
-          const candidateW = Math.floor((availW - ((cols - 1) * gap)) / cols);
-          let finalCardW = Math.min(cardW, Math.max(28, candidateW));
-          // compute card height then ensure rows fit vertically
-          let finalCardH = Math.floor(finalCardW * cardRatio);
-          const requiredH = (finalCardH * rows) + ((rows - 1) * gap);
-          if (requiredH > availH) {
-            // scale down by height constraint
-            const scale = Math.max(0.4, (availH - ((rows - 1) * gap)) / (rows * finalCardH));
-            finalCardW = Math.max(24, Math.floor(finalCardW * scale));
-            finalCardH = Math.max(36, Math.floor(finalCardW * cardRatio));
-          }
-          // apply to grid and slots
-          try { grid.style.gridTemplateColumns = `repeat(${cols}, ${finalCardW}px)`; } catch (e) {}
-          try { grid.style.gridAutoRows = `${finalCardH}px`; } catch (e) {}
-          try { grid.style.width = ((finalCardW * cols) + ((cols - 1) * gap)) + 'px'; } catch (e) {}
-          try { grid.style.height = ((finalCardH * rows) + ((rows - 1) * gap)) + 'px'; } catch (e) {}
-          // update individual slots if present
-          try {
-            const slots = grid.querySelectorAll && grid.querySelectorAll('.pm-card-slot');
-            if (slots && slots.length) {
-              slots.forEach(s => { try { s.style.width = finalCardW + 'px'; s.style.height = finalCardH + 'px'; } catch (e) {} });
-            }
-          } catch (e) {}
-        } catch (e) {}
-      }, 320);
-    } catch (e) {}
-  } catch (e) {}
-
-  // If PopupManager returned a wrapper element, attempt to force larger visual
-      // dimensions on the wrapper. If that still results in a too-small visual
-      // frame (common when page modal managers enforce sizing), create a fallback
-      // absolute-positioned overlay that guarantees the requested size and position.
-      try {
-        const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
-        const target = wrapper || container;
-        if (target && target.style) {
-          try { target.style.minWidth = Math.max(900, desiredWidth) + 'px'; } catch (e) {}
-          try { target.style.width = Math.max(940, desiredWidth + 20) + 'px'; } catch (e) {}
-          try { target.style.minHeight = Math.max(700, desiredHeight) + 'px'; } catch (e) {}
-          try { target.style.height = 'auto'; } catch (e) {}
-          try { if (target.parentNode && target.parentNode.style) { target.parentNode.style.minWidth = Math.max(720, desiredWidth) + 'px'; target.parentNode.style.width = Math.max(760, desiredWidth + 20) + 'px'; target.parentNode.style.minHeight = Math.max(540, desiredHeight) + 'px'; } } catch (e) {}
-        }
-
-        // after a tiny delay, check if the visual width is still too small; if so, create fallback overlay
-            setTimeout(() => {
-          try {
-            const checkEl = wrapper || container;
-            const rect = (checkEl && checkEl.getBoundingClientRect) ? checkEl.getBoundingClientRect() : { width: 0, height: 0 };
-            if ((rect.width || 0) < Math.min(900, desiredWidth)) {
-              // create overlay
-              const overlay = document.createElement('div');
-              overlay.className = 'pa-deck-overlay-fallback';
-        Object.assign(overlay.style, {
-    position: 'fixed',
-    left: '50%',
-  transform: 'translate(-50%,0)',
-  // lift overlay a lot so it sits near the top of the page (minimal blank space)
-  top: '110px',
-    zIndex: 999999,
-    background: 'rgba(255,255,255,0.02)',
-    padding: '12px',
-    borderRadius: '10px',
-    boxShadow: '0 18px 60px rgba(0,0,0,0.6)',
-  // allow overlay to expand to desiredWidth + padding but never exceed viewport minus margins
-  width: Math.min(window.innerWidth - 40, (desiredWidth || 0) + 120) + 'px',
-  maxWidth: 'calc(100vw - 40px)',
-    maxHeight: Math.min(window.innerHeight - 120, (desiredHeight + 120)) + 'px',
-    overflow: 'hidden',
-    boxSizing: 'border-box'
-        });
-              // add a close button
-              const closeBtn = document.createElement('button');
-              closeBtn.textContent = '×';
-              Object.assign(closeBtn.style, { position: 'absolute', right: '10px', top: '6px', background: 'transparent', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer' });
-              closeBtn.addEventListener('click', () => { try { document.body.removeChild(overlay); setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {} });
-              overlay.appendChild(closeBtn);
-              // move our container inside overlay (detach from previous parent)
-              try { if (container.parentNode) container.parentNode.removeChild(container); } catch (e) {}
-              Object.assign(container.style, { width: '100%', minWidth: Math.max(720, desiredWidth) + 'px', minHeight: Math.max(640, desiredHeight) + 'px', padding: '12px 12px 12px 4px', overflow: 'hidden', boxSizing: 'border-box', maxWidth: '100%', maxHeight: '100%' });
-              overlay.appendChild(container);
-              // prevent the page from scrolling horizontally while overlay is open
-              try { document.body.style.overflowX = 'hidden'; } catch (e) {}
-              document.body.appendChild(overlay);
-            }
-          } catch (e) {}
-        }, 120);
-      } catch (e) {}
-
-  // build a randomized mapping of the 22 major-arcana face images to the slots
+  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupHandle = popupHandle; } catch (e) { console.warn('[PA]', e); }
+  try { setGlobalNoScroll(true); } catch (e) { console.warn('[PA]', e); }
+      // build a randomized mapping of the 22 major-arcana face images to the slots
       // so each time the deck popup opens the faces are shuffled and assigned
       const deckFaceNames = [
-        '00-le-mat.webp','01-le-bateleur.webp','02-la-papesse.webp','03-limperatrice.webp','04-lempereur.webp','05-le-pape.webp',
-        '06-lamoureux.webp','07-le-chariot.webp','08-la-justice.webp','09-lermite.webp','10-la-roue.webp','11-la-force.webp',
-        '12-le-pendu.webp','13-larcane-sans-nom.webp','14-temperance.webp','15-le-diable.webp','16-la-maison-dieu.webp','17-letoile.webp',
+        '00-le-fou.webp','01-le-bateleur.webp','02-la-papesse.webp','03-limperatrice.webp','04-lempereur.webp','05-le-pape.webp',
+        '06-lamoureux.webp','07-le-chariot.webp','08-la-force.webp','09-lermite.webp','10-la-roue-de-fortune.webp','11-la-justice.webp',
+        '12-le-pendu.webp','13-larcane-sans-nom.webp','14-la-temperance.webp','15-le-diable.webp','16-la-maison-dieu.webp','17-letoile.webp',
         '18-la-lune.webp','19-le-soleil.webp','20-le-jugement.webp','21-le-monde.webp'
       ];
       // shuffle in-place
       function _shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } }
       const shuffledFaces = deckFaceNames.slice(); _shuffleArray(shuffledFaces);
       const deckMapping = new Array(total);
-      for (let i = 0; i < total; i++) deckMapping[i] = './public/img/majors/' + shuffledFaces[i % shuffledFaces.length];
+      for (let i = 0; i < total; i++) deckMapping[i] = '/img/majors/' + shuffledFaces[i % shuffledFaces.length] + '?v=2';
 
       // track selected cards in selection order so we can display them in the interpretation popup
       const selectedCards = [];
@@ -1137,78 +824,34 @@
       function showInterpretationPopup(cards) {
         try {
           const interp = document.createElement('div');
-          interp.style.textAlign = 'center';
-          // use balanced padding on all sides so inner frames don't touch the popup edges
-          // reduce overall padding so content sits higher in the popup
-          interp.style.padding = '8px';
-          try { interp.dataset.maxWidth = Math.max(720, parseInt(String(getMaxFrameWidth()).replace(/[^0-9]/g,''),10)) + 'px'; } catch (e) {}
-          interp.style.minWidth = (container && container.style && container.style.minWidth) ? container.style.minWidth : '680px';
-          // do not inherit a large minHeight from the deck popup — allow the interpretation popup
-          // to size to its content (we control the internal viewport height separately)
-          interp.style.minHeight = 'auto';
-          // ensure no scrollbars: content fits inside the popup and overflow is hidden
-          interp.style.overflow = 'hidden';
-
-          // Center the whole popup content using a centered column max-width
-          // similar to the tirage-choice panels: use width 100% and limit maxWidth
-          interp.style.display = 'block';
-          interp.style.width = '100%';
-          try { interp.style.maxWidth = getMaxFrameWidth(); } catch (e) {}
-          interp.style.margin = '0 auto';
-          interp.style.gap = '12px';
-          // small padding so content doesn't touch popup borders
-          interp.style.paddingTop = '6px';
-          interp.style.paddingBottom = '6px';
-          const h = document.createElement('h3'); h.className = 'pm-popup-title'; h.textContent = 'Interprétation du tirage';
-          // reduce title margins so it sits higher
-          try { h.style.margin = '6px 0 8px 0'; } catch (e) {}
+          interp.className = 'pa-interp-container';
+          try { interp.dataset.maxWidth = '960px'; } catch (e) { console.warn('[PA]', e); }
+          const h = document.createElement('h3'); h.className = 'pm-popup-title pa-interp-title'; h.textContent = 'Interpr\u00e9tation du tirage';
           interp.appendChild(h);
 
-          // Placeholder interpretation frame — to be replaced by API results later
+          // Placeholder interpretation frame
           const frame = document.createElement('div');
-          // mark the frame for diagnostic access
-          try { frame.id = 'pa-last-interpretation-frame'; } catch (e) {}
-          // ensure the frame has explicit internal padding and a safe max-width so text won't touch popup edges
-          Object.assign(frame.style, {
-            minHeight: '140px',
-            width: '100%',
-            maxWidth: '760px',
-            borderRadius: '10px',
-            padding: '18px',
-            boxSizing: 'border-box',
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
-            color: '#111',
-            margin: '12px auto',
-            overflow: 'hidden',
-            textAlign: 'center'
-          });
-          frame.textContent = 'Interprétation en cours...';
-          // expose reference for diagnostics
-          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastInterpFrame = frame; } catch (e) {}
+          frame.className = 'pa-interp-frame';
+          try { frame.id = 'pa-last-interpretation-frame'; } catch (e) { console.warn('[PA]', e); }
+          frame.textContent = 'Interpr\u00e9tation en cours\u2026';
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastInterpFrame = frame; } catch (e) { console.warn('[PA]', e); }
 
           // We'll place the chosen cards at the top, then the interpretation frame and buttons below.
           // action buttons (Tirage / Enregistrer / Retour) and audio control will be placed under the frame.
           const btnRow = document.createElement('div');
-          btnRow.style.display = 'flex';
-          btnRow.style.justifyContent = 'center';
-          btnRow.style.gap = '10px';
-          // nudge the buttons slightly lower so they sit a bit below the frame
-          btnRow.style.marginTop = '14px';
+          btnRow.className = 'pa-interp-actions';
 
-          const btnTirage = document.createElement('button'); btnTirage.textContent = 'Tirage';
+          const btnTirage = document.createElement('button'); btnTirage.textContent = '\u2726 Nouveau tirage';
           const btnSave = document.createElement('button'); btnSave.textContent = 'Enregistrer';
-          const btnBack = document.createElement('button'); btnBack.textContent = 'Retour';
-          // apply compact site-styled classes
-          try { btnTirage.className = 'pa-action-btn'; } catch (e) {}
-          try { btnSave.className = 'pa-action-btn secondary'; } catch (e) {}
-          try { btnBack.className = 'pa-action-btn secondary'; } catch (e) {}
+          const btnBack = document.createElement('button'); btnBack.textContent = 'Fermer';
+          try { btnTirage.className = 'pa-action-btn primary'; } catch (e) { console.warn('[PA]', e); }
+          try { btnSave.className = 'pa-action-btn'; } catch (e) { console.warn('[PA]', e); }
+          try { btnBack.className = 'pa-action-btn'; } catch (e) { console.warn('[PA]', e); }
 
           // add a single audio icon button to control TTS (placed to the right)
           const audioBtn = document.createElement('button');
           audioBtn.title = 'Lire / Couper le son';
-          audioBtn.className = 'pa-action-btn small';
-          audioBtn.style.background = 'linear-gradient(90deg,#ff7a59,#ffb86b)';
-          audioBtn.style.marginLeft = '8px';
+          audioBtn.className = 'pa-action-btn audio';
           // insert inline SVG icon (speaker)
           audioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19 8a5 5 0 0 1 0 8"></path></svg>';
           // start disabled until the interpretation is ready
@@ -1222,13 +865,10 @@
           // helper to stop any playing audio/TTS immediately and update UI
           function stopPlayback() {
             try {
-              // stop programmatic controls if available
-              try { if (_interpControls && typeof _interpControls.stop === 'function') { try { _interpControls.stop(); } catch(e){} } } catch (e) {}
-              // stop SpeechSynthesis if active
-              try { if (typeof speechSynthesis !== 'undefined' && speechSynthesis && speechSynthesis.speaking) { try { speechSynthesis.cancel(); } catch(e){} } } catch (e) {}
-              // update audio button icon/state
-              try { setAudioIcon(false); if (audioBtn) { audioBtn.disabled = true; } } catch (e) {}
-            } catch (e) {}
+              try { if (_interpControls && typeof _interpControls.stop === 'function') { try { _interpControls.stop(); } catch (e) { console.warn('[PA]', e); } } } catch (e) { console.warn('[PA]', e); }
+              try { if (typeof speechSynthesis !== 'undefined' && speechSynthesis && speechSynthesis.speaking) { try { speechSynthesis.cancel(); } catch (e) { console.warn('[PA]', e); } } } catch (e) { console.warn('[PA]', e); }
+              try { setAudioIcon(false); if (audioBtn) { audioBtn.disabled = true; } } catch (e) { console.warn('[PA]', e); }
+            } catch (e) { console.warn('[PA]', e); }
           }
           // helper to update button icon
           function setAudioIcon(isPlaying) {
@@ -1239,7 +879,7 @@
               } else {
                 audioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19 8a5 5 0 0 1 0 8"></path></svg>';
               }
-            } catch (e) {}
+            } catch (e) { console.warn('[PA]', e); }
           }
           // click toggles play/stop
           audioBtn.addEventListener('click', function(){
@@ -1247,70 +887,87 @@
               if (!audioBtn || audioBtn.disabled) return;
               if (_interpControls) {
                 try {
-                  // if speech is ongoing, stop; otherwise start
-                  if (speechSynthesis && speechSynthesis.speaking) {
+                  // if TTS is ongoing, stop; otherwise start
+                  if (typeof _interpControls.isPlaying === 'function' ? _interpControls.isPlaying() : false) {
                     try { _interpControls.stop(); setAudioIcon(false); } catch (e) { setAudioIcon(false); }
                   } else {
                     try { _interpControls.play(1.0); setAudioIcon(true); } catch (e) { setAudioIcon(false); }
                   }
                 } catch (e) { console && console.warn && console.warn('audio toggle failed', e); }
               }
-            } catch (e) {}
+            } catch (e) { console.warn('[PA]', e); }
           });
 
-          // Show the selected cards below the buttons in larger format
+          // Show the selected cards in a compact horizontal row
           const chosenWrap = document.createElement('div');
-          chosenWrap.id = 'pa-chosen-wrap';
-          chosenWrap.style.display = 'flex';
-          chosenWrap.style.flexWrap = 'wrap';
-          chosenWrap.style.gap = '14px';
-          chosenWrap.style.justifyContent = 'center';
-          chosenWrap.style.alignItems = 'center';
-          chosenWrap.style.overflow = 'hidden';
-          // clamp the chosen cards container so cards don't push into popup edges and center it
-          chosenWrap.style.maxWidth = '100%';
-          // tighten chosen cards padding to free vertical space
-          chosenWrap.style.padding = '4px 8px';
-          chosenWrap.style.margin = '0 auto';
+          chosenWrap.className = 'pa-interp-cards';
+          chosenWrap.style.opacity = '0';
+          chosenWrap.style.transition = 'opacity 1.2s ease';
           cards.forEach((c, idx) => {
             try {
               const cardBox = document.createElement('div');
-              // even larger card display
-              cardBox.style.width = '220px';
-              cardBox.style.height = '330px';
-              cardBox.style.borderRadius = '10px';
-              cardBox.style.overflow = 'hidden';
-              cardBox.style.boxSizing = 'border-box';
-              cardBox.style.display = 'flex';
-              cardBox.style.alignItems = 'center';
-              cardBox.style.justifyContent = 'center';
-              cardBox.style.background = 'transparent';
-              cardBox.style.border = '1px solid rgba(0,0,0,0.06)';
+              cardBox.className = 'pa-interp-card';
               const im = document.createElement('img');
               im.src = c.src || c;
               im.alt = c.alt || ('carte-' + (c.index != null ? c.index : idx));
-              im.style.width = '100%'; im.style.height = '100%'; im.style.objectFit = 'contain'; im.style.borderRadius = '8px';
+              im.draggable = false;
+              if (c.reversed) im.style.transform = 'rotate(180deg)';
               cardBox.appendChild(im);
+              // Click to zoom card (fixed clone so it escapes overflow:hidden parents)
+              cardBox.addEventListener('click', function (ev) {
+                ev.stopPropagation();
+                // close any existing zoom
+                try { var oldC = document.querySelector('.pa-card-zoom-clone'); if (oldC && oldC.parentNode) oldC.parentNode.removeChild(oldC); } catch (e) {}
+                try { var oldB = document.querySelector('.pa-card-zoom-backdrop'); if (oldB && oldB.parentNode) oldB.parentNode.removeChild(oldB); } catch (e) {}
+                // create backdrop
+                var zoomBd = document.createElement('div');
+                zoomBd.className = 'pa-card-zoom-backdrop';
+                // create clone image
+                var clone = document.createElement('img');
+                clone.className = 'pa-card-zoom-clone';
+                clone.src = im.src;
+                clone.alt = im.alt;
+                clone.draggable = false;
+                if (c.reversed) clone.style.transform = 'translate(-50%,-50%) rotate(180deg)';
+                // close on click
+                function closeZoom() {
+                  try { if (clone.parentNode) clone.parentNode.removeChild(clone); } catch (e) {}
+                  try { if (zoomBd.parentNode) zoomBd.parentNode.removeChild(zoomBd); } catch (e) {}
+                }
+                zoomBd.addEventListener('click', closeZoom);
+                clone.addEventListener('click', closeZoom);
+                try { document.body.appendChild(zoomBd); document.body.appendChild(clone); } catch (e) {}
+              });
+              // Extract card name from filename for label
+              try {
+                const fname = (c.src || String(c)).split('/').pop().split('?')[0].replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/^\d+-/, '').replace(/-/g, ' ');
+                const label = document.createElement('span');
+                label.className = 'pa-interp-card-label';
+                label.textContent = fname.charAt(0).toUpperCase() + fname.slice(1) + (c.reversed ? ' (Invers\u00e9e)' : '');
+                cardBox.appendChild(label);
+              } catch (e) { console.warn('[PA]', e); }
               chosenWrap.appendChild(cardBox);
-            } catch (e) {}
+            } catch (e) { console.warn('[PA]', e); }
           });
-          // append chosen cards first so they're at the top of the popup
-          // append chosen cards first so they're at the top of the popup
           interp.appendChild(chosenWrap);
-          // then append the frame
           interp.appendChild(frame);
 
           // fetch and render interpretation from configured API (Cloudflare Workers)
           try {
             // ensure global API base is available for configuration
             window.PopupAdapter = window.PopupAdapter || {};
-            // default to the deployed worker route used in this repo
-            const defaultApi = 'https://api-opanoma.csebille.workers.dev/api/open-proxy';
+            // In dev (localhost), use relative paths (Vite proxy). In prod, use Cloudflare Worker directly.
+            const _workerBase = 'https://api-opanoma.csebille.workers.dev';
+            const _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            const defaultApi = _isLocal ? '/api/open-proxy' : _workerBase + '/api/open-proxy';
             const apiBase = (window.PopupAdapter.apiBase && String(window.PopupAdapter.apiBase).trim()) ? String(window.PopupAdapter.apiBase).trim() : defaultApi;
 
             // payload expected by the worker: { cartes: [...], theme: '', question: '' }
             const payload = {
-              cartes: cards.map(c => (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c)),
+              cartes: cards.map(c => {
+                const name = (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c);
+                return (c && c.reversed) ? name + ' (invers\u00e9e)' : name;
+              }),
               theme: (window.PopupAdapter && window.PopupAdapter.currentTheme) ? window.PopupAdapter.currentTheme : '',
               question: (window.PopupAdapter && window.PopupAdapter.currentQuestion) ? window.PopupAdapter.currentQuestion : ''
             };
@@ -1318,14 +975,11 @@
             // create a content container inside the frame for scrollable results
             const content = document.createElement('div');
             content.id = 'ia-interpretation-content';
-            // smaller maxHeight to keep the interpretation frame compact and avoid excess vertical length
-            content.style.maxHeight = '160px';
-            // hide scrollbars and prevent native scrolling; credits animation will handle movement
-            content.style.overflow = 'hidden';
             content.style.padding = '6px';
             content.style.boxSizing = 'border-box';
             content.style.textAlign = 'left';
-            content.textContent = 'Chargement de l\'interprétation...';
+            // Show a visible loading indicator
+            content.innerHTML = '<div class="pa-interpretation-loader"><div class="pa-loader-spinner"></div><p class="pa-loader-text">Consultation des arcanes\u2026</p></div>';
             // clear previous simple text and append content
             frame.textContent = '';
             frame.appendChild(content);
@@ -1334,49 +988,26 @@
             btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
             btnRow.appendChild(audioBtn);
 
-            // post-render: ensure combined heights fit inside popup
-            try {
-              setTimeout(() => {
-                try {
-                  const wrapper = (popupHandle && popupHandle.nodeType === 1) ? popupHandle : (popupHandle && popupHandle.el) ? popupHandle.el : null;
-                  const measureEl = wrapper || interp;
-                  if (!measureEl || !measureEl.getBoundingClientRect) return;
-                  const r = measureEl.getBoundingClientRect();
-                  const chosenH = chosenWrap.getBoundingClientRect ? chosenWrap.getBoundingClientRect().height : 0;
-                  const buttonsH = btnRow.getBoundingClientRect ? btnRow.getBoundingClientRect().height : 56;
-                  const availH = Math.max(220, r.height - 36);
-                  const allowedFrameH = Math.max(100, Math.floor(availH - chosenH - buttonsH - 20));
-                  try { frame.style.maxHeight = allowedFrameH + 'px'; frame.style.height = allowedFrameH + 'px'; } catch (e) {}
-                  try { content.style.maxHeight = Math.max(60, allowedFrameH - 20) + 'px'; } catch (e) {}
-                } catch (e) {}
-              }, 80);
-            } catch (e) {}
-
             // inject small stylesheet for interpretation frame (once)
             try {
               if (!document.getElementById('pa-interpretation-styles')) {
                 const st = document.createElement('style');
                 st.id = 'pa-interpretation-styles';
                 st.textContent = `
-                  #ia-interpretation-content { font-family: 'Inter', 'Quicksand', Arial, sans-serif; color: #111; font-size: 15px; line-height: 1.5; padding: 8px; }
+                  #ia-interpretation-content { font-family: 'Quicksand', 'Inter', Arial, sans-serif; color: #ede8e3; font-size: 14px; line-height: 1.65; padding: 8px; }
                   #ia-interpretation-content p { margin: 0 0 0.8em 0; }
-                  .pa-interpretation-toolbar { display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-bottom:6px }
-                  .pa-interpretation-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); background:linear-gradient(180deg,#fff,#f6f6f6); cursor:pointer }
-                  .pa-interpretation-viewport { height: 180px; max-height: 180px; overflow: hidden !important; position: relative; }
-                  /* ensure interpretation content never shows scrollbars */
-                  #ia-interpretation-content { overflow: hidden !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
-                  .pa-interpretation-viewport, #ia-interpretation-content { -ms-overflow-style: none !important; scrollbar-width: none !important; }
-                  .pa-interpretation-viewport::-webkit-scrollbar, #ia-interpretation-content::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
-                  .pa-interpret-line { transition: transform 260ms ease, opacity 220ms ease; white-space: pre-wrap; }
-                  .pa-interpretation-skeleton { background: linear-gradient(90deg,#f3f3f3,#ececec,#f3f3f3); height:14px; border-radius:6px; margin-bottom:8px; animation: pa-skel 1.2s linear infinite }
+                  .pa-interpretation-viewport { overflow-y: auto; position: relative; }
+                  #ia-interpretation-content { overflow: visible !important; }
+                  
+                  .pa-interpretation-viewport::-webkit-scrollbar { width: 5px !important; display: block !important; }
+                  .pa-interpretation-viewport::-webkit-scrollbar-track { background: transparent; }
+                  .pa-interpretation-viewport::-webkit-scrollbar-thumb { background: rgba(201,169,110,.25); border-radius: 4px; }
+                  #ia-interpretation-content::-webkit-scrollbar { display: none !important; width: 0 !important; }
+                  .pa-interpret-line { transition: transform 260ms ease, opacity 220ms ease; white-space: pre-wrap; color: rgba(237,232,227,.88); }
+                  .pa-interpretation-skeleton { background: linear-gradient(90deg, rgba(201,169,110,.06), rgba(201,169,110,.12), rgba(201,169,110,.06)); height:14px; border-radius:6px; margin-bottom:8px; background-size:400px 100%; animation: pa-skel 1.4s linear infinite }
                   @keyframes pa-skel { 0% { background-position: -200px 0 } 100% { background-position: 200px 0 } }
                   .pa-interpretation-fadein { animation: pa-fade-in 320ms ease both }
                   @keyframes pa-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity:1; transform:none } }
-                  /* compact action buttons matching site style */
-                  .pa-action-btn { padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); background: linear-gradient(180deg,#2b2b2b,#1f1f1f); color: #fff; cursor:pointer; font-size:13px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); transition: transform 140ms ease, box-shadow 140ms ease; }
-                  .pa-action-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.18); }
-                  .pa-action-btn.secondary { background: linear-gradient(180deg,#f6f6f6,#fff); color:#111; border:1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-                  .pa-action-btn.small { padding:4px 8px; font-size:12px; border-radius:7px; }
                 `;
                 (document.head || document.documentElement).appendChild(st);
               }
@@ -1390,7 +1021,7 @@
                 `;
                 (document.head || document.documentElement).appendChild(ov);
               }
-            } catch (e) {}
+            } catch (e) { console.warn('[PA]', e); }
 
             // helper to render interpretation text/html into the content area
             function renderInterpretationInto(el, data, opts) {
@@ -1422,25 +1053,20 @@
                 // create a fixed viewport for typed content so we can control overflow
                 const viewport = document.createElement('div');
                 viewport.className = 'pa-interpretation-viewport';
-                viewport.style.overflow = 'hidden';
-                // prefer the caller-specified maxHeight if present, otherwise default to 180px
-                try { viewport.style.maxHeight = (el.style && el.style.maxHeight) ? el.style.maxHeight : '180px'; } catch (e) { viewport.style.maxHeight = '180px'; }
-                // lock the explicit height to the maxHeight so the viewport cannot grow
+                viewport.style.overflowY = 'auto';
+                try { viewport.style.maxHeight = 'none'; } catch (e) { console.warn('[PA]', e); }
                 try {
-                  // if maxHeight is a simple px value like '320px', apply it to height and minHeight
-                  const mh = String(viewport.style.maxHeight || '180px').trim();
-                  viewport.style.height = mh;
-                  viewport.style.minHeight = mh;
-                } catch (e) {}
+                  viewport.style.height = 'auto';
+                  viewport.style.minHeight = '0';
+                } catch (e) { console.warn('[PA]', e); }
                 viewport.style.position = 'relative';
-                viewport.style.width = '100%';
                 viewport.style.boxSizing = 'border-box';
 
-                // inner queue will hold lines stacked vertically; align to bottom so new lines appear at the bottom
+                // inner queue will hold lines stacked vertically; start from top
                 const queue = document.createElement('div');
                 queue.style.display = 'flex';
                 queue.style.flexDirection = 'column';
-                queue.style.justifyContent = 'flex-end';
+                queue.style.justifyContent = 'flex-start';
                 queue.style.width = '100%';
                 queue.style.boxSizing = 'border-box';
                 queue.style.gap = '6px';
@@ -1453,25 +1079,100 @@
                 el.appendChild(viewport);
 
                 // fade in effect for the body/viewport
-                setTimeout(() => { try { viewport.style.opacity = '1'; } catch (e) {} }, 20);
+                setTimeout(() => { try { viewport.style.opacity = '1'; } catch (e) { console.warn('[PA]', e); } }, 20);
 
                 // debug: log viewport size at open for easier troubleshooting
-                try { const rect = viewport.getBoundingClientRect(); console && console.log && console.log('[PopupAdapter] interp viewport rect', rect); } catch (e) {}
+                try { const rect = viewport.getBoundingClientRect(); console && console.log && console.log('[PopupAdapter] interp viewport rect', rect); } catch (e) { console.warn('[PA]', e); }
 
-                // speech synthesis wiring (programmatic control)
-                let utter = null;
-                function stopSpeak() { try { if (utter) { speechSynthesis.cancel(); utter = null; } } catch (e) {} }
+                // speech / TTS wiring (OpenAI TTS via /api/tts, fallback to speechSynthesis)
+                let _audioEl = null; // <audio> element for OpenAI TTS
+                let _audioBlobUrl = null;
+                let utter = null; // fallback speechSynthesis
+                let _ttsPlaying = false;
+
+                function stopSpeak() {
+                  try {
+                    _ttsPlaying = false;
+                    if (_audioEl) { try { _audioEl.pause(); _audioEl.currentTime = 0; } catch (e) { console.warn('[PA]', e); } }
+                    if (utter) { try { speechSynthesis.cancel(); } catch (e) { console.warn('[PA]', e); } utter = null; }
+                  } catch (e) { console.warn('[PA]', e); }
+                }
+
+                function isTTSPlaying() {
+                  if (_audioEl && !_audioEl.paused && !_audioEl.ended) return true;
+                  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.speaking) return true;
+                  return _ttsPlaying;
+                }
+
+                // fetch OpenAI TTS audio, returns blob URL. Caches result.
+                async function fetchTTSAudio(text) {
+                  if (_audioBlobUrl) return _audioBlobUrl;
+                  const ttsUrl = _isLocal ? '/api/tts' : _workerBase + '/api/tts';
+                  const resp = await fetch(ttsUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text, voice: 'nova', speed: 0.85 }),
+                  });
+                  if (!resp.ok) throw new Error('TTS API ' + resp.status);
+                  const blob = await resp.blob();
+                  _audioBlobUrl = URL.createObjectURL(blob);
+                  return _audioBlobUrl;
+                }
+
                 function playSpeak(text, rate) {
                   try {
                     stopSpeak();
                     const txt = String(text || (queue.innerText || queue.textContent || '') || '').trim();
                     if (!txt) return false;
-                    utter = new SpeechSynthesisUtterance(txt);
-                    utter.lang = (navigator.language || 'fr').indexOf('fr') === 0 ? 'fr-FR' : (navigator.language || 'fr');
-                    utter.rate = Number(rate || 1.0) || 1.0;
-                    speechSynthesis.speak(utter);
+                    _ttsPlaying = true;
+
+                    // Try OpenAI TTS first, fall back to speechSynthesis
+                    fetchTTSAudio(txt).then(function(blobUrl) {
+                      if (!_ttsPlaying) return; // cancelled while fetching
+                      if (!_audioEl) {
+                        _audioEl = new Audio();
+                      }
+                      _audioEl.src = blobUrl;
+                      _audioEl.playbackRate = Number(rate || 1.0) || 1.0;
+
+                      // sync credits with actual audio duration once metadata loads
+                      _audioEl.onloadedmetadata = function() {
+                        try {
+                          const realDuration = _audioEl.duration; // seconds
+                          if (realDuration && realDuration > 0) {
+                            const existingLines = Array.prototype.slice.call(queue.children || []).map(function(c) { return c.innerText || c.textContent || ''; });
+                            if (existingLines.length) {
+                              startCreditsMode(existingLines, null, realDuration / (_audioEl.playbackRate || 1));
+                            }
+                          }
+                        } catch (e) { console.warn('[PA]', e); }
+                      };
+                      _audioEl.onended = function() {
+                        _ttsPlaying = false;
+                        try { setAudioIcon(false); } catch (e) { console.warn('[PA]', e); }
+                      };
+                      _audioEl.play().catch(function(e) { console.warn('[PA] audio play blocked', e); });
+                    }).catch(function(e) {
+                      // fallback to speechSynthesis
+                      console.warn('[PA] OpenAI TTS failed, fallback to speechSynthesis', e);
+                      try {
+                        utter = new SpeechSynthesisUtterance(txt);
+                        utter.lang = 'fr-FR';
+                        utter.rate = Number(rate || 1.25) || 1.25;
+                        utter.onend = function() {
+                          _ttsPlaying = false;
+                          try { setAudioIcon(false); } catch (e) { console.warn('[PA]', e); }
+                        };
+                        speechSynthesis.speak(utter);
+                        // estimate duration for credits sync (fallback)
+                        var words = txt.split(/\s+/).filter(Boolean).length;
+                        var estSec = Math.max(15, (words / (140 * (utter.rate || 1.25))) * 60);
+                        var existingLines = Array.prototype.slice.call(queue.children || []).map(function(c) { return c.innerText || c.textContent || ''; });
+                        if (existingLines.length) { startCreditsMode(existingLines, null, estSec); }
+                      } catch (fe) { console.warn('[PA] speechSynthesis fallback failed', fe); _ttsPlaying = false; }
+                    });
                     return true;
-                  } catch (e) { console && console.warn && console.warn('TTS play failed', e); return false; }
+                  } catch (e) { console && console.warn && console.warn('TTS play failed', e); _ttsPlaying = false; return false; }
                 }
 
                 // Credits mode state
@@ -1509,8 +1210,8 @@
                           // clear transition so subsequent updates are immediate
                           queue.style.transition = '';
                           // leave queue.style.transform as translateY(-_removedHeight) to preserve continuity
-                        } catch (e) {}
-                        try { queue.removeEventListener('transitionend', onEnd); } catch (e) {}
+                        } catch (e) { console.warn('[PA]', e); }
+                        try { queue.removeEventListener('transitionend', onEnd); } catch (e) { console.warn('[PA]', e); }
                         resolve();
                       };
                       queue.addEventListener('transitionend', onEnd);
@@ -1579,12 +1280,14 @@
                         pEl.textContent = clean || '\u00A0';
                         queue.appendChild(pEl);
                       });
-                      // keep overflow hidden to avoid visible scrollbars
-                      viewport.style.overflow = 'hidden';
+                      // allow scroll within viewport (no credits animation)
+                      viewport.style.overflowY = 'auto';
+                      viewport.style.scrollbarWidth = 'thin';
+                      viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
                       return;
                     }
 
-                    // Normal: render all paragraphs immediately and start credits-mode automatically (slow)
+                    // Normal: render all paragraphs and auto-scroll from bottom of frame
                     queue.innerHTML = '';
                     paragraphs.forEach(p => {
                       const clean = sanitizeTextForDisplay(p);
@@ -1592,19 +1295,44 @@
                       pEl.textContent = clean || '\u00A0';
                       queue.appendChild(pEl);
                     });
-                    // start credits at slow speed (use paragraphs array)
-                    try { startCreditsMode(paragraphs, 8); } catch (e) {}
+                    // start auto-scroll: text begins at bottom of frame and scrolls up
+                    try {
+                      viewport.style.overflowY = 'hidden';
+                      void queue.offsetHeight;
+                      var frameH = (el.closest('.pa-interp-frame') || el.parentElement || viewport).clientHeight || 280;
+                      var queueH = queue.scrollHeight || queue.offsetHeight || 300;
+                      // position text just below visible area
+                      queue.style.transition = 'none';
+                      queue.style.transform = 'translateY(' + frameH + 'px)';
+                      void queue.offsetHeight;
+                      // scroll duration: ~12px/s (slow reading speed)
+                      var totalDist = frameH + queueH;
+                      var durationMs = Math.max(10000, Math.round((totalDist / 12) * 1000));
+                      queue.style.transition = 'transform ' + durationMs + 'ms linear';
+                      queue.style.transform = 'translateY(-' + queueH + 'px)';
+                      // when done, reset and allow manual scroll
+                      var _scrollDone = function() {
+                        queue.style.transition = 'none';
+                        queue.style.transform = 'none';
+                        viewport.style.overflowY = 'auto';
+                        viewport.style.scrollbarWidth = 'thin';
+                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                      };
+                      queue.addEventListener('transitionend', _scrollDone, { once: true });
+                      setTimeout(function() { _scrollDone(); }, durationMs + 500);
+                    } catch(e) { console.warn('[PA]', e); }
                   } catch (e) { console && console.warn && console.warn('[PopupAdapter] credits render error', e); }
                 })();
 
                 // Credits-mode animator: render all lines and smoothly scroll them upward like film credits
-                function startCreditsMode(lines, speedPxPerSec) {
+                // durationOverrideSec: if provided, ignore speedPxPerSec and use this total duration
+                function startCreditsMode(lines, speedPxPerSec, durationOverrideSec) {
                   try {
                     stopCreditsMode();
                     _creditsRunning = true;
                     _creditsCancel = null;
                     queue.innerHTML = '';
-                    viewport.style.overflow = 'hidden';
+                    viewport.style.overflowY = 'hidden';
                     // fill queue with paragraph elements (use textContent to avoid HTML injection)
                     lines.forEach(l => {
                       const lineEl = document.createElement('div');
@@ -1620,8 +1348,14 @@
                     const qh = queue.scrollHeight || queue.offsetHeight || 0;
                     const vh = viewport.clientHeight || 320;
                     const totalDistance = qh + vh;
-                    const speed = Math.max(10, Number(speedPxPerSec) || 30); // px per second
-                    const durationMs = Math.max(800, Math.round((totalDistance / speed) * 1000));
+                    let durationMs;
+                    if (durationOverrideSec && durationOverrideSec > 0) {
+                      // match scroll to TTS duration (add 20% buffer so text doesn't outrun voice)
+                      durationMs = Math.max(800, Math.round(durationOverrideSec * 1000 * 1.20));
+                    } else {
+                      const speed = Math.max(10, Number(speedPxPerSec) || 30); // px per second
+                      durationMs = Math.max(800, Math.round((totalDistance / speed) * 1000));
+                    }
 
                     // start with queue positioned below viewport (translateY = viewportHeight)
                     queue.style.transition = '';
@@ -1633,20 +1367,33 @@
                     queue.style.transform = `translateY(-${qh}px)`;
 
                     const onEnd = () => {
-                      try { _creditsRunning = false; _creditsCancel = null; queue.style.transition = ''; } catch (e) {}
+                      try {
+                        _creditsRunning = false; _creditsCancel = null;
+                        queue.style.transition = '';
+                        queue.style.transform = '';
+                        // switch viewport to scrollable after credits finish
+                        viewport.style.overflowY = 'auto';
+                        viewport.style.scrollbarWidth = 'thin';
+                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                      } catch (e) { console.warn('[PA]', e); }
                     };
                     const onEndHandler = () => { onEnd(); queue.removeEventListener('transitionend', onEndHandler); };
                     queue.addEventListener('transitionend', onEndHandler);
                     // cancel function
                     _creditsCancel = () => {
-                      try { queue.style.transition = ''; queue.style.transform = ''; _creditsRunning = false; _creditsCancel = null; } catch (e) {}
+                      try {
+                        queue.style.transition = ''; queue.style.transform = ''; _creditsRunning = false; _creditsCancel = null;
+                        viewport.style.overflowY = 'auto';
+                        viewport.style.scrollbarWidth = 'thin';
+                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                      } catch (e) { console.warn('[PA]', e); }
                     };
                     // fallback guard
                     setTimeout(() => { if (_creditsRunning) onEnd(); }, durationMs + 300);
                   } catch (e) { console && console.warn && console.warn('startCreditsMode failed', e); }
                 }
 
-                function stopCreditsMode() { try { if (_creditsCancel) { _creditsCancel(); } _creditsRunning = false; _creditsCancel = null; } catch (e) {} }
+                function stopCreditsMode() { try { if (_creditsCancel) { _creditsCancel(); } _creditsRunning = false; _creditsCancel = null; } catch (e) { console.warn('[PA]', e); } }
 
                 // provide a programmatic credits trigger (no UI button)
                 function triggerCredits() {
@@ -1664,14 +1411,14 @@
                 }
 
                 // return programmatic controls for external UI wiring
-                return { play: (rate) => playSpeak(null, rate), stop: stopSpeak, stopTyping, credits: triggerCredits };
+                return { play: (rate) => playSpeak(null, rate), stop: stopSpeak, isPlaying: isTTSPlaying, stopTyping, credits: triggerCredits };
               } catch (e) { try { el.textContent = (typeof data === 'string') ? data : JSON.stringify(data); } catch (er) {} }
             }
 
             // call the API with POST JSON, but use a retry wrapper and provide a retry button on failure
             (async () => {
               // helper: fetch with attempts + timeout
-              async function fetchWithRetries(url, options, attempts = 3, baseDelay = 700, timeoutMs = 12000) {
+              async function fetchWithRetries(url, options, attempts = 3, baseDelay = 700, timeoutMs = 60000) {
                 let lastErr = null;
                 for (let i = 0; i < attempts; i++) {
                   try {
@@ -1692,14 +1439,17 @@
               // main request runner with UI hooks so we can retry on user click
               async function doRequest() {
                 try {
-                  // show skeleton while waiting
+                  // show loading message while waiting
                   content.innerHTML = '';
-                  const sk = document.createElement('div'); sk.className = 'pa-interpretation-skeleton'; sk.style.width = '80%'; sk.style.height = '18px'; content.appendChild(sk);
+                  const loader = document.createElement('div'); loader.className = 'pa-interpretation-loader';
+                  loader.innerHTML = '<div class="pa-loader-spinner"></div><p class="pa-loader-text">Les astres alignent votre tirage…</p>';
+                  content.appendChild(loader);
                   // run fetch with retries
-                  const resp = await fetchWithRetries(apiBase, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }, 3, 700, 12000);
+                  const resp = await fetchWithRetries(apiBase, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }, 3, 700, 60000);
                   if (!resp || !resp.ok) {
                     const txt = await (resp ? resp.text().catch(()=>resp.statusText||String(resp.status)) : Promise.resolve('No response'));
-                    showError('Erreur API: ' + txt);
+                    const isTimeout = txt.indexOf('TimeoutError') !== -1 || txt.indexOf('timeout') !== -1 || txt.indexOf('aborted') !== -1;
+                    showError(isTimeout ? 'Le serveur met trop de temps à répondre. Réessayez dans quelques instants.' : 'Erreur API: ' + txt);
                     console.warn('[PopupAdapter] Interpretation API error', resp && resp.status, txt);
                     return;
                   }
@@ -1708,21 +1458,35 @@
                     const html = await resp.text();
                     try {
                       const ctr = renderInterpretationInto(content, html, { type: 'html' });
-                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); }
                     } catch (e) { content.innerHTML = html; }
                   } else if (ctype.indexOf('application/json') !== -1) {
                     const j = await resp.json();
                     try {
                       const ctr = renderInterpretationInto(content, j, { type: 'json' });
-                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); }
                     } catch (e) { content.textContent = typeof j === 'string' ? j : JSON.stringify(j, null, 2); }
                   } else {
                     const txt = await resp.text();
                     try {
                       const ctr = renderInterpretationInto(content, txt, { type: 'text' });
-                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); try { ctr.play(1.0); setAudioIcon(true); } catch(e){} }
+                      if (ctr && typeof ctr.play === 'function') { _interpControls = ctr; audioBtn.disabled = false; setAudioIcon(false); }
                     } catch (e) { content.textContent = txt; }
                   }
+                  // Fade out carto video and fade in cards when interpretation is ready
+                  try {
+                    if (window.PopupAdapter._cartoVideo) {
+                      window.PopupAdapter._cartoVideo.style.opacity = '0';
+                    }
+                  } catch (_ve) {}
+                  try { chosenWrap.style.opacity = '1'; } catch (_cw) {}
+                  // Log tirage to admin API (fire-and-forget)
+                  try {
+                    const _logUrl = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+                      ? 'https://opanoma.fr/api/admin.php?action=tirage-log'
+                      : '/api/admin.php?action=tirage-log';
+                    fetch(_logUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+                  } catch (_le) {}
                 } catch (err) {
                   // network/abort error
                   const msg = (err && err.name === 'AbortError') ? 'Temps d\'attente épuisé' : (err && err.message) ? err.message : 'Erreur réseau lors de la récupération de l\'interprétation.';
@@ -1737,7 +1501,7 @@
                   const detail = document.createElement('div'); detail.style.fontSize = '12px'; detail.style.color = '#666'; detail.style.marginTop = '6px'; detail.textContent = (err && err.toString()) || '';
                   content.appendChild(em); content.appendChild(detail);
                   const retry = document.createElement('button'); retry.textContent = 'Réessayer'; retry.style.marginTop = '8px'; retry.className = 'pa-interpretation-btn';
-                  retry.addEventListener('click', function(){ try { doRequest(); } catch(e){} });
+                  retry.addEventListener('click', function(){ try { doRequest(); } catch (e) { console.warn('[PA]', e); } });
                   content.appendChild(retry);
                 } catch (e) { try { content.textContent = msg; } catch (ee) {} }
                 console.error('[PopupAdapter] fetchInterpretation failed', err || msg);
@@ -1759,15 +1523,17 @@
           // wire button behaviors
           btnTirage.addEventListener('click', function () {
             try {
+              // stop audio before leaving
+              try { stopPlayback(); } catch (e) { console.warn('[PA]', e); }
               // reopen a new deck with the same initial chosen count (if available)
-              try { if (typeof showDeckPopup === 'function') showDeckPopup(initialRemaining || 3, { fan: true }); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(initialRemaining || 3, { fan: true }); } catch (e) {}
-            } catch (e) {}
+              try { if (typeof showDeckPopup === 'function') showDeckPopup(initialRemaining || 3, { fan: true }); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(initialRemaining || 3, { fan: true }); } catch (e) { console.warn('[PA]', e); }
+            } catch (e) { console.warn('[PA]', e); }
           });
           // Ensure the Back button removes our overlay (if we used it) and stops audio
           btnBack.addEventListener('click', function () {
             try {
               // ensure playback is stopped as soon as the popup is dismissed
-              try { stopPlayback(); } catch (e) {}
+              try { stopPlayback(); } catch (e) { console.warn('[PA]', e); }
               // close/hide this interpretation popup; best-effort removal
               try {
                 const overlay = interp.closest('.pa-interpretation-overlay');
@@ -1775,36 +1541,81 @@
                 if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
                 if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
                 else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
-                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {}
-              } catch (e) {}
-            } catch (e) {}
+                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) { console.warn('[PA]', e); } } catch (e) { console.warn('[PA]', e); }
+              } catch (e) { console.warn('[PA]', e); }
+            } catch (e) { console.warn('[PA]', e); }
           });
 
           btnSave.addEventListener('click', function () {
             try {
-              // default save behavior: download a JSON file with the selection
+              // Generate a styled PDF with cards + interpretation text
+              var interpText = '';
               try {
-                const payload = { date: (new Date()).toISOString(), selection: cards };
-                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'tirage-' + (new Date()).toISOString().replace(/[:.]/g, '-') + '.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-              } catch (e) {
-                // fallback: expose via callback
-                try { if (window.PopupAdapter && typeof window.PopupAdapter._onSaveLastTirage === 'function') window.PopupAdapter._onSaveLastTirage(cards); } catch (ee) {}
+                var el = document.getElementById('ia-interpretation-content');
+                if (el) interpText = el.innerText || el.textContent || '';
+                if (!interpText) { var vp = frame.querySelector('.pa-interpretation-viewport'); if (vp) interpText = vp.innerText || vp.textContent || ''; }
+              } catch (e) { console.warn('[PA]', e); }
+              var themeLabel = (window.PopupAdapter && window.PopupAdapter.currentTheme) || '';
+              var questionLabel = (window.PopupAdapter && window.PopupAdapter.currentQuestion) || '';
+              var dateStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+              // Build card images as base64 data URLs via canvas for PDF embedding
+              var cardHtmlParts = [];
+              cards.forEach(function(c, idx) {
+                var src = c.src || c;
+                var fname = String(src).split('/').pop().replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/^\d+-/, '').replace(/-/g, ' ');
+                var label = fname.charAt(0).toUpperCase() + fname.slice(1) + (c.reversed ? ' (Invers\u00e9e)' : '');
+                var rotateStyle = c.reversed ? 'transform:rotate(180deg)' : '';
+                cardHtmlParts.push(
+                  '<div style="display:inline-block;text-align:center;margin:0 8px 8px">' +
+                  '<img src="' + src + '" style="width:100px;height:150px;object-fit:cover;border-radius:8px;border:1.5px solid #8b6f3a;display:block;' + rotateStyle + '" crossorigin="anonymous">' +
+                  '<div style="margin-top:4px;font-size:11px;color:#8b6f3a;font-family:serif">' + label + '</div></div>'
+                );
+              });
+
+              // Format interpretation text as paragraphs
+              var interpHtml = interpText.split(/\n\s*\n/).map(function(p) { return '<p style="margin:0 0 10px;line-height:1.6">' + p.trim().replace(/\n/g, '<br>') + '</p>'; }).join('');
+
+              var htmlDoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tirage - L\u2019\u0152il d\u2019Opanoma</title>' +
+                '<style>' +
+                  'body{margin:0;padding:32px 28px;background:#fff;color:#1a1a1a;font-family:"Quicksand","Inter",Arial,sans-serif;font-size:14px}' +
+                  'h1{text-align:center;font-family:"Cinzel",Georgia,serif;font-size:20px;color:#8b6f3a;margin:0 0 4px;letter-spacing:.06em}' +
+                  '.date{text-align:center;font-size:12px;color:#999;margin:0 0 20px}' +
+                  '.meta{text-align:center;margin:0 0 18px;font-size:13px;color:#555}' +
+                  '.meta b{color:#8b6f3a}' +
+                  '.cards{text-align:center;margin:0 0 24px}' +
+                  '.sep{border:none;border-top:1px solid #ddd;margin:20px 0}' +
+                  'h2{font-family:"Cinzel",Georgia,serif;font-size:15px;color:#8b6f3a;margin:0 0 12px;letter-spacing:.04em}' +
+                  '.text{color:#222;line-height:1.65;font-size:14px}' +
+                  '.footer{margin-top:28px;text-align:center;font-size:11px;color:#aaa;font-style:italic}' +
+                '</style></head><body>' +
+                '<h1>L\u2019\u0152il d\u2019Opanoma</h1>' +
+                '<div class="date">' + dateStr + '</div>' +
+                (themeLabel || questionLabel ? '<div class="meta">' + (themeLabel ? 'Th\u00e8me\u00a0: <b>' + themeLabel + '</b>' : '') + (themeLabel && questionLabel ? ' &mdash; ' : '') + (questionLabel ? 'Question\u00a0: <b>' + questionLabel + '</b>' : '') + '</div>' : '') +
+                '<div class="cards">' + cardHtmlParts.join('') + '</div>' +
+                '<hr class="sep">' +
+                '<h2>Interpr\u00e9tation</h2>' +
+                '<div class="text">' + interpHtml + '</div>' +
+                '<div class="footer">Tirage guid\u00e9 par IA &mdash; en compl\u00e9ment de vos s\u00e9ances avec Manon</div>' +
+                '</body></html>';
+
+              // Open in a new window and trigger print (Save as PDF)
+              var w = window.open('', '_blank', 'width=700,height=900');
+              if (w) {
+                w.document.write(htmlDoc);
+                w.document.close();
+                // Wait for images to load before printing
+                setTimeout(function() {
+                  try { w.focus(); w.print(); } catch (e) { console.warn('[PA]', e); }
+                }, 600);
               }
-            } catch (e) {}
+            } catch (e) { console.warn('[PopupAdapter] PDF save failed', e); }
           });
 
           btnBack.addEventListener('click', function () {
             try {
               // ensure playback is stopped as soon as the popup is dismissed
-              try { stopPlayback(); } catch (e) {}
+              try { stopPlayback(); } catch (e) { console.warn('[PA]', e); }
               // close/hide this interpretation popup; best-effort removal
               try {
                 // if inside a fallback overlay, remove that overlay
@@ -1814,35 +1625,17 @@
                 if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
                 else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
                 // restore any applied transforms
-                try { if (interp && interp.dataset && interp.dataset._pa_fixApplied) { interp.style.transform = interp.dataset._pa_origTransform || ''; delete interp.dataset._pa_fixApplied; delete interp.dataset._pa_origTransform; } } catch (e) {}
-                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) {} } catch (e) {}
-              } catch (e) {}
-            } catch (e) {}
+                try { if (interp && interp.dataset && interp.dataset._pa_fixApplied) { interp.style.transform = interp.dataset._pa_origTransform || ''; delete interp.dataset._pa_fixApplied; delete interp.dataset._pa_origTransform; } } catch (e) { console.warn('[PA]', e); }
+                try { setGlobalNoScroll(false); try { document.body.style.overflowX = ''; } catch (e) { console.warn('[PA]', e); } } catch (e) { console.warn('[PA]', e); }
+              } catch (e) { console.warn('[PA]', e); }
+            } catch (e) { console.warn('[PA]', e); }
           });
 
-          // expose starter hook and auto-invoke if present (to allow automatic interpretation later)
-          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._interpretationStarter = function(cb) { try { if (typeof cb === 'function') cb(cards, frame); } catch (e) {} }; } catch (e) {}
-          // ensure global no-scroll and clamp interp sizes so it won't cause page scrollbars
-          try { setGlobalNoScroll(true); } catch (e) {}
-          try { interp.style.boxSizing = 'border-box'; interp.style.maxWidth = 'calc(100vw - 40px)'; interp.style.maxHeight = 'calc(100vh - 160px)'; interp.style.overflow = 'hidden'; } catch (e) {}
-                  // open the interpretation popup
-                          // if we have a cached deck popup size, apply it so both popups match exactly
-                          try {
-                            // prefer the precise measured rect (set after deck open) if available
-                            const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
-                            if (rect) {
-                              try { interp.style.minWidth = (rect.width ? (rect.width + 'px') : interp.style.minWidth); } catch (e) {}
-                              try { interp.style.width = (rect.width ? (rect.width + 'px') : interp.style.width); } catch (e) {}
-                              // Do NOT force a large fixed height on the interpretation popup. Instead cap the
-                              // maximum height to the previously measured deck height and allow the popup to
-                              // size to its content. This prevents the interpretation frame from being too tall.
-                              try { interp.style.maxHeight = (rect.height ? (rect.height + 'px') : interp.style.maxHeight); } catch (e) {}
-                              try { interp.style.height = 'auto'; } catch (e) {}
-                              try { interp.style.minHeight = 'auto'; } catch (e) {}
-                            }
-                          } catch (e) {}
+          // expose starter hook and auto-invoke if present
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._interpretationStarter = function(cb) { try { if (typeof cb === 'function') cb(cards, frame); } catch (e) { console.warn('[PA]', e); } }; } catch (e) { console.warn('[PA]', e); }
+          try { setGlobalNoScroll(true); } catch (e) { console.warn('[PA]', e); }
+                  // open the interpretation popup via PopupManager
                           let _popupHandle = null;
-                          // Try to mount interpretation into a controlled fixed overlay to avoid host popup wrappers
                           let handle = null;
                           try {
                             // create overlay if missing (and ensure a backdrop always exists)
@@ -1855,15 +1648,16 @@
                               Object.assign(overlay.style, {
                                 position: 'fixed',
                                 left: '50%',
+                                top: '12vh',
                                 transform: 'translateX(-50%)',
-                                top: '110px',
                                 zIndex: 2147483646,
                                 background: 'transparent',
                                 boxSizing: 'border-box',
                                 display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                                padding: '8px'
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                padding: '16px'
                               });
                               // ensure overlay does not capture pointer events except children
                               overlay.style.pointerEvents = 'auto';
@@ -1874,23 +1668,46 @@
                               bd.className = 'pa-interpretation-backdrop';
                               Object.assign(bd.style, {
                                 position: 'fixed', left: '0', top: '0', right: '0', bottom: '0',
-                                background: 'rgba(0,0,0,0.36)', zIndex: 2147483645
+                                background: 'rgba(0,0,0,1)', zIndex: 2147483645
                               });
                               // clicking backdrop closes overlay
                               bd.addEventListener('click', function () {
                                 try {
                                   // restore any hidden deck parents
-                                  try { const hidden = document.querySelectorAll('[data-_pa_hiddenByInterp="1"]'); if (hidden && hidden.length) Array.prototype.forEach.call(hidden, h => { try { h.style.visibility = ''; delete h.dataset._pa_hiddenByInterp; } catch (e) {} }); } catch (e) {}
-                                } catch (e) {}
-                                try { const ov = document.querySelector('.pa-interpretation-overlay'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch (e) {}
-                                try { setGlobalNoScroll(false); } catch (e) {}
-                                try { if (typeof stopPlayback === 'function') stopPlayback(); } catch (e) {}
-                                try { if (bd && bd.parentNode) bd.parentNode.removeChild(bd); } catch (e) {}
+                                  try { const hidden = document.querySelectorAll('[data-_pa_hiddenByInterp="1"]'); if (hidden && hidden.length) Array.prototype.forEach.call(hidden, h => { try { h.style.visibility = ''; delete h.dataset._pa_hiddenByInterp; } catch (e) { console.warn('[PA]', e); } }); } catch (e) { console.warn('[PA]', e); }
+                                } catch (e) { console.warn('[PA]', e); }
+                                try { const ov = document.querySelector('.pa-interpretation-overlay'); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch (e) { console.warn('[PA]', e); }
+                                try { setGlobalNoScroll(false); } catch (e) { console.warn('[PA]', e); }
+                                try { if (typeof stopPlayback === 'function') stopPlayback(); } catch (e) { console.warn('[PA]', e); }
+                                try { if (bd && bd.parentNode) bd.parentNode.removeChild(bd); } catch (e) { console.warn('[PA]', e); }
                               });
                             }
                             // ensure backdrop and overlay are appended (backdrop before overlay)
                             try {
                               if (!bd.parentNode) document.body.appendChild(bd);
+                              // Insert carto video into backdrop
+                              if (!bd.querySelector('.pa-carto-video')) {
+                                const vid = document.createElement('video');
+                                vid.className = 'pa-carto-video';
+                                vid.src = '/img/carto-video.mp4';
+                                vid.autoplay = true; vid.muted = false; vid.loop = false; vid.playsInline = true;
+                                vid.setAttribute('playsinline', '');
+                                Object.assign(vid.style, {
+                                  position: 'absolute', top: '50%', left: '50%',
+                                  transform: 'translate(-50%,-50%)',
+                                  width: '100%', height: '100%',
+                                  objectFit: 'contain', opacity: '0',
+                                  transition: 'opacity 1.5s ease', zIndex: '0'
+                                });
+                                // Cross-fade: ramp video in once it starts playing
+                                vid.addEventListener('playing', function () {
+                                  requestAnimationFrame(function () { vid.style.opacity = '0.5'; });
+                                }, { once: true });
+                                bd.style.overflow = 'hidden';
+                                bd.appendChild(vid);
+                                // Store reference to fade out later
+                                window.PopupAdapter._cartoVideo = vid;
+                              }
                               if (!overlay.parentNode) document.body.appendChild(overlay);
                               // apply stored deck background to overlay so it's opaque like the deck popup
                               try {
@@ -1926,18 +1743,22 @@
                                     return 'rgba(255,255,255,0.96)';
                                   } catch (e) { return 'rgba(255,255,255,0.96)'; }
                                 }
-                                try { overlay.style.background = veilColor(bg); } catch (e) { overlay.style.background = 'rgba(255,255,255,0.96)'; }
-                              } catch (e) {}
-                            } catch (e) {}
+                                try { overlay.style.background = 'transparent'; } catch (e) { overlay.style.background = 'transparent'; }
+                              } catch (e) { console.warn('[PA]', e); }
+                            } catch (e) { console.warn('[PA]', e); }
 
-                            // apply measured deck popup size if available so both popups match exactly
+                            // apply measured deck popup width if available; let height adapt to content
                             const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
                             if (rect) {
-                              try { overlay.style.width = rect.width + 'px'; } catch (e) {}
-                              try { overlay.style.minWidth = rect.width + 'px'; } catch (e) {}
-                              try { overlay.style.maxHeight = rect.height + 'px'; } catch (e) {}
-                              try { overlay.style.overflow = 'hidden'; } catch (e) {}
+                              try { overlay.style.width = rect.width + 'px'; } catch (e) { console.warn('[PA]', e); }
+                              try { overlay.style.minWidth = rect.width + 'px'; } catch (e) { console.warn('[PA]', e); }
                             }
+                            // let overlay expand and scroll naturally
+                            try { overlay.style.maxHeight = 'none'; } catch (e) { console.warn('[PA]', e); }
+                            try { overlay.style.maxWidth = '95vw'; } catch (e) { console.warn('[PA]', e); }
+                            try { overlay.style.width = '900px'; } catch (e) { console.warn('[PA]', e); }
+                            try { overlay.style.overflowY = 'auto'; } catch (e) { console.warn('[PA]', e); }
+                            try { overlay.style.overflowX = 'hidden'; } catch (e) { console.warn('[PA]', e); }
 
                             // Before moving interp into overlay, aggressively remove any remaining deck popup elements
                             try {
@@ -1946,29 +1767,40 @@
                                 const lastHandle = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupHandle) ? window.PopupAdapter._lastDeckPopupHandle : null;
                                 const wrapper = (lastHandle && lastHandle.nodeType === 1) ? lastHandle : (lastHandle && lastHandle.el) ? lastHandle.el : null;
                                 if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                               // remove any fallback overlays created for the deck
-                              try { const fbs = document.querySelectorAll && document.querySelectorAll('.pa-deck-overlay-fallback'); if (fbs && fbs.length) Array.prototype.forEach.call(fbs, f => { try { if (f && f.parentNode) f.parentNode.removeChild(f); } catch (e) {} }); } catch (e) {}
+                              try { const fbs = document.querySelectorAll && document.querySelectorAll('.pa-deck-overlay-fallback'); if (fbs && fbs.length) Array.prototype.forEach.call(fbs, f => { try { if (f && f.parentNode) f.parentNode.removeChild(f); } catch (e) { console.warn('[PA]', e); } }); } catch (e) { console.warn('[PA]', e); }
+                              // cross-fade .pm-overlay (carto.webp) out instead of removing abruptly
+                              try {
+                                const pmOvs = document.querySelectorAll('.pm-overlay');
+                                if (pmOvs && pmOvs.length) Array.prototype.forEach.call(pmOvs, function (o) {
+                                  try {
+                                    o.style.transition = 'opacity 1.2s ease';
+                                    o.style.opacity = '0';
+                                    setTimeout(function () { try { if (o && o.parentNode) o.parentNode.removeChild(o); } catch (e) {} }, 1300);
+                                  } catch (e) {}
+                                });
+                              } catch (e) { console.warn('[PA]', e); }
                               // remove any legacy deck container id
-                              try { const lastC = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastC && lastC.parentNode) lastC.parentNode.removeChild(lastC); } catch (e) {}
-                            } catch (e) {}
+                              try { const lastC = document.getElementById && document.getElementById('pa-last-deck-container'); if (lastC && lastC.parentNode) lastC.parentNode.removeChild(lastC); } catch (e) { console.warn('[PA]', e); }
+                            } catch (e) { console.warn('[PA]', e); }
                             // hide any popup ancestors that contain deck slots so they cannot be seen under the interpretation
                             try {
-                              const slots = document.querySelectorAll && document.querySelectorAll('.pm-card-slot');
+                              const slots = document.querySelectorAll && document.querySelectorAll('.pa-deck-card, .pm-card-slot');
                               if (slots && slots.length) {
                                 Array.prototype.forEach.call(slots, function(s) {
                                   try {
-                                    const parent = (s.closest && (s.closest('.pa-deck-overlay-fallback') || s.closest('.pm-popup') || s.closest('.pm-popup-root') || s.closest('.pm-popup-box') || s.closest('#pa-last-deck-container')) ) || s.parentNode;
+                                    const parent = (s.closest && (s.closest('.pa-deck-overlay-fallback') || s.closest('.pm-popup') || s.closest('.pm-popup-inner') || s.closest('#pa-last-deck-container')) ) || s.parentNode;
                                     if (parent && parent.style && !parent.dataset._pa_hiddenByInterp) {
                                       parent.dataset._pa_hiddenByInterp = '1';
                                       parent.style.visibility = 'hidden';
                                     }
-                                  } catch (e) {}
+                                  } catch (e) { console.warn('[PA]', e); }
                                 });
                               }
-                            } catch (e) {}
+                            } catch (e) { console.warn('[PA]', e); }
                             // move interp into overlay
-                            try { if (interp.parentNode) interp.parentNode.removeChild(interp); } catch (e) {}
+                            try { if (interp.parentNode) interp.parentNode.removeChild(interp); } catch (e) { console.warn('[PA]', e); }
                             interp.style.width = '100%';
                             interp.style.boxSizing = 'border-box';
                             overlay.appendChild(interp);
@@ -1977,48 +1809,48 @@
                             // fallback: use openPopup (host PopupManager)
                             try { handle = openPopup(interp); } catch (er) { handle = interp; }
                           }
-                          try { _popupHandle = handle; } catch (e) {}
+                          try { _popupHandle = handle; } catch (e) { console.warn('[PA]', e); }
                           // Diagnostic logger: capture wrapper rects and events for troubleshooting
                           try {
                             try { window.__PopupWatcherLogs = window.__PopupWatcherLogs || []; } catch (e) { window.__PopupWatcherLogs = []; }
                             function _pw_now() { try { return Date.now(); } catch (e) { return +(new Date()); } }
                             function _pw_rect(n) { try { if (!n || !n.getBoundingClientRect) return null; const r = n.getBoundingClientRect(); return { left: Math.round(r.left), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height), right: Math.round(r.right), bottom: Math.round(r.bottom) }; } catch (e) { return null; } }
-                            function _pw_log(msg, node) { try { window.__PopupWatcherLogs.push({ t: _pw_now(), msg: String(msg || ''), rect: _pw_rect(node), style: node && node.getAttribute ? node.getAttribute('style') : null, class: node && node.className ? node.className : null }); } catch (e) {} }
+                            function _pw_log(msg, node) { try { window.__PopupWatcherLogs.push({ t: _pw_now(), msg: String(msg || ''), rect: _pw_rect(node), style: node && node.getAttribute ? node.getAttribute('style') : null, class: node && node.className ? node.className : null }); } catch (e) { console.warn('[PA]', e); } }
                             // attempt to identify the wrapper returned by openPopup
                             try {
                               const wrapperNode = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                               _pw_log('wrapper-initial', wrapperNode || interp);
                               // probes at intervals
-                              [60,120,240,480,900].forEach((ms) => setTimeout(() => { try { _pw_log('wrapper-probe+' + ms, wrapperNode || interp); } catch (e) {} }, ms));
+                              [60,120,240,480,900].forEach((ms) => setTimeout(() => { try { _pw_log('wrapper-probe+' + ms, wrapperNode || interp); } catch (e) { console.warn('[PA]', e); } }, ms));
                               // listen for transitionend/animationend
                               try {
                                 if (wrapperNode) {
-                                  const onEnd = function(ev) { try { _pw_log('wrapper-transitionend:' + (ev && ev.propertyName) , wrapperNode); } catch (e) {} };
+                                  const onEnd = function(ev) { try { _pw_log('wrapper-transitionend:' + (ev && ev.propertyName) , wrapperNode); } catch (e) { console.warn('[PA]', e); } };
                                   wrapperNode.addEventListener && wrapperNode.addEventListener('transitionend', onEnd);
                                   wrapperNode.addEventListener && wrapperNode.addEventListener('animationend', onEnd);
                                 }
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                               // observe attribute changes on wrapper for short period
                               try {
                                 if (wrapperNode && window.MutationObserver) {
                                   const mo = new MutationObserver(function(list) {
-                                    try { _pw_log('wrapper-mutation', wrapperNode); } catch (e) {}
+                                    try { _pw_log('wrapper-mutation', wrapperNode); } catch (e) { console.warn('[PA]', e); }
                                   });
-                                  try { mo.observe(wrapperNode, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) {}
-                                  setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 1200);
+                                  try { mo.observe(wrapperNode, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) { console.warn('[PA]', e); }
+                                  setTimeout(() => { try { mo.disconnect(); } catch (e) { console.warn('[PA]', e); } }, 1200);
                                 }
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                               // also probe deck slot rects if present (helpful to see source positions)
                               try {
-                                const deckSlots = document.querySelectorAll && document.querySelectorAll('.pm-card-slot');
+                                const deckSlots = document.querySelectorAll && document.querySelectorAll('.pa-deck-card, .pm-card-slot');
                                 if (deckSlots && deckSlots.length) {
-                                  Array.prototype.forEach.call(deckSlots, function(s, idx) { try { _pw_log('deck-slot-' + idx, s); } catch (e) {} });
+                                  Array.prototype.forEach.call(deckSlots, function(s, idx) { try { _pw_log('deck-slot-' + idx, s); } catch (e) { console.warn('[PA]', e); } });
                                 }
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                             } catch (e) { _pw_log('wrapper-log-setup-failed', interp); }
                             // expose reader helper
-                            try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter.getPopupWatcherLogs = function() { try { return window.__PopupWatcherLogs || []; } catch (e) { return []; } }; } catch (e) {}
-                          } catch (e) {}
+                            try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter.getPopupWatcherLogs = function() { try { return window.__PopupWatcherLogs || []; } catch (e) { return []; } }; } catch (e) { console.warn('[PA]', e); }
+                          } catch (e) { console.warn('[PA]', e); }
                           // Try morph transition: clone visible card images from the deck and animate them
                           try {
                             // Disable morph by default to avoid visual displacement; can be re-enabled
@@ -2034,26 +1866,26 @@
                                     if (wrapperNode && wrapperNode.getBoundingClientRect) {
                                       const wr = wrapperNode.getBoundingClientRect();
                                       // preserve originals
-                                      try { wrapperNode.dataset._pa_origTransition = wrapperNode.style.transition || ''; } catch (e) {}
-                                      try { wrapperNode.dataset._pa_origTransform = wrapperNode.style.transform || ''; } catch (e) {}
-                                      try { wrapperNode.dataset._pa_origLeft = wrapperNode.style.left || ''; } catch (e) {}
-                                      try { wrapperNode.dataset._pa_origPosition = wrapperNode.style.position || ''; } catch (e) {}
-                                      try { wrapperNode.dataset._pa_origWidth = wrapperNode.style.width || ''; } catch (e) {}
-                                      try { wrapperNode.dataset._pa_origMinWidth = wrapperNode.style.minWidth || ''; } catch (e) {}
+                                      try { wrapperNode.dataset._pa_origTransition = wrapperNode.style.transition || ''; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.dataset._pa_origTransform = wrapperNode.style.transform || ''; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.dataset._pa_origLeft = wrapperNode.style.left || ''; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.dataset._pa_origPosition = wrapperNode.style.position || ''; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.dataset._pa_origWidth = wrapperNode.style.width || ''; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.dataset._pa_origMinWidth = wrapperNode.style.minWidth || ''; } catch (e) { console.warn('[PA]', e); }
                                       // disable transitions and enforce centering class
-                                      try { wrapperNode.style.transition = 'none'; } catch (e) {}
-                                      try { wrapperNode.style.width = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) {}
-                                      try { wrapperNode.style.minWidth = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) {}
-                                      try { wrapperNode.classList && wrapperNode.classList.add('pa-center-popup'); } catch (e) {}
+                                      try { wrapperNode.style.transition = 'none'; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.style.width = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.style.minWidth = Math.max(48, Math.round(wr.width || 720)) + 'px'; } catch (e) { console.warn('[PA]', e); }
+                                      try { wrapperNode.classList && wrapperNode.classList.add('pa-center-popup'); } catch (e) { console.warn('[PA]', e); }
                                       _morphLockedWrapper = wrapperNode;
                                     }
-                                  } catch (e) {}
+                                  } catch (e) { console.warn('[PA]', e); }
                                 // hide interp content until morph completes (use opacity so visibility/layout remains)
-                                try { interp.style.visibility = 'hidden'; interp.style.opacity = '0'; } catch (e) {}
+                                try { interp.style.visibility = 'hidden'; interp.style.opacity = '0'; } catch (e) { console.warn('[PA]', e); }
                                 // locate deck slot images by index (if deck still present)
                                 const clones = [];
                                 const body = document.body || document.documentElement;
-                                const deckSlots = (function(){ try { return Array.prototype.slice.call(document.querySelectorAll('.pm-card-slot')); } catch(e){ return []; } })();
+                                const deckSlots = (function(){ try { return Array.prototype.slice.call(document.querySelectorAll('.pa-deck-card, .pm-card-slot')); } catch(e){ return []; } })();
                                 // create clones mapped to the chosen cards
                                 cards.forEach((c, i) => {
                                   try {
@@ -2065,7 +1897,7 @@
                                     }
                                     // fallback: try to find any image with matching src
                                     if (!sourceImg && src) {
-                                      try { sourceImg = document.querySelector('img[src$="' + String(src).split('/').pop() + '"]'); } catch (e) {}
+                                      try { sourceImg = document.querySelector('img[src$="' + String(src).split('/').pop() + '"]'); } catch (e) { console.warn('[PA]', e); }
                                     }
                                     // build clone element
                                     const cl = document.createElement('img');
@@ -2079,7 +1911,7 @@
                                     cl.style.transition = 'transform 520ms cubic-bezier(.2,.9,.25,1), opacity 420ms ease';
                                     // initial placement from source image rect or center fallback
                                     let sRect = null;
-                                    try { if (sourceImg && sourceImg.getBoundingClientRect) sRect = sourceImg.getBoundingClientRect(); } catch (e) {}
+                                    try { if (sourceImg && sourceImg.getBoundingClientRect) sRect = sourceImg.getBoundingClientRect(); } catch (e) { console.warn('[PA]', e); }
                                     if (!sRect) {
                                       sRect = { left: window.innerWidth/2 - 80, top: window.innerHeight/2 - 120, width: 160, height: 240 };
                                     }
@@ -2090,7 +1922,7 @@
                                     cl.style.objectFit = 'contain';
                                     body.appendChild(cl);
                                     clones.push({ el: cl, sourceRect: sRect, sourceImg: sourceImg });
-                                  } catch (e) {}
+                                  } catch (e) { console.warn('[PA]', e); }
                                 });
 
                                 // ensure chosenWrap children exist inside interp; wait for wrapper to stabilize
@@ -2109,15 +1941,15 @@
                                           if (trans) {
                                             const onEnd = (ev) => {
                                               try { if (ev && (ev.propertyName === 'left' || ev.propertyName === 'top' || ev.propertyName === 'width' || ev.propertyName === 'height' || ev.propertyName === 'transform')) {
-                                                if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) {} resolve(true); }
-                                              } } catch (e) {}
+                                                if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) { console.warn('[PA]', e); } resolve(true); }
+                                              } } catch (e) { console.warn('[PA]', e); }
                                             };
-                                            try { node.addEventListener('transitionend', onEnd); } catch (e) {}
+                                            try { node.addEventListener('transitionend', onEnd); } catch (e) { console.warn('[PA]', e); }
                                             // fallback timeout
-                                            setTimeout(() => { if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) {} resolve(true); } }, Math.min(maxMs, 900));
+                                            setTimeout(() => { if (!resolved) { resolved = true; try { node.removeEventListener('transitionend', onEnd); } catch (e) { console.warn('[PA]', e); } resolve(true); } }, Math.min(maxMs, 900));
                                             return;
                                           }
-                                        } catch (e) {}
+                                        } catch (e) { console.warn('[PA]', e); }
                                         // otherwise poll for stable rect
                                         let lastKey = null;
                                         let stable = 0;
@@ -2139,21 +1971,21 @@
                                     (async function () {
                                       try {
                                         await waitForStableRect(wrapperNode, 900, 60, 3);
-                                      } catch (e) {}
+                                      } catch (e) { console.warn('[PA]', e); }
                                       try {
                                         const targetChildren = interp.querySelectorAll && interp.querySelectorAll('#pa-chosen-wrap > div');
                                         clones.forEach((cclone, idx) => {
                                           try {
                                             // recompute source rect just before animation (in case it moved)
                                             if (cclone.sourceImg && cclone.sourceImg.getBoundingClientRect) {
-                                              try { cclone.sourceRect = cclone.sourceImg.getBoundingClientRect(); } catch (e) {}
+                                              try { cclone.sourceRect = cclone.sourceImg.getBoundingClientRect(); } catch (e) { console.warn('[PA]', e); }
                                               // apply current source rect to current clone position so transform is correct
                                               try {
                                                 cclone.el.style.left = (cclone.sourceRect.left) + 'px';
                                                 cclone.el.style.top = (cclone.sourceRect.top) + 'px';
                                                 cclone.el.style.width = (cclone.sourceRect.width) + 'px';
                                                 cclone.el.style.height = (cclone.sourceRect.height) + 'px';
-                                              } catch (e) {}
+                                              } catch (e) { console.warn('[PA]', e); }
                                             }
                                             const tgt = (targetChildren && targetChildren[idx]) ? targetChildren[idx] : null;
                                             let tRect = null;
@@ -2167,88 +1999,86 @@
                                             const sy = (tRect.height || 1) / (cclone.sourceRect.height || 1);
                                             const s = Math.min(sx, sy);
                                             // trigger layout before transform
-                                            try { void cclone.el.offsetWidth; } catch (e) {}
+                                            try { void cclone.el.offsetWidth; } catch (e) { console.warn('[PA]', e); }
                                             cclone.el.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
                                             cclone.el.style.opacity = '1';
-                                          } catch (e) {}
+                                          } catch (e) { console.warn('[PA]', e); }
                                         });
-                                      } catch (e) {}
+                                      } catch (e) { console.warn('[PA]', e); }
                                     })();
-                                  } catch (e) {}
+                                  } catch (e) { console.warn('[PA]', e); }
                                 })();
 
                                 // finish morph: unhide interp after transition and remove clones
                                 setTimeout(() => {
                                   try {
                                     // remove clones with a small fade
-                                    clones.forEach(cc => { try { cc.el.style.opacity = '0'; cc.el.style.transition = 'opacity 200ms ease'; } catch (e) {} });
+                                    clones.forEach(cc => { try { cc.el.style.opacity = '0'; cc.el.style.transition = 'opacity 200ms ease'; } catch (e) { console.warn('[PA]', e); } });
                                     setTimeout(() => {
-                                      try { clones.forEach(cc => { try { if (cc.el && cc.el.parentNode) cc.el.parentNode.removeChild(cc.el); } catch (e) {} }); } catch (e) {}
-                                      try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) {}
+                                      try { clones.forEach(cc => { try { if (cc.el && cc.el.parentNode) cc.el.parentNode.removeChild(cc.el); } catch (e) { console.warn('[PA]', e); } }); } catch (e) { console.warn('[PA]', e); }
+                                      try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) { console.warn('[PA]', e); }
                                       // restore wrapper width/transition and class if we locked it
                                       try {
                                         if (_morphLockedWrapper) {
-                                          try { _morphLockedWrapper.style.width = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origWidth) ? _morphLockedWrapper.dataset._pa_origWidth : ''; } catch (e) {}
-                                          try { _morphLockedWrapper.style.minWidth = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origMinWidth) ? _morphLockedWrapper.dataset._pa_origMinWidth : ''; } catch (e) {}
-                                          try { _morphLockedWrapper.style.transition = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origTransition) ? _morphLockedWrapper.dataset._pa_origTransition : ''; } catch (e) {}
-                                          try { if (_morphLockedWrapper.classList) _morphLockedWrapper.classList.remove('pa-center-popup'); } catch (e) {}
-                                          try { if (_morphLockedWrapper.dataset) { delete _morphLockedWrapper.dataset._pa_origTransition; delete _morphLockedWrapper.dataset._pa_origTransform; delete _morphLockedWrapper.dataset._pa_origLeft; delete _morphLockedWrapper.dataset._pa_origPosition; delete _morphLockedWrapper.dataset._pa_origWidth; delete _morphLockedWrapper.dataset._pa_origMinWidth; } } catch (e) {}
+                                          try { _morphLockedWrapper.style.width = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origWidth) ? _morphLockedWrapper.dataset._pa_origWidth : ''; } catch (e) { console.warn('[PA]', e); }
+                                          try { _morphLockedWrapper.style.minWidth = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origMinWidth) ? _morphLockedWrapper.dataset._pa_origMinWidth : ''; } catch (e) { console.warn('[PA]', e); }
+                                          try { _morphLockedWrapper.style.transition = (_morphLockedWrapper.dataset && _morphLockedWrapper.dataset._pa_origTransition) ? _morphLockedWrapper.dataset._pa_origTransition : ''; } catch (e) { console.warn('[PA]', e); }
+                                          try { if (_morphLockedWrapper.classList) _morphLockedWrapper.classList.remove('pa-center-popup'); } catch (e) { console.warn('[PA]', e); }
+                                          try { if (_morphLockedWrapper.dataset) { delete _morphLockedWrapper.dataset._pa_origTransition; delete _morphLockedWrapper.dataset._pa_origTransform; delete _morphLockedWrapper.dataset._pa_origLeft; delete _morphLockedWrapper.dataset._pa_origPosition; delete _morphLockedWrapper.dataset._pa_origWidth; delete _morphLockedWrapper.dataset._pa_origMinWidth; } } catch (e) { console.warn('[PA]', e); }
                                           _morphLockedWrapper = null;
                                         }
-                                      } catch (e) {}
+                                      } catch (e) { console.warn('[PA]', e); }
                                     }, 220);
-                                  } catch (e) {}
+                                  } catch (e) { console.warn('[PA]', e); }
                                 }, 620);
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                             } else {
                               // not morphing: ensure interp visible
-                              try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) {}
+                              try { interp.style.visibility = ''; interp.style.opacity = '1'; } catch (e) { console.warn('[PA]', e); }
                             }
-                          } catch (e) {}
+                          } catch (e) { console.warn('[PA]', e); }
                           // Observe DOM removal of the interpretation node so we can stop audio
                           try {
                             // If the popup node is removed by PopupManager or by host, stop playback immediately
                             const removalObserver = new MutationObserver((mutList) => {
                               try {
                                 if (!interp || !interp.isConnected) {
-                                  try { stopPlayback(); } catch (e) {}
-                                  try { removalObserver.disconnect(); } catch (e) {}
+                                  try { stopPlayback(); } catch (e) { console.warn('[PA]', e); }
+                                  try { removalObserver.disconnect(); } catch (e) { console.warn('[PA]', e); }
                                 }
-                              } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
                             });
                             // observe document.body subtree for changes; disconnect when interp removed
-                            try { removalObserver.observe(document.body, { childList: true, subtree: true }); } catch (e) {}
-                          } catch (e) {}
+                            try { removalObserver.observe(document.body, { childList: true, subtree: true }); } catch (e) { console.warn('[PA]', e); }
+                          } catch (e) { console.warn('[PA]', e); }
                           // robustly enforce wrapper sizing. PopupManager may wrap/override; use immediate + delayed reapply + MutationObserver
                           try {
                             const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
                             const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                             if (wrapper && rect) {
                               const applyRect = (w, r) => {
-                                try { w.style.minWidth = r.width + 'px'; } catch (e) {}
-                                try { w.style.width = r.width + 'px'; } catch (e) {}
-                                // Avoid forcing wrapper to a fixed tall height. Cap the wrapper's maxHeight
-                                // to the measured deck height to keep parity but allow the wrapper to shrink
-                                // to fit the interpretation content.
-                                try { w.style.maxHeight = r.height + 'px'; } catch (e) {}
-                                try { w.style.height = 'auto'; } catch (e) {}
-                                try { w.style.minHeight = 'auto'; } catch (e) {}
+                                try { w.style.minWidth = r.width + 'px'; } catch (e) { console.warn('[PA]', e); }
+                                try { w.style.width = r.width + 'px'; } catch (e) { console.warn('[PA]', e); }
+                                // Let wrapper height adapt freely to content
+                                try { w.style.maxHeight = 'none'; } catch (e) { console.warn('[PA]', e); }
+                                try { w.style.height = 'auto'; } catch (e) { console.warn('[PA]', e); }
+                                try { w.style.minHeight = 'auto'; } catch (e) { console.warn('[PA]', e); }
                               };
-                              try { applyRect(wrapper, rect); } catch (e) {}
+                              try { applyRect(wrapper, rect); } catch (e) { console.warn('[PA]', e); }
                               // reapply slightly later in case the host mutates the wrapper
-                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) {} }, 120);
-                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) {} }, 420);
+                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) { console.warn('[PA]', e); } }, 120);
+                              setTimeout(() => { try { applyRect(wrapper, rect); } catch (e) { console.warn('[PA]', e); } }, 420);
                               // observe wrapper for attribute/style changes and reapply once if needed
                               try {
                                 const mo = new MutationObserver((mut) => {
-                                  try { applyRect(wrapper, rect); } catch (e) {}
+                                  try { applyRect(wrapper, rect); } catch (e) { console.warn('[PA]', e); }
                                 });
                                 mo.observe(wrapper, { attributes: true, attributeFilter: ['style', 'class'], childList: false, subtree: false });
                                 // disconnect after a short grace period
-                                setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 2500);
-                              } catch (e) {}
+                                setTimeout(() => { try { mo.disconnect(); } catch (e) { console.warn('[PA]', e); } }, 2500);
+                              } catch (e) { console.warn('[PA]', e); }
                             }
-                          } catch (e) {}
+                          } catch (e) { console.warn('[PA]', e); }
                   // after the popup is attached to the DOM, ensure popup bottom is below the chosen cards
                   try {
                     setTimeout(() => {
@@ -2265,12 +2095,12 @@
                             const newMin = ( (wrapper.clientHeight || wRect.height || 0) + delta );
                             wrapper.style.minHeight = newMin + 'px';
                             // also ensure wrapper height can grow
-                            try { wrapper.style.height = 'auto'; } catch (e) {}
-                          } catch (e) {}
+                            try { wrapper.style.height = 'auto'; } catch (e) { console.warn('[PA]', e); }
+                          } catch (e) { console.warn('[PA]', e); }
                         }
-                      } catch (e) {}
+                      } catch (e) { console.warn('[PA]', e); }
                     }, 160);
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                   // Force a downward offset of 100px on the wrapper returned by openPopup (some page managers override positioning)
                   try {
                             const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
@@ -2281,9 +2111,9 @@
               // apply a smaller translateY so the popup sits higher on the page
             wrapper.style.transform = (wrapper.style.transform || '') + ' translateY(40px)';
             wrapper.dataset._pa_downshift = '40';
-                      } catch (e) {}
+                      } catch (e) { console.warn('[PA]', e); }
                     }
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                   // After the popup is visible, measure alignment and apply a corrective translate if needed
                   try {
                     setTimeout(() => {
@@ -2295,11 +2125,11 @@
                             interp.style.transform = (interp.style.transform || '') + ` translateX(${ -m.offsetPx }px)`;
                             interp.dataset._pa_fixApplied = '1';
                             console && console.log && console.log('[PopupAdapter] applied interp corrective translateX', -m.offsetPx);
-                          } catch (e) {}
+                          } catch (e) { console.warn('[PA]', e); }
                         }
-                      } catch (e) {}
+                      } catch (e) { console.warn('[PA]', e); }
                     }, 140);
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                   // inject centering CSS if missing
                   try {
                     if (!document.getElementById('pa-popup-center-styles')) {
@@ -2310,15 +2140,15 @@
                       `;
                       (document.head || document.documentElement).appendChild(st);
                     }
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                   // try to center the wrapper returned by openPopup (best-effort)
                   try {
                     const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                     if (wrapper && wrapper.classList) {
                       wrapper.classList.add('pa-center-popup');
-                      try { wrapper.dataset._pa_centered = '1'; } catch (e) {}
+                      try { wrapper.dataset._pa_centered = '1'; } catch (e) { console.warn('[PA]', e); }
                     }
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                   // Aggressive inline centering enforcement: some hosts reflow/translate the wrapper
                   // after we open it which causes a micro-offset. Force inline left/transform and
                   // reapply a few times via MutationObserver to override transient host mutations.
@@ -2326,10 +2156,10 @@
                     const wrapper = (_popupHandle && _popupHandle.nodeType === 1) ? _popupHandle : (_popupHandle && _popupHandle.el) ? _popupHandle.el : null;
                     const rect = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupRect) ? window.PopupAdapter._lastDeckPopupRect : null;
                     if (wrapper && wrapper.style) {
-                      try { wrapper.style.transition = 'none'; } catch (e) {}
-                      try { wrapper.style.left = '50%'; } catch (e) {}
-                      try { wrapper.style.transform = 'translateX(-50%)'; } catch (e) {}
-                      try { if (rect && rect.width) { wrapper.style.width = rect.width + 'px'; wrapper.style.minWidth = rect.width + 'px'; } } catch (e) {}
+                      try { wrapper.style.transition = 'none'; } catch (e) { console.warn('[PA]', e); }
+                      try { wrapper.style.left = '50%'; } catch (e) { console.warn('[PA]', e); }
+                      try { wrapper.style.transform = 'translateX(-50%)'; } catch (e) { console.warn('[PA]', e); }
+                      try { if (rect && rect.width) { wrapper.style.width = rect.width + 'px'; wrapper.style.minWidth = rect.width + 'px'; } } catch (e) { console.warn('[PA]', e); }
 
                       try {
                         let attempts = 0;
@@ -2342,16 +2172,16 @@
                               wrapper.style.transform = 'translateX(-50%)';
                               if (rect && rect.width) { wrapper.style.width = rect.width + 'px'; wrapper.style.minWidth = rect.width + 'px'; }
                             } else {
-                              try { mo.disconnect(); } catch (e) {}
+                              try { mo.disconnect(); } catch (e) { console.warn('[PA]', e); }
                             }
-                          } catch (e) {}
+                          } catch (e) { console.warn('[PA]', e); }
                         });
-                        try { mo.observe(wrapper, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) {}
+                        try { mo.observe(wrapper, { attributes: true, attributeFilter: ['style','class'] }); } catch (e) { console.warn('[PA]', e); }
                         // safety disconnect after short grace period
-                        setTimeout(() => { try { mo.disconnect(); } catch (e) {} }, 900);
-                      } catch (e) {}
+                        setTimeout(() => { try { mo.disconnect(); } catch (e) { console.warn('[PA]', e); } }, 900);
+                      } catch (e) { console.warn('[PA]', e); }
                     }
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
           // Note: previously we auto-invoked a sample interpretation starter which
           // wrote a placeholder ('Appel API automatique… (exemple)') into the frame.
           // That placeholder could overwrite the real API results that are fetched
@@ -2359,7 +2189,7 @@
           // still use window.PopupAdapter._interpretationStarter to run custom logic.
 
           // expose selected cards for external usage
-          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = cards.slice(); } catch (e) {}
+          try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = cards.slice(); } catch (e) { console.warn('[PA]', e); }
 
           return handle;
         } catch (e) { console && console.warn && console.warn('interpretation popup error', e); }
@@ -2370,11 +2200,11 @@
         window.PopupAdapter = window.PopupAdapter || {};
         window.PopupAdapter._fanEnabled = !!fanEnabled;
         window.PopupAdapter._lastFanAngles = fanAngles.slice();
-      } catch (e) {}
+      } catch (e) { console.warn('[PA]', e); }
 
       // attach click handler to each slot to flip and reveal assigned face
       try {
-        const slotsAll = grid.querySelectorAll('.pm-card-slot');
+        const slotsAll = grid.querySelectorAll('.pa-deck-card');
         // run a staggered reveal for the entrance: per-image, toggle visible class with small delay
         try {
           const prefersReduced = (typeof window.matchMedia === 'function') && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2388,14 +2218,14 @@
                 if (!im) return;
                 const jitter = Math.round((Math.random() * 40) - 20); // +/- jitter
                 const delay = baseDelay * idx + jitter;
-                setTimeout(() => { try { im.classList.add('pa-deck-entrance--visible'); } catch (e) {} }, Math.max(0, delay));
-              } catch (e) {}
+                setTimeout(() => { try { im.classList.add('pa-deck-entrance--visible'); } catch (e) { console.warn('[PA]', e); } }, Math.max(0, delay));
+              } catch (e) { console.warn('[PA]', e); }
             });
           } else {
             // prefer reduced motion => remove entrance class immediately
-            Array.prototype.forEach.call(slotsAll, function (s) { try { const im = s.querySelector('img.pa-deck-entrance'); if (im) im.classList.add('pa-deck-entrance--visible'); } catch (e) {} });
+            Array.prototype.forEach.call(slotsAll, function (s) { try { const im = s.querySelector('img.pa-deck-entrance'); if (im) im.classList.add('pa-deck-entrance--visible'); } catch (e) { console.warn('[PA]', e); } });
           }
-        } catch (e) {}
+        } catch (e) { console.warn('[PA]', e); }
         slotsAll.forEach((slot, si) => {
           slot.dataset.revealed = '0';
           slot.style.cursor = 'pointer';
@@ -2406,10 +2236,10 @@
               try {
                 if (typeof initialRemaining === 'number' && initialRemaining > 0 && selectedCards.length >= initialRemaining) {
                   // visual feedback: pulse the remaining number
-                  try { numSpan && numSpan.classList.add('pa-remaining-pulse'); setTimeout(() => { try { numSpan && numSpan.classList.remove('pa-remaining-pulse'); } catch (e) {} }, 420); } catch (e) {}
+                  try { numSpan && numSpan.classList.add('pa-remaining-pulse'); setTimeout(() => { try { numSpan && numSpan.classList.remove('pa-remaining-pulse'); } catch (e) { console.warn('[PA]', e); } }, 420); } catch (e) { console.warn('[PA]', e); }
                   return;
                 }
-              } catch (e) {}
+              } catch (e) { console.warn('[PA]', e); }
               slot.dataset.revealed = '1';
               // find existing img (verso) or create one
               let img = slot.querySelector('img');
@@ -2431,13 +2261,13 @@
                     img.style.objectFit = 'contain';
                     // restore scale to visible
                     img.style.transform = 'scaleX(1)';
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                 }, 240);
               } else {
                 // no img present — replace slot content
                 slot.innerHTML = '';
                 // ensure slot padding exists so image fits exactly in frame
-                try { slot.style.padding = '4px'; slot.style.boxSizing = 'border-box'; } catch (e) {}
+                try { slot.style.padding = '4px'; slot.style.boxSizing = 'border-box'; } catch (e) { console.warn('[PA]', e); }
                 img = document.createElement('img');
                 img.src = faceSrc;
                 img.alt = '';
@@ -2449,23 +2279,31 @@
                 slot.appendChild(img);
                 // force reflow then animate in
                 void img.offsetWidth;
-                setTimeout(() => { try { img.style.transform = 'scaleX(1)'; } catch (e) {} }, 20);
+                setTimeout(() => { try { img.style.transform = 'scaleX(1)'; } catch (e) { console.warn('[PA]', e); } }, 20);
               }
               // mark slot as revealed visually
-              try { slot.classList.add('pm-card-revealed'); } catch (e) {}
+              try { slot.classList.add('pm-card-revealed'); } catch (e) { console.warn('[PA]', e); }
               // decrement remaining count and update title (if this popup was opened with a chosenCount)
               try {
                 if (typeof remaining !== 'undefined' && remaining > 0) {
                   remaining = Math.max(0, remaining - 1);
-                  try { updateTitle(); } catch (e) {}
+                  try { updateTitle(); } catch (e) { console.warn('[PA]', e); }
                 }
-              } catch (e) {}
-              // record selected card info
+              } catch (e) { console.warn('[PA]', e); }
+              // record selected card info (50% chance reversed)
               try {
                 const faceSrc = deckMapping[si];
-                selectedCards.push({ index: si, src: faceSrc });
-                try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = selectedCards.slice(); } catch (e) {}
-              } catch (e) {}
+                const reversed = Math.random() < 0.5;
+                selectedCards.push({ index: si, src: faceSrc, reversed: reversed });
+                // visually rotate the card 180° if reversed
+                if (reversed && img) {
+                  try {
+                    img.style.transition = 'transform 350ms ease';
+                    setTimeout(function() { try { img.style.transform = 'rotate(180deg)'; } catch (e) { console.warn('[PA]', e); } }, 300);
+                  } catch (e) { console.warn('[PA]', e); }
+                }
+                try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = selectedCards.slice(); } catch (e) { console.warn('[PA]', e); }
+              } catch (e) { console.warn('[PA]', e); }
               // when remaining is zero, open the interpretation popup showing chosen cards
               try {
                 if (typeof remaining !== 'undefined' && remaining === 0) {
@@ -2485,21 +2323,21 @@
                               try {
                                 const cs = window.getComputedStyle && window.getComputedStyle(wrapper);
                                 if (cs) {
-                                  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupBackground = cs.background || cs.backgroundImage || cs.backgroundColor || ''; } catch (e) {}
+                                  try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastDeckPopupBackground = cs.background || cs.backgroundImage || cs.backgroundColor || ''; } catch (e) { console.warn('[PA]', e); }
                                 }
-                              } catch (e) {}
-                            } catch (e) {}
-                            try { const pf = wrapper.closest && wrapper.closest('.pa-deck-overlay-fallback'); if (pf && pf.parentNode) pf.parentNode.removeChild(pf); } catch (e) {}
-                            try { if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch (e) {}
+                              } catch (e) { console.warn('[PA]', e); }
+                            } catch (e) { console.warn('[PA]', e); }
+                            try { const pf = wrapper.closest && wrapper.closest('.pa-deck-overlay-fallback'); if (pf && pf.parentNode) pf.parentNode.removeChild(pf); } catch (e) { console.warn('[PA]', e); }
+                            try { if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch (e) { console.warn('[PA]', e); }
                           }
-                        } catch (e) {}
+                        } catch (e) { console.warn('[PA]', e); }
                         // small gap to let layout settle visually, then open interpretation
-                        setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) {} }, 220);
-                      } catch (e) {}
+                        setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) { console.warn('[PA]', e); } }, 220);
+                      } catch (e) { console.warn('[PA]', e); }
                     }, displayMs);
-                  } catch (e) {}
+                  } catch (e) { console.warn('[PA]', e); }
                 }
-              } catch (e) {}
+              } catch (e) { console.warn('[PA]', e); }
             } catch (e) { /* ignore reveal errors */ }
           });
         });
@@ -2508,19 +2346,19 @@
       // expose helpers
       window.PopupAdapter = window.PopupAdapter || {};
       // expose the mapping so external code can inspect which face was assigned to which slot
-      try { window.PopupAdapter._lastDeckMapping = deckMapping; } catch (e) {}
+      try { window.PopupAdapter._lastDeckMapping = deckMapping; } catch (e) { console.warn('[PA]', e); }
       // allow external code to place/clear cards inside this deck popup
         window.PopupAdapter.placeCardInSlot = function (index, src, alt) {
         try {
           const idx = Number(index) || 0;
-          const sl = grid.querySelectorAll('.pm-card-slot');
+          const sl = grid.querySelectorAll('.pa-deck-card');
           if (!sl || idx < 0 || idx >= sl.length) return false;
           sl[idx].innerHTML = '';
         if (src) {
           const im = document.createElement('img');
           im.src = src; im.alt = alt || '';
           // ensure slot has a small inset and uses border-box so image fits exactly
-          try { sl[idx].style.padding = '4px'; sl[idx].style.boxSizing = 'border-box'; sl[idx].style.overflow = 'hidden'; } catch (e) {}
+          try { sl[idx].style.padding = '4px'; sl[idx].style.boxSizing = 'border-box'; sl[idx].style.overflow = 'hidden'; } catch (e) { console.warn('[PA]', e); }
           im.style.width = '100%';
           im.style.height = '100%';
           im.style.boxSizing = 'border-box';
@@ -2531,10 +2369,10 @@
           return true;
         } catch (e) { return false; }
       };
-      window.PopupAdapter.clearAllSlots = function () { try { grid.querySelectorAll('.pm-card-slot').forEach(s => { s.innerHTML = ''; }); } catch (e) {} };
+      window.PopupAdapter.clearAllSlots = function () { try { grid.querySelectorAll('.pa-deck-card').forEach(s => { s.innerHTML = ''; }); } catch (e) { console.warn('[PA]', e); } };
 
   // expose the showDeckPopup function so external callers can open the deck with options (e.g., {fan: true})
-  try { window.PopupAdapter.showDeckPopup = function(count, opts) { return showDeckPopup(count, opts); }; } catch (e) {}
+  try { window.PopupAdapter.showDeckPopup = function(count, opts) { return showDeckPopup(count, opts); }; } catch (e) { console.warn('[PA]', e); }
 
       return popupHandle;
     } catch (e) { console && console.warn && console.warn('showDeckPopup error', e); }
@@ -2552,12 +2390,12 @@
       _rotator.running = false;
       // clear scheduled timers
       if (_rotator.timers && _rotator.timers.length) {
-        _rotator.timers.forEach(t => { try { clearTimeout(t); } catch (e) {} });
+        _rotator.timers.forEach(t => { try { clearTimeout(t); } catch (e) { console.warn('[PA]', e); } });
       }
       _rotator.timers = [];
       // remove active elements
       if (_rotator.activeEls && _rotator.activeEls.length) {
-        _rotator.activeEls.forEach(el => { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) {} });
+        _rotator.activeEls.forEach(el => { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) { console.warn('[PA]', e); } });
       }
       _rotator.activeEls = [];
       if (window.PopupAdapter && window.PopupAdapter._lastThemeMsgBox) {
@@ -2566,15 +2404,15 @@
       // restore theme button visuals
       try {
         if (window.PopupAdapter && window.PopupAdapter._themeButtons) {
-          Object.keys(window.PopupAdapter._themeButtons).forEach(k => { try { window.PopupAdapter._themeButtons[k].style.opacity = '1'; } catch (e) {} });
+          Object.keys(window.PopupAdapter._themeButtons).forEach(k => { try { window.PopupAdapter._themeButtons[k].style.opacity = '1'; } catch (e) { console.warn('[PA]', e); } });
         }
-      } catch (e) {}
+      } catch (e) { console.warn('[PA]', e); }
     } catch (e) { /* ignore */ }
   }
 
   function playThemeMessages(theme, messages, opts) {
     console && console.log && console.log('[PopupAdapter] playThemeMessages', theme, 'messagesLen=', messages && messages.length, 'opts=', opts);
-    try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = 'playing ' + theme + ' (' + (messages && messages.length || 0) + ')'; } catch (e) {}
+    try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = 'playing ' + theme + ' (' + (messages && messages.length || 0) + ')'; } catch (e) { console.warn('[PA]', e); }
     opts = opts || {};
     const charDelay = Number(opts.charDelay) || 28; // ms between chars (faster)
     const hold = Number(opts.hold) || 700; // ms to keep message after complete (shorter)
@@ -2696,7 +2534,7 @@
           el.style.visibility = 'visible';
           _rotator.activeEls.push({ el: el });
 
-          try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = (window.PopupAdapter._debugBadge.textContent || '') + ' • spawn'; } catch (e) {}
+          try { if (window.PopupAdapter && window.PopupAdapter._debugBadge) window.PopupAdapter._debugBadge.textContent = (window.PopupAdapter._debugBadge.textContent || '') + ' • spawn'; } catch (e) { console.warn('[PA]', e); }
 
           // choose a random typewriter speed for this message (three possibilities)
           const defaultSpeeds = Array.isArray(opts && opts.typeSpeeds) && opts.typeSpeeds.length ? opts.typeSpeeds.slice(0,3) : [18, 28, 44];
@@ -2705,7 +2543,7 @@
           // typewriter
           let i = 0;
           function tick() {
-            if (!_rotator.running) { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) {} ; resolve(); return; }
+            if (!_rotator.running) { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) { console.warn('[PA]', e); } ; resolve(); return; }
             if (i < text.length) {
               // append into the textHolder to preserve the dot
               const th = el.querySelector('.pm-rot-text');
@@ -2725,7 +2563,7 @@
                 try {
                   // respects reduced motion preference
                   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) {}
+                    try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) { console.warn('[PA]', e); }
                     _rotator.activeEls = _rotator.activeEls.filter(a => a.el !== el);
                     resolve();
                     return;
@@ -2759,8 +2597,8 @@
                       let finished = false;
                       const onEnd = () => {
                         if (finished) return; finished = true;
-                        try { inner.removeEventListener('transitionend', onEnd); } catch (e) {}
-                        try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) {}
+                        try { inner.removeEventListener('transitionend', onEnd); } catch (e) { console.warn('[PA]', e); }
+                        try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) { console.warn('[PA]', e); }
                         _rotator.activeEls = _rotator.activeEls.filter(a => a.el !== el);
                         resolve();
                       };
@@ -2775,11 +2613,11 @@
                   // fallback / default: reverse deletion (typewriter reverse)
                   (function delTick() {
                     try {
-                      if (!_rotator.running) { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) {} ; resolve(); return; }
+                      if (!_rotator.running) { try { el.parentNode && el.parentNode.removeChild(el); } catch (e) { console.warn('[PA]', e); } ; resolve(); return; }
                       const th = el.querySelector('.pm-rot-text');
                       const cur = th ? (th.textContent || '') : '';
                       if (cur.length === 0) {
-                        try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) {}
+                        try { if (el && el.parentNode) { el.parentNode.removeChild(el); } } catch (e) { console.warn('[PA]', e); }
                         _rotator.activeEls = _rotator.activeEls.filter(a => a.el !== el);
                         resolve();
                         return;
@@ -2879,7 +2717,7 @@
       // draw a green guide at the frame center
       if (showMarkers) {
         // remove existing guide
-        try { const old = document.getElementById('pa-frame-center-guide'); if (old && old.parentNode) old.parentNode.removeChild(old); } catch (e) {}
+        try { const old = document.getElementById('pa-frame-center-guide'); if (old && old.parentNode) old.parentNode.removeChild(old); } catch (e) { console.warn('[PA]', e); }
         const g = document.createElement('div');
         g.id = 'pa-frame-center-guide';
         Object.assign(g.style, {
@@ -2919,15 +2757,15 @@
       const last = (window.PopupAdapter && window.PopupAdapter._lastDeckPopupSize) ? window.PopupAdapter._lastDeckPopupSize : null;
       const node = el || null;
       if (!last || !node) return false;
-      try { node.style.minWidth = last.width + 'px'; } catch (e) {}
-      try { node.style.width = last.width + 'px'; } catch (e) {}
-      try { node.style.minHeight = last.height + 'px'; } catch (e) {}
-      try { node.style.height = last.height + 'px'; } catch (e) {}
+      try { node.style.minWidth = last.width + 'px'; } catch (e) { console.warn('[PA]', e); }
+      try { node.style.width = last.width + 'px'; } catch (e) { console.warn('[PA]', e); }
+      try { node.style.minHeight = last.height + 'px'; } catch (e) { console.warn('[PA]', e); }
+      try { node.style.height = last.height + 'px'; } catch (e) { console.warn('[PA]', e); }
       return true;
     } catch (e) { return false; }
   };
 
-  window.PopupAdapter.clearCenterGuides = function () { try { const a = document.getElementById('pa-center-guide'); if (a && a.parentNode) a.parentNode.removeChild(a); const b = document.getElementById('pa-frame-center-guide'); if (b && b.parentNode) b.parentNode.removeChild(b); } catch (e) {} };
+  window.PopupAdapter.clearCenterGuides = function () { try { const a = document.getElementById('pa-center-guide'); if (a && a.parentNode) a.parentNode.removeChild(a); const b = document.getElementById('pa-frame-center-guide'); if (b && b.parentNode) b.parentNode.removeChild(b); } catch (e) { console.warn('[PA]', e); } };
 
   
 
