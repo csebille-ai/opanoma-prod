@@ -1412,17 +1412,17 @@ document.addEventListener('DOMContentLoaded', function() {
         var data = await resp.json();
 
         if (data.success) {
-          showStatus('✨ ' + data.message, 'success');
+          showStatus('✨ Réservation confirmée ! Vous recevrez un email de confirmation.', 'success');
           document.getElementById('client-name').value = '';
           document.getElementById('client-email').value = '';
           document.getElementById('reservation-date').value = '';
           document.getElementById('reservation-time').value = '';
           document.getElementById('offre-select').value = '';
-        } else if (data.error === 'conflict') {
+        } else if (data.error === 'Créneau déjà pris' && data.nearest_slots) {
           showStatus('Ce créneau est déjà pris.', 'warn');
           showNearestSlots(data.nearest_slots, reservationDate);
         } else {
-          showStatus(data.message || 'Une erreur est survenue.', 'error');
+          showStatus(data.error || 'Une erreur est survenue.', 'error');
         }
       } catch (err) {
         showStatus('Erreur de connexion. Veuillez réessayer.', 'error');
