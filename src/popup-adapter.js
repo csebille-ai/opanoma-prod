@@ -842,7 +842,7 @@
           btnRow.className = 'pa-interp-actions';
 
           const btnTirage = document.createElement('button'); btnTirage.textContent = '\u2726 Nouveau tirage';
-          const btnSave = document.createElement('button'); btnSave.textContent = 'Enregistrer';
+          const btnSave = document.createElement('button'); btnSave.textContent = '\u2709 Recevoir par email';
           const btnBack = document.createElement('button'); btnBack.textContent = 'Fermer';
           try { btnTirage.className = 'pa-action-btn primary'; } catch (e) { console.warn('[PA]', e); }
           try { btnSave.className = 'pa-action-btn'; } catch (e) { console.warn('[PA]', e); }
@@ -1548,68 +1548,105 @@
 
           btnSave.addEventListener('click', function () {
             try {
-              // Generate a styled PDF with cards + interpretation text
-              var interpText = '';
-              try {
-                var el = document.getElementById('ia-interpretation-content');
-                if (el) interpText = el.innerText || el.textContent || '';
-                if (!interpText) { var vp = frame.querySelector('.pa-interpretation-viewport'); if (vp) interpText = vp.innerText || vp.textContent || ''; }
-              } catch (e) { console.warn('[PA]', e); }
-              var themeLabel = (window.PopupAdapter && window.PopupAdapter.currentTheme) || '';
-              var questionLabel = (window.PopupAdapter && window.PopupAdapter.currentQuestion) || '';
-              var dateStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+              // Show email input prompt
+              var existing = document.getElementById('pa-email-overlay');
+              if (existing) existing.remove();
 
-              // Build card images as base64 data URLs via canvas for PDF embedding
-              var cardHtmlParts = [];
-              cards.forEach(function(c, idx) {
-                var src = c.src || c;
-                var fname = String(src).split('/').pop().replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/^\d+-/, '').replace(/-/g, ' ');
-                var label = fname.charAt(0).toUpperCase() + fname.slice(1) + (c.reversed ? ' (Invers\u00e9e)' : '');
-                var rotateStyle = c.reversed ? 'transform:rotate(180deg)' : '';
-                cardHtmlParts.push(
-                  '<div style="display:inline-block;text-align:center;margin:0 8px 8px">' +
-                  '<img src="' + src + '" style="width:100px;height:150px;object-fit:cover;border-radius:8px;border:1.5px solid #8b6f3a;display:block;' + rotateStyle + '" crossorigin="anonymous">' +
-                  '<div style="margin-top:4px;font-size:11px;color:#8b6f3a;font-family:serif">' + label + '</div></div>'
-                );
+              var overlay = document.createElement('div');
+              overlay.id = 'pa-email-overlay';
+              overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:2147483647;display:flex;align-items:center;justify-content:center;';
+
+              var box = document.createElement('div');
+              box.style.cssText = 'background:#1a1614;border:1px solid rgba(201,169,110,.3);border-radius:12px;padding:28px;max-width:380px;width:90%;text-align:center;font-family:Quicksand,Inter,sans-serif;';
+              box.innerHTML = '<div style="font-family:Cinzel,serif;font-size:18px;color:#c9a96e;margin-bottom:12px;">Recevoir par email</div>' +
+                '<p style="color:rgba(237,232,227,.7);font-size:14px;margin:0 0 16px;">Entrez votre adresse email pour recevoir votre tirage complet.</p>' +
+                '<input id="pa-email-input" type="email" placeholder="votre@email.com" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(201,169,110,.3);background:rgba(255,255,255,.08);color:#ede8e3;font-size:15px;box-sizing:border-box;outline:none;margin-bottom:12px;" />' +
+                '<div style="display:flex;gap:10px;justify-content:center;">' +
+                '<button id="pa-email-send" style="padding:10px 24px;background:#c9a96e;color:#110e0c;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">Envoyer</button>' +
+                '<button id="pa-email-cancel" style="padding:10px 24px;background:transparent;color:#c9a96e;border:1px solid rgba(201,169,110,.3);border-radius:8px;cursor:pointer;font-size:14px;">Annuler</button>' +
+                '</div>' +
+                '<div id="pa-email-status" style="margin-top:12px;font-size:13px;color:#c9a96e;"></div>';
+
+              overlay.appendChild(box);
+              document.body.appendChild(overlay);
+
+              overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+              document.getElementById('pa-email-cancel').addEventListener('click', function() { overlay.remove(); });
+
+              document.getElementById('pa-email-send').addEventListener('click', function() {
+                var emailInput = document.getElementById('pa-email-input');
+                var status = document.getElementById('pa-email-status');
+                var emailVal = (emailInput.value || '').trim();
+                if (!emailVal || !emailVal.includes('@')) {
+                  status.textContent = 'Veuillez entrer un email valide.';
+                  status.style.color = '#e57373';
+                  return;
+                }
+                status.textContent = 'Envoi en cours...';
+                status.style.color = '#c9a96e';
+                this.disabled = true;
+
+                // Get interpretation text
+                var interpText = '';
+                try {
+                  var el = document.getElementById('ia-interpretation-content');
+                  if (el) {
+                    // Clone and remove any loader elements before extracting text
+                    var clone = el.cloneNode(true);
+                    var loaders = clone.querySelectorAll('.pa-interpretation-loader, .pa-loader-spinner, .pa-loader-text');
+                    for (var li = 0; li < loaders.length; li++) loaders[li].remove();
+                    interpText = (clone.innerText || clone.textContent || '').trim();
+                  }
+                  if (!interpText) {
+                    var vp = document.querySelector('.pa-interpretation-viewport');
+                    if (vp) {
+                      var clone2 = vp.cloneNode(true);
+                      var loaders2 = clone2.querySelectorAll('.pa-interpretation-loader, .pa-loader-spinner, .pa-loader-text');
+                      for (var li2 = 0; li2 < loaders2.length; li2++) loaders2[li2].remove();
+                      interpText = (clone2.innerText || clone2.textContent || '').trim();
+                    }
+                  }
+                } catch (e) {}
+
+                // Get card names and image filenames
+                var cardNames = [];
+                var cardImages = [];
+                cards.forEach(function(c) {
+                  var src = c.src || c;
+                  var file = String(src).split('/').pop().replace(/\?.*$/, '');
+                  var fname = file.replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/^\d+-/, '').replace(/-/g, ' ');
+                  fname = fname.replace(/^l(er|arc|imp|emp|amo|eto)/i, function(m, p) { return "l'" + p.charAt(0).toUpperCase() + p.slice(1); });
+                  cardNames.push(fname.charAt(0).toUpperCase() + fname.slice(1) + (c.reversed ? ' (Invers\u00e9e)' : ''));
+                  cardImages.push({ file: file, reversed: !!c.reversed });
+                });
+
+                fetch('/api/send-tarot-email-v2.php', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: emailVal, tirage: interpText, cartes: cardNames, images: cardImages })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                  if (data.success) {
+                    status.textContent = '\u2728 Email envoy\u00e9 ! V\u00e9rifiez votre bo\u00eete de r\u00e9ception.';
+                    status.style.color = '#81c784';
+                    setTimeout(function() { overlay.remove(); }, 2500);
+                  } else {
+                    status.textContent = data.error || 'Erreur lors de l\u2019envoi.';
+                    status.style.color = '#e57373';
+                    document.getElementById('pa-email-send').disabled = false;
+                  }
+                })
+                .catch(function() {
+                  status.textContent = 'Erreur r\u00e9seau. R\u00e9essayez.';
+                  status.style.color = '#e57373';
+                  document.getElementById('pa-email-send').disabled = false;
+                });
               });
 
-              // Format interpretation text as paragraphs
-              var interpHtml = interpText.split(/\n\s*\n/).map(function(p) { return '<p style="margin:0 0 10px;line-height:1.6">' + p.trim().replace(/\n/g, '<br>') + '</p>'; }).join('');
-
-              var htmlDoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tirage - L\u2019\u0152il d\u2019Opanoma</title>' +
-                '<style>' +
-                  'body{margin:0;padding:32px 28px;background:#fff;color:#1a1a1a;font-family:"Quicksand","Inter",Arial,sans-serif;font-size:14px}' +
-                  'h1{text-align:center;font-family:"Cinzel",Georgia,serif;font-size:20px;color:#8b6f3a;margin:0 0 4px;letter-spacing:.06em}' +
-                  '.date{text-align:center;font-size:12px;color:#999;margin:0 0 20px}' +
-                  '.meta{text-align:center;margin:0 0 18px;font-size:13px;color:#555}' +
-                  '.meta b{color:#8b6f3a}' +
-                  '.cards{text-align:center;margin:0 0 24px}' +
-                  '.sep{border:none;border-top:1px solid #ddd;margin:20px 0}' +
-                  'h2{font-family:"Cinzel",Georgia,serif;font-size:15px;color:#8b6f3a;margin:0 0 12px;letter-spacing:.04em}' +
-                  '.text{color:#222;line-height:1.65;font-size:14px}' +
-                  '.footer{margin-top:28px;text-align:center;font-size:11px;color:#aaa;font-style:italic}' +
-                '</style></head><body>' +
-                '<h1>L\u2019\u0152il d\u2019Opanoma</h1>' +
-                '<div class="date">' + dateStr + '</div>' +
-                (themeLabel || questionLabel ? '<div class="meta">' + (themeLabel ? 'Th\u00e8me\u00a0: <b>' + themeLabel + '</b>' : '') + (themeLabel && questionLabel ? ' &mdash; ' : '') + (questionLabel ? 'Question\u00a0: <b>' + questionLabel + '</b>' : '') + '</div>' : '') +
-                '<div class="cards">' + cardHtmlParts.join('') + '</div>' +
-                '<hr class="sep">' +
-                '<h2>Interpr\u00e9tation</h2>' +
-                '<div class="text">' + interpHtml + '</div>' +
-                '<div class="footer">Tirage guid\u00e9 par IA &mdash; en compl\u00e9ment de vos s\u00e9ances avec Manon</div>' +
-                '</body></html>';
-
-              // Open in a new window and trigger print (Save as PDF)
-              var w = window.open('', '_blank', 'width=700,height=900');
-              if (w) {
-                w.document.write(htmlDoc);
-                w.document.close();
-                // Wait for images to load before printing
-                setTimeout(function() {
-                  try { w.focus(); w.print(); } catch (e) { console.warn('[PA]', e); }
-                }, 600);
-              }
-            } catch (e) { console.warn('[PopupAdapter] PDF save failed', e); }
+              // Focus input
+              setTimeout(function() { document.getElementById('pa-email-input').focus(); }, 100);
+            } catch (e) { console.warn('[PopupAdapter] Email send failed', e); }
           });
 
           btnBack.addEventListener('click', function () {
@@ -1648,7 +1685,7 @@
                               Object.assign(overlay.style, {
                                 position: 'fixed',
                                 left: '50%',
-                                top: '12vh',
+                                top: '2vh',
                                 transform: 'translateX(-50%)',
                                 zIndex: 2147483646,
                                 background: 'transparent',
@@ -1657,7 +1694,7 @@
                                 flexDirection: 'column',
                                 justifyContent: 'flex-start',
                                 alignItems: 'center',
-                                padding: '16px'
+                                padding: '8px'
                               });
                               // ensure overlay does not capture pointer events except children
                               overlay.style.pointerEvents = 'auto';

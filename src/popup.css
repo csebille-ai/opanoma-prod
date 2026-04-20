@@ -379,8 +379,8 @@
 /* ── Interpretation Popup ── */
 .pa-interp-container {
   text-align: center;
-  padding: 12px 16px 20px;
-  max-width: 920px;
+  padding: 6px 16px 10px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
 }
@@ -390,7 +390,7 @@
   font-size: 1.1rem;
   color: #c9a96e;
   letter-spacing: .05em;
-  margin: 0 0 14px;
+  margin: 0 0 8px;
 }
 
 /* Chosen cards: horizontal compact row */
@@ -398,7 +398,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin: 0 auto 16px;
+  margin: 0 auto 10px;
   padding: 0 8px;
   max-width: 100%;
   overflow: hidden;
@@ -494,18 +494,18 @@
 /* Interpretation text frame */
 .pa-interp-frame {
   width: 100%;
-  max-width: 880px;
-  padding: 16px;
+  max-width: 620px;
+  padding: 18px 24px;
   box-sizing: border-box;
-  background: transparent;
-  border: none;
-  border-radius: 10px;
-  color: rgba(237,232,227,.85);
+  background: rgba(201,169,110,.04);
+  border: 1px solid rgba(201,169,110,.12);
+  border-radius: 12px;
+  color: rgba(237,232,227,.9);
   font-family: "Quicksand", "Inter", Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.7;
   text-align: left;
-  margin: 0 auto 16px;
+  margin: 0 auto 8px;
 }
 
 /* Action buttons row */
@@ -514,7 +514,7 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin: 0 auto;
+  margin: 4px auto 0;
   flex-wrap: wrap;
 }
 
@@ -541,15 +541,16 @@
 }
 
 .pa-action-btn.primary {
-  background: #c9a96e;
-  color: #0c0a09;
-  border-color: #c9a96e;
-  font-weight: 600;
+  background: rgba(201,169,110,.06);
+  color: rgba(237,232,227,.72);
+  border-color: rgba(201,169,110,.18);
+  font-weight: 500;
 }
 
 .pa-action-btn.primary:hover {
-  background: #d4b87a;
-  box-shadow: 0 4px 16px rgba(201,169,110,.25);
+  background: rgba(201,169,110,.14);
+  color: #c9a96e;
+  border-color: rgba(201,169,110,.35);
 }
 
 .pa-action-btn.audio {
