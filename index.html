@@ -1,7 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PZRQCL0GJG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PZRQCL0GJG');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>L’Œil d’Opanoma — Tarot, Pendule & Guidance Spirituelle | Tirage Gratuit en Ligne</title>
   <meta name="description" content="L’Œil d’Opanoma — Guidance spirituelle personnalisée par Manon. Consultations de tarot, pendule et alignement énergétique. Tirage en ligne gratuit avec interprétation par IA.">
@@ -76,7 +84,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <a href="#main-content" class="skip-to-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:999999;padding:8px 16px;background:#c9a96e;color:#110e0c;font-weight:600;text-decoration:none;border-radius:4px;" onfocus="this.style.cssText='position:fixed;left:16px;top:16px;width:auto;height:auto;overflow:visible;z-index:999999;padding:8px 16px;background:#c9a96e;color:#110e0c;font-weight:600;text-decoration:none;border-radius:4px;'" onblur="this.style.cssText='position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;'">Aller au contenu principal</a>
+  <a href="#main-content" class="skip-to-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:999999;padding:8px 16px;background:#ff7a2f;color:#060d1a;font-weight:600;text-decoration:none;border-radius:4px;" onfocus="this.style.cssText='position:fixed;left:16px;top:16px;width:auto;height:auto;overflow:visible;z-index:999999;padding:8px 16px;background:#ff7a2f;color:#060d1a;font-weight:600;text-decoration:none;border-radius:4px;'" onblur="this.style.cssText='position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;'">Aller au contenu principal</a>
   <script>window.PopupAdapter = window.PopupAdapter || {};</script>
   <!-- Preload popup adapter early to ensure triggerTirageIA can call it synchronously -->
   <script src="./src/popup-adapter.js"></script>
@@ -133,11 +141,36 @@
     })();
   </script>
   <div class="background-video">
-    <video class="hero-video" playsinline autoplay muted loop preload="auto">
+    <video class="hero-video" playsinline webkit-playsinline autoplay muted loop preload="metadata">
       <source src="/fond10.mp4" type="video/mp4"/>
     </video>
     <div class="hero-overlay"></div>
   </div>
+  <script>
+    (function () {
+      var video = document.querySelector('.hero-video');
+      if (!video) return;
+
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+
+      var safePlay = function () {
+        var p = video.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(function () {});
+        }
+      };
+
+      video.addEventListener('loadeddata', safePlay, { once: true });
+      document.addEventListener('touchstart', safePlay, { once: true, passive: true });
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') safePlay();
+      });
+    })();
+  </script>
   
   <!-- ===== HEADER uniquement ===== -->
 
@@ -152,7 +185,21 @@
       </a>
 
   <nav class="nav" aria-label="Menu professionnel" style="pointer-events:auto;">
-  <a href="#consultations-section" class="highlight" onclick="event.preventDefault();showConsultations()">Consultations</a>
+  <div class="nav-dropdown">
+    <a href="#consultations-section" class="nav-dropdown-trigger highlight" onclick="event.preventDefault();showConsultations()">Consultations</a>
+    <div class="nav-dropdown-menu">
+      <a href="#tarot-detail" class="nav-dropdown-item" onclick="event.preventDefault();showServiceDetail('tarot-detail')">Tarot</a>
+      <a href="#pendule-detail" class="nav-dropdown-item" onclick="event.preventDefault();showServiceDetail('pendule-detail')">Pendule</a>
+      <a href="#alignement-detail" class="nav-dropdown-item" onclick="event.preventDefault();showServiceDetail('alignement-detail')">Alignement</a>
+    </div>
+  </div>
+  <div class="nav-dropdown">
+    <a href="#horoscope-section" class="nav-dropdown-trigger">Horoscope</a>
+    <div class="nav-dropdown-menu">
+      <a href="#horoscope-section" class="nav-dropdown-item" onclick="event.preventDefault(); window.scrollTo({top: document.getElementById('horoscope-section').getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth'})">Horoscope du jour</a>
+      <a href="#natal-section" class="nav-dropdown-item" onclick="event.preventDefault(); window.scrollTo({top: document.querySelector('.natal-section').getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth'})">Carte du ciel</a>
+    </div>
+  </div>
   <a href="#temoignages-section" onclick="event.preventDefault();showTemoignages()">Témoignages</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -206,12 +253,31 @@
         </div>
 
         <nav class="mobile-nav" aria-label="Navigation mobile">
-          <a href="#consultations-section" class="mobile-nav-item highlight" onclick="closeMobileMenu();showConsultations()">
-            <span>Consultations</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </a>
+          <div class="mobile-nav-item-group">
+            <button class="mobile-nav-item highlight" onclick="toggleMobileSubmenu(event)" type="button">
+              <span>Consultations</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="nav-expand-icon">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="mobile-nav-submenu" style="display: none;">
+              <a href="#tarot-detail" class="mobile-nav-subitem" onclick="closeMobileMenu();showServiceDetail('tarot-detail');event.preventDefault()">Tarot</a>
+              <a href="#pendule-detail" class="mobile-nav-subitem" onclick="closeMobileMenu();showServiceDetail('pendule-detail');event.preventDefault()">Pendule</a>
+              <a href="#alignement-detail" class="mobile-nav-subitem" onclick="closeMobileMenu();showServiceDetail('alignement-detail');event.preventDefault()">Alignement</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item-group">
+            <button class="mobile-nav-item" onclick="toggleMobileSubmenu(event)" type="button">
+              <span>Horoscope</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="nav-expand-icon">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="mobile-nav-submenu" style="display: none;">
+              <a href="#horoscope-section" class="mobile-nav-subitem" onclick="closeMobileMenu(); window.scrollTo({top: document.getElementById('horoscope-section').getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth'}); event.preventDefault();">Horoscope du jour</a>
+              <a href="#natal-section" class="mobile-nav-subitem" onclick="closeMobileMenu(); window.scrollTo({top: document.querySelector('.natal-section').getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth'}); event.preventDefault();">Carte du ciel</a>
+            </div>
+          </div>
           <a href="#temoignages-section" class="mobile-nav-item" onclick="closeMobileMenu();showTemoignages()">
             <span>Témoignages</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -303,9 +369,12 @@
       </div>
     </div>
 
-    <!-- Nouveau cadre discret Consultation -->
+    <!-- Section Consultations Personnalisées -->
     <section class="offres-tarifs-section" id="consultations-section">
-      <h3 class="offres-tarifs-title">Consultation</h3>
+      <h3 class="offres-tarifs-title">Consultations Personnalisées</h3>
+      <p style="text-align: center; color: #e0e0e0; font-size: 1.05em; margin-bottom: 2em; font-style: italic;">
+        Des lectures profonde et bienveillantes pour éclairer votre chemin et débloquer vos possibilités.
+      </p>
       <div class="offres-tarifs-grid">
   <div class="offre-tarif-card" data-offre="Tarot">
           <div class="offre-tarif-content">
@@ -611,6 +680,80 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="horoscope-section" id="horoscope-section">
+      <h3 class="horoscope-title">Horoscope du Jour</h3>
+      <p class="horoscope-intro">
+        Une guidance rapide par signe pour poser l'intention de la journée. Découvrez comment une consultation personnalisée pourrait aller bien plus loin.
+      </p>
+      <p class="horoscope-date"><span id="horoscope-date"></span></p>
+
+      <div class="horoscope-signs" id="horoscope-signs" role="tablist" aria-label="Choix du signe astrologique">
+        <button class="horoscope-sign" data-sign="Belier" type="button"><span class="zodiac-badge">♈</span>Belier</button>
+        <button class="horoscope-sign" data-sign="Taureau" type="button"><span class="zodiac-badge">♉</span>Taureau</button>
+        <button class="horoscope-sign" data-sign="Gemeaux" type="button"><span class="zodiac-badge">♊</span>Gemeaux</button>
+        <button class="horoscope-sign" data-sign="Cancer" type="button"><span class="zodiac-badge">♋</span>Cancer</button>
+        <button class="horoscope-sign" data-sign="Lion" type="button"><span class="zodiac-badge">♌</span>Lion</button>
+        <button class="horoscope-sign" data-sign="Vierge" type="button"><span class="zodiac-badge">♍</span>Vierge</button>
+        <button class="horoscope-sign" data-sign="Balance" type="button"><span class="zodiac-badge">♎</span>Balance</button>
+        <button class="horoscope-sign" data-sign="Scorpion" type="button"><span class="zodiac-badge">♏</span>Scorpion</button>
+        <button class="horoscope-sign" data-sign="Sagittaire" type="button"><span class="zodiac-badge">♐</span>Sagittaire</button>
+        <button class="horoscope-sign" data-sign="Capricorne" type="button"><span class="zodiac-badge">♑</span>Capricorne</button>
+        <button class="horoscope-sign" data-sign="Verseau" type="button"><span class="zodiac-badge">♒</span>Verseau</button>
+        <button class="horoscope-sign" data-sign="Poissons" type="button"><span class="zodiac-badge">♓</span>Poissons</button>
+      </div>
+
+      <article class="horoscope-card horoscope-sign-all" id="horoscope-card" aria-live="polite">
+        <h4 id="horoscope-sign-name">Choisissez votre signe</h4>
+        <p><strong>Climat:</strong> <span id="horoscope-energy">Selectionnez un signe pour afficher la guidance du jour.</span></p>
+        <p><strong>Relationnel:</strong> <span id="horoscope-love">-</span></p>
+        <p><strong>Action:</strong> <span id="horoscope-work">-</span></p>
+        <p class="horoscope-tip"><strong>Conseil:</strong> <span id="horoscope-tip">-</span></p>
+        <div id="horoscope-zodiac-image" class="horoscope-zodiac-image"></div>
+      </article>
+
+      <div class="horoscope-actions">
+        <div style="margin-top: 2em; padding: 1.5em; background: rgba(255, 122, 47, 0.1); border-left: 4px solid #ff7a2f; border-radius: 8px;">
+          <p style="margin: 0 0 1em 0; font-weight: 600; font-size: 1.1em; color: #f5f5dc;">Vous cherchez une guidance plus profonde ?</p>
+          <p style="margin: 0 0 1.2em 0; font-size: 0.95em; color: #e0e0e0; line-height: 1.5;">L'horoscope gratuit vous donne une orientation générale. Une consultation personnalisée avec Manon explore vos énergies spécifiques, vos blocages et vos opportunités réelles.</p>
+          <button type="button" class="reservation-btn" onclick="(function(){var res=document.getElementById('reservation');if(res){var top=window.pageYOffset + res.getBoundingClientRect().top - 60;window.scrollTo({top:top,behavior:'smooth'});}return false}).call(this,event)" style="background: #ff7a2f; color: #060d1a; font-weight: 600; border: none; padding: 0.8em 1.6em; border-radius: 6px; cursor: pointer; font-family: 'Quicksand', sans-serif; font-size: 1em;">Réserver une Consultation</button>
+        </div>
+      </div>
+
+      <div class="natal-divider"></div>
+
+      <section class="natal-section" aria-labelledby="natal-title">
+        <h4 id="natal-title" class="natal-title">Carte du Ciel Personnelle (V2)</h4>
+        <p class="natal-intro">Entrez date, heure et ville de naissance: la latitude et la longitude sont trouvées automatiquement. Vous pouvez aussi saisir les coordonnées manuellement.</p>
+
+        <form class="natal-form" id="natal-form">
+          <div class="natal-row">
+            <input type="date" id="natal-date" class="natal-input" required>
+            <input type="time" id="natal-time" class="natal-input" required>
+          </div>
+          <input type="text" id="natal-city" class="natal-input" placeholder="Ville de naissance (ex: Poissy)" required>
+          <div class="natal-row">
+            <input type="number" step="0.0001" id="natal-lat" class="natal-input" placeholder="Latitude (optionnel, ex: 48.8566)">
+            <input type="number" step="0.0001" id="natal-lon" class="natal-input" placeholder="Longitude (optionnel, ex: 2.3522)">
+          </div>
+          <p id="natal-geo-status" class="natal-geo-status"></p>
+          <button type="submit" class="reservation-btn">Calculer ma carte</button>
+        </form>
+
+        <article class="natal-result" id="natal-result" aria-live="polite" style="display:none;">
+          <h5 id="natal-headline"></h5>
+          <p><strong>Tempérament:</strong> <span id="natal-temperament"></span></p>
+          <p><strong>Mental:</strong> <span id="natal-mental"></span></p>
+          <p><strong>Affectif:</strong> <span id="natal-affectif"></span></p>
+          <p><strong>Dynamique:</strong> <span id="natal-momentum"></span></p>
+          <p><strong>Aspects dominants:</strong> <span id="natal-aspects"></span></p>
+          <div class="natal-houses-block">
+            <h6>Les 12 domaines de vie</h6>
+            <div id="natal-houses" class="natal-houses-grid"></div>
+          </div>
+        </article>
+      </section>
     </section>
 
     <section class="newsletter-section">
@@ -940,12 +1083,12 @@
     <div style="max-width:800px;margin:0 auto">
       <p style="margin:0 0 8px">&copy; 2026 L&rsquo;&OElig;il d&rsquo;Opanoma &mdash; Tous droits r&eacute;serv&eacute;s</p>
       <p style="margin:0 0 12px">
-        <a href="#" onclick="document.getElementById('mentions-legales').style.display=document.getElementById('mentions-legales').style.display==='block'?'none':'block';return false" style="color:#c9a96e;text-decoration:none">Mentions l&eacute;gales</a>
+        <a href="#" onclick="document.getElementById('mentions-legales').style.display=document.getElementById('mentions-legales').style.display==='block'?'none':'block';return false" style="color:#ff7a2f;text-decoration:none">Mentions légales</a>
         &nbsp;&middot;&nbsp;
-        <a href="#" onclick="document.getElementById('politique-conf').style.display=document.getElementById('politique-conf').style.display==='block'?'none':'block';return false" style="color:#c9a96e;text-decoration:none">Politique de confidentialit&eacute;</a>
+        <a href="#" onclick="document.getElementById('politique-conf').style.display=document.getElementById('politique-conf').style.display==='block'?'none':'block';return false" style="color:#ff7a2f;text-decoration:none">Politique de confidentialité</a>
       </p>
       <div id="mentions-legales" style="display:none;text-align:left;background:#1a1614;border-radius:10px;padding:24px;margin:16px 0;color:rgba(237,232,227,.7);line-height:1.7">
-        <h3 style="color:#c9a96e;margin:0 0 12px;font-size:1rem">Mentions l&eacute;gales</h3>
+        <h3 style="color:#ff7a2f;margin:0 0 12px;font-size:1rem">Mentions légales</h3>
         <p><strong>&Eacute;diteur :</strong> Manon &mdash; L&rsquo;&OElig;il d&rsquo;Opanoma<br>
         <strong>Activit&eacute; :</strong> Guidance spirituelle, consultations de tarot et bien-&ecirc;tre<br>
         <strong>Contact :</strong> contact@opanoma.fr<br>
@@ -953,7 +1096,7 @@
         <p style="font-size:.75rem;margin-top:12px">Les consultations propos&eacute;es sont &agrave; vis&eacute;e de guidance et de d&eacute;veloppement personnel. Elles ne remplacent en aucun cas un avis m&eacute;dical, juridique ou financier professionnel.</p>
       </div>
       <div id="politique-conf" style="display:none;text-align:left;background:#1a1614;border-radius:10px;padding:24px;margin:16px 0;color:rgba(237,232,227,.7);line-height:1.7">
-        <h3 style="color:#c9a96e;margin:0 0 12px;font-size:1rem">Politique de confidentialit&eacute;</h3>
+        <h3 style="color:#ff7a2f;margin:0 0 12px;font-size:1rem">Politique de confidentialité</h3>
         <p><strong>Donn&eacute;es collect&eacute;es :</strong> Lors d&rsquo;une r&eacute;servation : nom, email, date et heure choisies. Lors de l&rsquo;inscription newsletter : email et pr&eacute;nom.</p>
         <p><strong>Finalit&eacute; :</strong> Gestion des rendez-vous et envoi de la newsletter hebdomadaire.</p>
         <p><strong>Conservation :</strong> Vos donn&eacute;es sont conserv&eacute;es tant que votre compte est actif. Vous pouvez demander leur suppression &agrave; tout moment.</p>
@@ -966,661 +1109,7 @@
   </footer>
   <!-- Script d'animations pour les cartes -->
   <script src="./src/card-animations.js"></script>
-  
-  <!-- SCRIPT MENU MOBILE -->
-  <script>
-    // Fonctions pour le menu mobile
-    function toggleMobileMenu() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      if (mobileMenu) {
-        mobileMenu.classList.toggle('active');
-        
-        // Empêcher le scroll du body quand le menu est ouvert
-        if (mobileMenu.classList.contains('active')) {
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.body.style.overflow = '';
-        }
-      }
-    }
-    
-    function closeMobileMenu() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      if (mobileMenu) {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    }
 
-    function showTemoignages() {
-      var t = document.getElementById('temoignages-section');
-      if (!t) return;
-      t.style.display = 'block';
-      setTimeout(function() { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
-    }
-
-    function showConsultations() {
-      var s = document.getElementById('consultations-section');
-      if (!s) return;
-      s.classList.remove('consultation-focus');
-      setTimeout(function() {
-        var isMobile = window.innerWidth <= 980;
-        if (isMobile) {
-          var top = window.pageYOffset + s.getBoundingClientRect().top - 80;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        } else {
-          s.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        s.classList.add('consultation-focus');
-        setTimeout(function() { s.classList.remove('consultation-focus'); }, 2000);
-      }, 150);
-    }
-    
-    // Fermer le menu en appuyant sur Echap
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeMobileMenu();
-      }
-    });
-    
-    // Fermer le menu lors du redimensionnement vers desktop
-    window.addEventListener('resize', function() {
-      if (window.innerWidth > 980) {
-        closeMobileMenu();
-      }
-    });
-  </script>
-  
-  <script>
-let typeWriterTimeout = null;
-
-// Attendre que le DOM soit chargé
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Bouton "En savoir plus"
-  const btnBio = document.getElementById('btn-bio');
-  if (btnBio) {
-    btnBio.addEventListener('click', function() {
-      var bio = document.getElementById('manon-bio');
-      var bioContent = bio.querySelector('.manon-bio-content');
-      
-      if (bio.style.display === 'none' || bio.style.display === '') {
-        // Ouvrir le texte
-        bio.style.display = 'block';
-        this.textContent = 'Fermer';
-        
-        // Scroll vers le texte
-        bio.scrollIntoView({behavior: 'smooth', block: 'center'});
-        
-        // Appliquer l'effet de soleil sur les lettres uniquement
-        setTimeout(() => {
-          bioContent.classList.add('text-sunshine-effect');
-        }, 100);
-        
-      } else {
-        // Fermer le texte et arrêter les effets
-        bio.style.display = 'none';
-        this.textContent = 'En savoir plus';
-        
-        // Retirer l'effet
-        bioContent.classList.remove('text-sunshine-effect');
-      }
-      
-    });
-  }
-  
-  // Fonction pour REMISE À ZÉRO COMPLÈTE - Retour à l'état d'accueil
-  function fermerTousLesCadres() {
-    // Fermer la bio
-    const bio = document.getElementById('manon-bio');
-    if (bio) {
-      bio.style.display = 'none';
-      const bioContent = bio.querySelector('.manon-bio-content');
-      if (bioContent) {
-        bioContent.classList.remove('text-sunshine-effect');
-      }
-    }
-    
-    // Fermer les détails des consultations
-    const detailIds = ['tarot-detail', 'pendule-detail', 'alignement-detail'];
-    detailIds.forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.style.display = 'none';
-      }
-    });
-    
-    // Fermer les témoignages
-    const temoignages = document.querySelector('.temoignages-section');
-    if (temoignages) {
-      temoignages.style.display = 'none';
-    }
-    
-    // Fermer la FAQ
-    const faq = document.querySelector('.faq-section');
-    if (faq) {
-      faq.style.display = 'none';
-    }
-    
-    // Remettre le texte du bouton "En savoir plus" à l'état initial
-    const btnBio = document.getElementById('btn-bio');
-    if (btnBio) {
-      btnBio.textContent = 'En savoir plus';
-    }
-    
-    // RETOUR AU SOMMET DE LA PAGE - État d'accueil
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-    
-  }
-  
-  // Comportement "RETOUR À L'ACCUEIL" pour tout le bloc brand (logo + textes)
-  const brandBlock = document.querySelector('.brand');
-  
-  if (brandBlock) {
-    // Supprimer le href par défaut pour contrôler le comportement
-    brandBlock.removeAttribute('href');
-    
-    brandBlock.addEventListener('click', function(e) {
-      e.preventDefault(); // Empêcher le comportement par défaut du lien
-      
-      // REMISE À ZÉRO TOTALE
-      fermerTousLesCadres();
-      
-      // Message visuel optionnel pour l'utilisateur
-    });
-    
-    // Style visuel pour indiquer que c'est cliquable
-    brandBlock.style.cursor = 'pointer';
-    brandBlock.style.transition = 'all 0.2s ease';
-    
-    // Effet hover pour le feedback visuel
-    brandBlock.addEventListener('mouseenter', function() {
-      this.style.transform = 'translateY(-1px)';
-      this.style.filter = 'brightness(1.1)';
-    });
-    
-    brandBlock.addEventListener('mouseleave', function() {
-      this.style.transform = 'translateY(0)';
-      this.style.filter = 'brightness(1)';
-    });
-  }
-  
-  // Initialiser les animations après un court délai
-  setTimeout(() => {
-    // Animer automatiquement les grilles de cartes visibles
-    const cardGrids = document.querySelectorAll('.cards-selection-grid');
-    cardGrids.forEach((grid, index) => {
-      setTimeout(() => {
-        if (window.animateCardGrid) {
-          window.animateCardGrid(`#${grid.id}` || `.cards-selection-grid:nth-child(${index + 1})`);
-        }
-      }, index * 500);
-    });
-  }, 1000);
-});
-
-document.querySelectorAll('.offre-tarif-card[data-offre]').forEach(function(card) {
-  card.addEventListener('click', function() {
-    var offre = this.getAttribute('data-offre');
-    
-    // Si c'est la carte Tarot, affiche la section détaillée
-    if (offre === 'Tarot') {
-      var tarotDetail = document.getElementById('tarot-detail');
-      if (tarotDetail) {
-        if (tarotDetail.style.display === 'none' || tarotDetail.style.display === '') {
-          // Masquer les autres sections d'abord
-          document.getElementById('pendule-detail').style.display = 'none';
-          document.getElementById('alignement-detail').style.display = 'none';
-          
-          tarotDetail.style.display = 'block';
-          tarotDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          tarotDetail.style.display = 'none';
-        }
-      }
-      return;
-    }
-    
-    // Si c'est la carte Pendule, affiche la section détaillée
-    if (offre === 'Pendule') {
-      var penduleDetail = document.getElementById('pendule-detail');
-      if (penduleDetail) {
-        if (penduleDetail.style.display === 'none' || penduleDetail.style.display === '') {
-          // Masquer les autres sections d'abord
-          document.getElementById('tarot-detail').style.display = 'none';
-          document.getElementById('alignement-detail').style.display = 'none';
-          
-          penduleDetail.style.display = 'block';
-          penduleDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          penduleDetail.style.display = 'none';
-        }
-      }
-      return;
-    }
-    
-    // Si c'est la carte Alignement, affiche la section détaillée
-    if (offre === 'Alignement') {
-      var alignementDetail = document.getElementById('alignement-detail');
-      if (alignementDetail) {
-        if (alignementDetail.style.display === 'none' || alignementDetail.style.display === '') {
-          // Masquer les autres sections d'abord
-          document.getElementById('tarot-detail').style.display = 'none';
-          document.getElementById('pendule-detail').style.display = 'none';
-          
-          alignementDetail.style.display = 'block';
-          alignementDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          alignementDetail.style.display = 'none';
-        }
-      }
-      return;
-    }
-    
-    // Comportement normal pour les autres cartes
-    var select = document.getElementById('offre-select');
-    if (select) {
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].text === offre) {
-          select.selectedIndex = i;
-          break;
-        }
-      }
-    }
-    // Scroll vers la section réservation
-    var reservation = document.getElementById('reservation');
-    if (reservation) {
-      reservation.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      select.focus();
-    }
-  });
-});
-
-// Avertissement si le formulaire de réservation n'est pas complet
-document.querySelector('.reservation-form').addEventListener('submit', function(e) {
-  var inputs = this.querySelectorAll('.reservation-input');
-  var allFilled = true;
-  inputs.forEach(function(input) {
-    if (!input.value) allFilled = false;
-  });
-  if (!allFilled) {
-    e.preventDefault();
-    alert('Merci de remplir tous les champs pour réserver votre séance.');
-  } else {
-    e.preventDefault();
-    document.getElementById('reservation-confirmation').style.display = 'block';
-    this.style.display = 'none';
-  }
-});
-
-// Gestion inscription newsletter
-document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const emailInput = this.querySelector('.newsletter-input');
-  const submitBtn = this.querySelector('.newsletter-btn');
-  const email = emailInput.value.trim();
-  
-  if (!email || !email.includes('@')) {
-    alert('Veuillez saisir un email valide.');
-    return;
-  }
-  
-  // Désactiver le bouton pendant l'envoi
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Inscription...';
-  
-  // Appel API
-  fetch('./api/newsletter-subscribe.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email: email })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.error) {
-      alert('Erreur: ' + data.error);
-    } else {
-      // Succès
-      emailInput.value = '';
-      submitBtn.textContent = '✅ Inscrit !';
-      submitBtn.style.background = '#4caf50';
-      
-      // Afficher message de confirmation
-      let confirmMsg = document.createElement('div');
-      confirmMsg.textContent = data.message || 'Inscription réussie !';
-      confirmMsg.style.color = '#4caf50';
-      confirmMsg.style.fontWeight = '600';
-      confirmMsg.style.marginTop = '1em';
-      confirmMsg.style.textAlign = 'center';
-      this.appendChild(confirmMsg);
-      
-      // Remettre le bouton normal après 3 secondes
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Je m\'abonne';
-        submitBtn.style.background = '';
-        if (confirmMsg.parentNode) {
-          confirmMsg.parentNode.removeChild(confirmMsg);
-        }
-      }, 3000);
-    }
-  })
-  .catch(error => {
-    console.error('Erreur:', error);
-    alert('Erreur de connexion. Veuillez réessayer.');
-  })
-  .finally(() => {
-    if (submitBtn.textContent === 'Inscription...') {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Je m\'abonne';
-    }
-  });
-});
-
-// Fonction pour scroll vers réservation
-
-// Fonction pour scroll vers réservation
-function scrollToReservation() {
-  const reservation = document.getElementById('reservation');
-  if (reservation) {
-    var top = window.pageYOffset + reservation.getBoundingClientRect().top - 70;
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-  }
-}
-
-// Fonction pour déclencher le tirage IA
-function triggerTirageIA() {
-  // Prefer using PopupAdapter if available to open the standardized popup
-  try {
-    if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-      window.PopupAdapter.showThemeChoice();
-      return;
-    }
-  } catch (e) {}
-  // If PopupAdapter is not yet loaded, retry for a short period then fallback
-  let attempts = 0;
-  const maxAttempts = 20; // ~5 seconds if interval 250ms
-  const poll = setInterval(function(){
-    attempts += 1;
-    try {
-      if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-        clearInterval(poll);
-        window.PopupAdapter.showThemeChoice();
-        return;
-      }
-    } catch (e) {}
-    if (attempts >= maxAttempts) {
-      clearInterval(poll);
-      // Fallback: click the header button if present
-      const btnIA = document.querySelector('.header-btn-ia');
-      if (btnIA) { try { btnIA.click(); return; } catch (e) {} }
-      // final fallback: log
-      console.log('Bouton IA non trouvé et PopupAdapter indisponible après attente');
-    }
-  }, 250);
-}
-// expose globally for inline handlers and external scripts
-try { window.triggerTirageIA = triggerTirageIA; } catch (e) {}
-
-// Connexion des boutons du header
-document.addEventListener('DOMContentLoaded', function() {
-  // Bouton "Réserver" -> scroll vers section reservation
-  const btnReserver = document.querySelector('.btn-pro');
-  if (btnReserver) {
-    btnReserver.addEventListener('click', function(e) {
-      e.preventDefault();
-      scrollToReservation();
-    });
-  }
-
-  // Bouton "Tirage IA" -> handled by inline onclick, no duplicate listener needed
-  // (The inline onclick="triggerTirageIA()" on .btn-ia already handles this)
-
-  // Tous les boutons "Réserver" des sections de détail -> scroll vers réservation et pré-sélectionne l'offre
-  const reservationButtons = document.querySelectorAll('.offre-btn-small');
-  reservationButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Pré-sélectionne l'offre correspondante dans le formulaire
-      const offreType = button.getAttribute('data-offre');
-      const offreSelect = document.getElementById('offre-select');
-      if (offreType && offreSelect) {
-        offreSelect.value = offreType;
-      }
-      
-      scrollToReservation();
-    });
-  });
-
-  // Gestion du bouton de réservation final
-  const RESERVATION_API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? 'https://opanoma.fr/api/reservation.php'
-    : '/api/reservation.php';
-  const submitReservationBtn = document.getElementById('submit-reservation');
-  const reservationStatus = document.getElementById('reservation-status');
-  const slotsSuggestion = document.getElementById('slots-suggestion');
-
-  function showStatus(msg, type) {
-    reservationStatus.style.display = 'block';
-    reservationStatus.textContent = msg;
-    reservationStatus.style.background = type === 'success' ? 'rgba(80,180,80,.15)' : type === 'error' ? 'rgba(200,80,80,.15)' : 'rgba(201,169,110,.1)';
-    reservationStatus.style.color = type === 'success' ? '#8f8' : type === 'error' ? '#f88' : '#c9a96e';
-    reservationStatus.style.border = '1px solid ' + (type === 'success' ? 'rgba(80,180,80,.3)' : type === 'error' ? 'rgba(200,80,80,.3)' : 'rgba(201,169,110,.3)');
-  }
-
-  function showNearestSlots(slots, date) {
-    if (!slots || slots.length === 0) {
-      slotsSuggestion.style.display = 'block';
-      slotsSuggestion.innerHTML = '<p style="color:var(--text-dim);font-size:.85rem;">Aucun créneau proche disponible. Essayez une autre date.</p>';
-      return;
-    }
-    var html = '<div style="display:flex;gap:12px;justify-content:center;margin-top:.5em;">';
-    slots.forEach(function(slot, i) {
-      var label = i === 0 && slots.length > 1 ? 'Avant' : slots.length > 1 ? 'Après' : 'Disponible';
-      if (slots.length === 1) label = slot < '12:00' ? 'Avant' : 'Après';
-      html += '<button type="button" onclick="document.getElementById(\'reservation-time\').value=\'' + slot + '\';document.getElementById(\'slots-suggestion\').style.display=\'none\';document.getElementById(\'reservation-status\').style.display=\'none\';" style="background:var(--bg-warm);border:1px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.95rem;font-family:Inter,sans-serif;transition:all .2s;"><span style="display:block;font-size:.7rem;color:var(--text-dim);margin-bottom:2px;">' + label + '</span>' + slot + '</button>';
-    });
-    html += '</div>';
-    slotsSuggestion.style.display = 'block';
-    slotsSuggestion.innerHTML = html;
-  }
-
-  if (submitReservationBtn) {
-    submitReservationBtn.addEventListener('click', async function(e) {
-      e.preventDefault();
-      slotsSuggestion.style.display = 'none';
-      reservationStatus.style.display = 'none';
-
-      var clientName = document.getElementById('client-name').value.trim();
-      var clientEmail = document.getElementById('client-email').value.trim();
-      var reservationDate = document.getElementById('reservation-date').value;
-      var reservationTime = document.getElementById('reservation-time').value;
-      var selectedOffre = document.getElementById('offre-select').value;
-
-      if (!clientName || !clientEmail || !reservationDate || !reservationTime || !selectedOffre) {
-        showStatus('Merci de remplir tous les champs pour réserver votre séance.', 'error');
-        return;
-      }
-
-      // Désactive le bouton pendant l'envoi
-      submitReservationBtn.disabled = true;
-      submitReservationBtn.textContent = 'Réservation en cours…';
-
-      try {
-        var resp = await fetch(RESERVATION_API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: clientName,
-            email: clientEmail,
-            date: reservationDate,
-            time: reservationTime,
-            offre: selectedOffre
-          })
-        });
-
-        var data = await resp.json();
-
-        if (data.success) {
-          showStatus('✨ Réservation confirmée ! Vous recevrez un email de confirmation.', 'success');
-          document.getElementById('client-name').value = '';
-          document.getElementById('client-email').value = '';
-          document.getElementById('reservation-date').value = '';
-          document.getElementById('reservation-time').value = '';
-          document.getElementById('offre-select').value = '';
-        } else if (data.error === 'Créneau déjà pris' && data.nearest_slots) {
-          showStatus('Ce créneau est déjà pris.', 'warn');
-          showNearestSlots(data.nearest_slots, reservationDate);
-        } else {
-          showStatus(data.error || 'Une erreur est survenue.', 'error');
-        }
-      } catch (err) {
-        showStatus('Erreur de connexion. Veuillez réessayer.', 'error');
-      } finally {
-        submitReservationBtn.disabled = false;
-        submitReservationBtn.textContent = 'Réserver';
-      }
-    });
-  }
-
-  // Charger les créneaux quand on change la date
-  var dateInput = document.getElementById('reservation-date');
-  if (dateInput) {
-    dateInput.addEventListener('change', function() {
-      slotsSuggestion.style.display = 'none';
-      reservationStatus.style.display = 'none';
-    });
-  }
-
-  // Gestion des liens "Témoignages" dans le menu (desktop ET mobile)
-  const temoignagesLinks = document.querySelectorAll('a[href="#temoignages"]');
-  const temoignagesSection = document.getElementById('temoignages-section');
-  
-  if (temoignagesLinks.length > 0 && temoignagesSection) {
-    temoignagesLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        // Reveal the testimonials section and ensure it appears under the reservation block
-        try {
-          const reservation = document.getElementById('reservation');
-
-          // If there's a reservation block and the testimonials section is not immediately after it,
-          // move the testimonials section to follow the reservation so it appears under the booking area.
-          if (reservation && reservation.nextElementSibling !== temoignagesSection) {
-            reservation.parentNode.insertBefore(temoignagesSection, reservation.nextSibling);
-          }
-
-          // Toggle display (temoignages are hidden by default via CSS)
-          const isHidden = (temoignagesSection.style.display === 'none' || temoignagesSection.style.display === '');
-          if (isHidden) {
-            temoignagesSection.style.display = 'block';
-
-            // Scroll to just below the reservation section so the testimonials appear under it
-            if (reservation) {
-              const rect = reservation.getBoundingClientRect();
-              const targetTop = window.pageYOffset + rect.bottom + 12; // 12px margin
-              window.scrollTo({ top: targetTop, behavior: 'smooth' });
-            } else {
-              // Fallback: scroll testimonials into view
-              temoignagesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          } else {
-            temoignagesSection.style.display = 'none';
-          }
-        } catch (err) {
-          console.warn('Erreur lors de l ouverture des témoignages:', err);
-        }
-      });
-    });
-  }
-
-  // Gestion des liens "FAQ" dans le menu (desktop ET mobile)
-  const faqLinks = document.querySelectorAll('a[href="#faq"]');
-  const faqSection = document.getElementById('faq-section');
-  
-  if (faqLinks.length > 0 && faqSection) {
-    faqLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Toggle de l'affichage de la section FAQ
-        if (faqSection.style.display === 'none' || faqSection.style.display === '') {
-          faqSection.style.display = 'block';
-          
-          // Scroll vers la section FAQ avec un meilleur positionnement
-          setTimeout(function() {
-            const faqRect = faqSection.getBoundingClientRect();
-            const offsetTop = window.pageYOffset + faqRect.top - 100; // 100px de marge en haut
-            
-            window.scrollTo({
-              top: offsetTop,
-              behavior: 'smooth'
-            });
-          }, 50); // Petit délai pour que l'affichage se fasse
-        } else {
-          faqSection.style.display = 'none';
-        }
-      });
-    });
-  }
-
-  // Gestion des accordéons FAQ
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(function(item) {
-    const question = item.querySelector('.faq-question');
-    question.addEventListener('click', function() {
-      // Ferme tous les autres accordéons
-      faqItems.forEach(function(otherItem) {
-        if (otherItem !== item) {
-          otherItem.classList.remove('active');
-        }
-      });
-      
-      // Toggle l'accordéon actuel
-      item.classList.toggle('active');
-    });
-  });
-
-  // Gestion des filtres par catégorie FAQ
-  const faqCategories = document.querySelectorAll('.faq-category');
-  faqCategories.forEach(function(category) {
-    category.addEventListener('click', function() {
-      // Retire la classe active de toutes les catégories
-      faqCategories.forEach(function(cat) {
-        cat.classList.remove('active');
-      });
-      
-      // Ajoute la classe active à la catégorie cliquée
-      category.classList.add('active');
-      
-      // Filtre les questions selon la catégorie
-      const selectedCategory = category.getAttribute('data-category');
-      const faqItems = document.querySelectorAll('.faq-item');
-      
-      faqItems.forEach(function(item) {
-        const itemCategory = item.getAttribute('data-category');
-        
-        if (selectedCategory === 'all' || itemCategory === selectedCategory) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
-        
-        // Ferme tous les accordéons lors du filtrage
-        item.classList.remove('active');
-      });
-    });
-  });
-});
-</script>
   <!-- PopupManager includes (feature/popup-rewrite) -->
   <script>
     (function(){
@@ -1643,56 +1132,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
   </script>
 </body>
-  
-  <!-- Small wiring script: attach click handlers to page buttons (safe, no markup changes) -->
-  <script>
-    (function () {
-      function safe(fn) { try { return fn(); } catch (e) { console && console.warn && console.warn('wiring error', e); } }
-
-      function onReady(cb) {
-        if (document.readyState === 'complete' || document.readyState === 'interactive') return cb();
-        document.addEventListener('DOMContentLoaded', cb);
-      }
-
-      onReady(function () {
-        // Main Tirage IA buttons (desktop and mobile)
-        safe(function () {
-          var els = Array.from(document.querySelectorAll('.btn-ia, .mobile-btn-ia, .header-btn-ia, .header-btn-ia a'));
-          els.forEach(function (el) {
-            // skip if already wired
-            if (el.__wiredForTirage) return; el.__wiredForTirage = true;
-            el.addEventListener('click', function (ev) { ev.preventDefault && ev.preventDefault(); try { window.triggerTirageIA(); } catch (e) { console && console.warn && console.warn('triggerTirageIA failed', e); } return false; });
-          });
-        });
-
-        // Offer buttons (Réserver) - if they have data-offre, scroll to booking/booking form if present
-        safe(function () {
-          var offers = Array.from(document.querySelectorAll('.offre-btn, .offre-btn-small, button[data-offre]'));
-          offers.forEach(function (btn) {
-            if (btn.__wiredForOffer) return; btn.__wiredForOffer = true;
-            btn.addEventListener('click', function (ev) {
-              try {
-                ev.preventDefault && ev.preventDefault();
-                var form = document.querySelector('form#bookingForm, form[name="booking"], .contact-form');
-                if (form) { form.scrollIntoView({behavior:'smooth', block:'center'}); form.querySelector('input,textarea,button') && form.querySelector('input,textarea,button').focus(); }
-                else { window.location.hash = '#contact'; }
-              } catch (e) { console && console.warn && console.warn('offer button action failed', e); }
-            });
-          });
-        });
-
-        // Newsletter subscription quick anchor
-        safe(function () {
-          var nl = document.querySelectorAll('a[href="#newsletter"], a[href*="newsletter"], .newsletter-link');
-          Array.from(nl).forEach(function (a) {
-            if (a.__wiredNewsletter) return; a.__wiredNewsletter = true;
-            a.addEventListener('click', function (ev) { ev.preventDefault && ev.preventDefault(); var el = document.querySelector('form#newsletter, form[name="newsletter"], .newsletter-form'); if (el) el.scrollIntoView({behavior:'smooth', block:'center'}); else window.location.hash = '#newsletter'; });
-          });
-        });
-
-        // Bio toggle handled by main DOMContentLoaded handler above
-
-      });
-    })();
-  </script>
 </html>

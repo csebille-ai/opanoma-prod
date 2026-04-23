@@ -5,36 +5,36 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-/* ── Design Tokens ── */
+/* ── Design Tokens — Crystal Blue & Orange ── */
 :root {
-  --bg: #110e0c;
-  --bg-warm: #1a1614;
-  --surface: rgba(255,245,235,.05);
-  --surface-hover: rgba(255,245,235,.09);
-  --surface-border: rgba(255,245,235,.11);
-  --surface-border-hover: rgba(255,245,235,.18);
-  --gold: #c9a96e;
-  --gold-soft: #d4b77a;
-  --gold-glow: rgba(201,169,110,.15);
-  --accent: #c9a96e;
-  --accent-hover: #d4b77a;
-  --brand: #c9a96e;
-  --orange: #c9a96e;
-  --text: #f0ebe6;
-  --text-dim: rgba(237,232,227,.6);
-  --text-body: rgba(237,232,227,.88);
-  --muted: rgba(237,232,227,.5);
-  --ia-start: #c9a96e;
-  --ia-end: #8b7355;
+  --bg: #060d1a;
+  --bg-warm: #0a1525;
+  --surface: rgba(100,180,255,.05);
+  --surface-hover: rgba(100,180,255,.09);
+  --surface-border: rgba(100,180,255,.15);
+  --surface-border-hover: rgba(100,180,255,.28);
+  --gold: #ff7a2f;
+  --gold-soft: #ff9557;
+  --gold-glow: rgba(255,122,47,.18);
+  --accent: #ff7a2f;
+  --accent-hover: #ff9557;
+  --brand: #ff7a2f;
+  --orange: #ff7a2f;
+  --text: #e8f4ff;
+  --text-dim: rgba(180,220,255,.62);
+  --text-body: rgba(210,235,255,.9);
+  --muted: rgba(140,190,240,.5);
+  --ia-start: #ff7a2f;
+  --ia-end: #cc5500;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.12);
-  --shadow-md: 0 4px 16px rgba(0,0,0,.2);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,.35);
-  --glass: rgba(255,245,235,.04);
-  --glass-stroke: rgba(255,245,235,.1);
-  --glass-strong: rgba(255,245,235,.07);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.2);
+  --shadow-md: 0 4px 16px rgba(0,20,60,.4);
+  --shadow-lg: 0 12px 40px rgba(0,20,60,.6);
+  --glass: rgba(100,180,255,.04);
+  --glass-stroke: rgba(100,180,255,.12);
+  --glass-strong: rgba(100,180,255,.08);
   --transition: .2s cubic-bezier(.4,0,.2,1);
 }
 
@@ -70,6 +70,7 @@ img { max-width: 100%; height: auto; display: block; }
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  background: #060d1a;
 }
 
 .hero-video {
@@ -77,19 +78,27 @@ img { max-width: 100%; height: auto; display: block; }
   height: 100%;
   object-fit: cover;
   opacity: .45;
-  filter: saturate(0) brightness(.5) contrast(1.1) sepia(.3);
+  filter: saturate(1.4) brightness(.45) contrast(1.2) hue-rotate(185deg);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, 
-    rgba(12,10,9,.6) 0%, 
-    rgba(12,10,9,.3) 40%, 
-    rgba(12,10,9,.7) 80%, 
-    rgba(12,10,9,.95) 100%);
+  background: linear-gradient(180deg,
+    rgba(6,13,26,.65) 0%,
+    rgba(6,13,26,.25) 40%,
+    rgba(6,13,26,.7) 80%,
+    rgba(6,13,26,.97) 100%);
   z-index: 1;
   pointer-events: none;
+}
+
+/* iOS Safari can render filtered videos as black. Keep the style, remove filter there. */
+@supports (-webkit-touch-callout: none) {
+  .hero-video {
+    filter: none;
+    opacity: .38;
+  }
 }
 
 /* ── Sticky Header ── */
@@ -97,9 +106,9 @@ img { max-width: 100%; height: auto; display: block; }
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 50;
-  backdrop-filter: saturate(120%) blur(20px);
-  background: rgba(12,10,9,.8);
-  border-bottom: 1px solid var(--surface-border);
+  backdrop-filter: saturate(160%) blur(20px);
+  background: rgba(6,13,26,.85);
+  border-bottom: 1px solid rgba(100,180,255,.18);
   transition: background var(--transition);
 }
 
@@ -203,7 +212,7 @@ img { max-width: 100%; height: auto; display: block; }
   gap: 3px;
   font-weight: 500;
   margin-left: 5px;
-  color: rgba(12,10,9,.6);
+  color: rgba(6,13,26,.6);
   background: rgba(255,255,255,.25);
   padding: 1px 5px;
   border-radius: 999px;
@@ -347,6 +356,11 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--text-body);
   border-bottom: 1px solid var(--surface-border);
   transition: color var(--transition), padding-left var(--transition);
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
 }
 .mobile-nav-item:hover {
   color: var(--gold);
@@ -359,6 +373,34 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .mobile-nav-item svg { opacity: .3; transition: opacity var(--transition), transform var(--transition); }
 .mobile-nav-item:hover svg { opacity: .6; transform: translateX(2px); }
+
+.mobile-nav-item-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav-submenu {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 122, 47, 0.05);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.mobile-nav-subitem {
+  display: block;
+  padding: 12px 20px 12px 40px;
+  font-size: 14px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color var(--transition), padding-left var(--transition);
+  border: none;
+  background: none;
+}
+
+.mobile-nav-subitem:hover {
+  color: var(--gold);
+  padding-left: 44px;
+}
 
 .mobile-actions {
   padding: 20px 20px 32px;
@@ -400,6 +442,22 @@ img { max-width: 100%; height: auto; display: block; }
 .mobile-social-icon:hover { color: var(--gold); border-color: var(--gold); }
 .mobile-social-icon svg { width: 16px; height: 16px; fill: currentColor; }
 
+/* Global blur state when navigation menus are open */
+main,
+footer,
+.background-video {
+  transition: filter .22s ease, opacity .22s ease;
+}
+
+body.mobile-menu-open main,
+body.mobile-menu-open footer,
+body.mobile-menu-open .background-video,
+body.desktop-nav-menu-open main,
+body.desktop-nav-menu-open footer,
+body.desktop-nav-menu-open .background-video {
+  filter: blur(6px) brightness(.72);
+}
+
 /* ── Main Content ── */
 main {
   position: relative;
@@ -421,7 +479,7 @@ main {
   margin: 2.5em 0 .15em;
   color: var(--gold);
   line-height: 1.1;
-  text-shadow: 0 0 40px rgba(201,169,110,.25), 0 0 80px rgba(201,169,110,.1);
+  text-shadow: 0 0 40px rgba(255,122,47,.25), 0 0 80px rgba(255,122,47,.1);
 }
 
 .manon-subtitle {
@@ -499,7 +557,7 @@ main {
 
 /* ── Section Cards (shared) ── */
 .glass-section {
-  background: linear-gradient(170deg, rgba(201,169,110,.04) 0%, var(--surface) 40%, rgba(201,169,110,.02) 100%);
+  background: linear-gradient(170deg, rgba(255,122,47,.04) 0%, var(--surface) 40%, rgba(255,122,47,.02) 100%);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   padding: 1.5em 1.2em;
@@ -508,11 +566,35 @@ main {
 }
 
 /* ── Consultation Section ── */
-.offres-tarifs-section,
+.offres-tarifs-section {
+  background: linear-gradient(170deg, rgba(255,122,47,.08) 0%, rgba(255,122,47,.03) 100%);
+  border: 2px solid rgba(255,122,47,.25);
+  border-radius: var(--radius-lg);
+  padding: 3em 1.2em;
+  margin: 2.5em 0;
+  text-align: center;
+  scroll-margin-top: 80px;
+  box-shadow: 0 4px 20px rgba(255,122,47,.08);
+  position: relative;
+}
+
+.offres-tarifs-section::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 24px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,122,47,.6) 50%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(6px);
+}
+
 .tarot-detail-section,
 .pendule-detail-section,
 .alignement-detail-section {
-  background: linear-gradient(170deg, rgba(201,169,110,.04) 0%, var(--surface) 40%, rgba(201,169,110,.02) 100%);
+  background: linear-gradient(170deg, rgba(255,122,47,.04) 0%, var(--surface) 40%, rgba(255,122,47,.02) 100%);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   padding: 2em 1.2em;
@@ -565,7 +647,7 @@ main {
 .pendule-detail-section .offre-tarif-card:hover,
 .alignement-detail-section .offre-tarif-card:hover {
   transform: none;
-  border-color: rgba(201,169,110,.2);
+  border-color: rgba(255,122,47,.2);
 }
 
 .offre-tarif-content {
@@ -634,8 +716,8 @@ main {
 }
 
 .sous-cadre {
-  background: rgba(201,169,110,.06);
-  border: 1px solid rgba(201,169,110,.12);
+  background: rgba(255,122,47,.06);
+  border: 1px solid rgba(255,122,47,.12);
   border-radius: var(--radius-sm);
   padding: 6px 14px;
   display: flex;
@@ -645,7 +727,7 @@ main {
   transition: border-color var(--transition);
 }
 .sous-cadre:hover {
-  border-color: rgba(201,169,110,.25);
+  border-color: rgba(255,122,47,.25);
 }
 
 .sous-cadre-label {
@@ -667,7 +749,7 @@ main {
 .newsletter-section {
   max-width: 520px;
   margin: 3em auto;
-  background: linear-gradient(170deg, rgba(201,169,110,.04) 0%, var(--surface) 40%, rgba(201,169,110,.02) 100%);
+  background: linear-gradient(170deg, rgba(255,122,47,.04) 0%, var(--surface) 40%, rgba(255,122,47,.02) 100%);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   padding: 2em 1.5em;
@@ -728,6 +810,318 @@ main {
 .newsletter-btn:hover { opacity: .9; }
 .newsletter-btn:active { transform: scale(.98); }
 
+/* ── Horoscope Section ── */
+.horoscope-section {
+  max-width: 880px;
+  margin: 2.5em auto;
+  background: linear-gradient(160deg, rgba(255,122,47,.03) 0%, rgba(10,21,40,.85) 32%, rgba(6,13,26,.92) 100%);
+  border: 1px solid rgba(255,122,47,.15);
+  border-radius: var(--radius-lg);
+  padding: 1.8em 1.2em;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(255,122,47,.04);
+  scroll-margin-top: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.horoscope-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.2rem, 3.4vw, 1.8rem);
+  letter-spacing: .08em;
+  color: var(--gold);
+  margin-bottom: .5em;
+  font-weight: 500;
+}
+
+.horoscope-intro {
+  margin: 0 auto .4em;
+  max-width: 620px;
+  color: var(--text-body);
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.horoscope-date {
+  margin: 0 0 1.4em;
+  color: var(--text-dim);
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.horoscope-signs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .3em;
+  margin: 0 auto 1.2em;
+  max-width: 760px;
+}
+
+.horoscope-sign {
+  border: 1px solid rgba(255,122,47,.24);
+  background: rgba(255,122,47,.06);
+  color: var(--text-dim);
+  padding: .4em .5em;
+  border-radius: 999px;
+  font-size: .72rem;
+  letter-spacing: .03em;
+  transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+  display: flex;
+  align-items: center;
+  gap: .4em;
+}
+
+.zodiac-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3em;
+  height: 1.3em;
+  background: #ff7a2f;
+  border-radius: 50%;
+  font-size: 0.9em;
+  color: #1a1208;
+  flex-shrink: 0;
+  order: 10;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.horoscope-sign:hover {
+  color: var(--gold);
+  border-color: rgba(255,122,47,.38);
+  transform: translateY(-1px);
+}
+
+.horoscope-sign:focus {
+  outline: none;
+}
+
+.horoscope-sign:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.horoscope-sign.active {
+  color: #1a1208;
+  background: linear-gradient(135deg, #ff7a2f, #e5cb90);
+  border-color: rgba(255,122,47,.72);
+  font-weight: 600;
+}
+
+.horoscope-card {
+  text-align: left;
+  max-width: 740px;
+  margin: 0 auto;
+  background: rgba(4,10,22,.72);
+  border: 1px solid rgba(255,122,47,.2);
+  border-radius: var(--radius-md);
+  padding: 1.2em 1.1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.horoscope-card h4 {
+  margin: 0 0 .8em;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  letter-spacing: .04em;
+  position: relative;
+  z-index: 1;
+}
+
+.horoscope-card p {
+  margin: 0 0 .55em;
+  font-size: .9rem;
+  line-height: 1.65;
+  color: var(--text-body);
+  position: relative;
+  z-index: 1;
+}
+
+.horoscope-card strong {
+  color: var(--gold-soft);
+  font-weight: 600;
+}
+
+.horoscope-tip {
+  margin-top: .9em;
+  padding-top: .8em;
+  border-top: 1px dashed rgba(255,122,47,.2);
+  position: relative;
+  z-index: 1;
+}
+
+.horoscope-zodiac-image {
+  display: none;
+}
+
+.horoscope-actions {
+  margin-top: 1.1em;
+}
+
+/* Zodiac Sign Background — REMOVED (using badges in buttons instead) */
+
+.horoscope-card.horoscope-sign-all::before {
+  display: none;
+}
+
+.zodiac-grid-bg {
+  display: none;
+}
+
+.horoscope-card.horoscope-sign-all {
+  min-height: 180px;
+  background: rgba(22,9,2,.92);
+}
+
+.horoscope-card.horoscope-sign-all h4,
+.horoscope-card.horoscope-sign-all p {
+  display: none;
+}
+
+.natal-divider {
+  height: 1px;
+  margin: 1.6em auto 1.2em;
+  max-width: 760px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,122,47,.3) 20%, rgba(255,122,47,.3) 80%, transparent 100%);
+}
+
+.natal-section {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.natal-title {
+  margin: 0 0 .45em;
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 1.1rem;
+  letter-spacing: .05em;
+}
+
+.natal-intro {
+  margin: 0 0 .9em;
+  color: var(--text-dim);
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.natal-form {
+  display: flex;
+  flex-direction: column;
+  gap: .6em;
+}
+
+.natal-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .6em;
+}
+
+.natal-input {
+  width: 100%;
+  background: rgba(4,10,22,.62);
+  border: 1px solid rgba(255,122,47,.2);
+  border-radius: var(--radius-sm);
+  padding: .72em .85em;
+  color: var(--text-body);
+  font-size: .88rem;
+}
+
+.natal-input:focus {
+  outline: none;
+  border-color: rgba(255,122,47,.52);
+}
+
+.natal-geo-status {
+  min-height: 1.15em;
+  margin: 0;
+  font-size: .78rem;
+  color: var(--text-dim);
+}
+
+.natal-result {
+  margin-top: 1em;
+  background: rgba(8,8,10,.7);
+  border: 1px solid rgba(255,122,47,.2);
+  border-radius: var(--radius-md);
+  padding: 1em;
+}
+
+.natal-result h5 {
+  margin: 0 0 .7em;
+  font-size: .98rem;
+  color: var(--gold);
+  letter-spacing: .03em;
+}
+
+.natal-result p {
+  margin: 0 0 .45em;
+  font-size: .88rem;
+  line-height: 1.65;
+  color: var(--text-body);
+}
+
+.natal-result strong {
+  color: var(--gold-soft);
+}
+
+.natal-houses-block {
+  margin-top: .9em;
+  padding-top: .8em;
+  border-top: 1px dashed rgba(255,122,47,.22);
+}
+
+.natal-houses-block h6 {
+  margin: 0 0 .6em;
+  font-family: 'Cinzel', serif;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--gold-soft);
+}
+
+.natal-houses-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .55em;
+}
+
+.natal-house-card {
+  background: rgba(16, 13, 10, .5);
+  border: 1px solid rgba(255,122,47,.2);
+  border-radius: var(--radius-sm);
+  padding: .62em .7em;
+}
+
+.natal-house-card h6 {
+  margin: 0 0 .35em;
+  color: var(--gold);
+  font-size: .75rem;
+  letter-spacing: .03em;
+}
+
+.natal-house-card p {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.55;
+}
+
+.natal-house-planets {
+  margin-top: .35em !important;
+  color: var(--text-dim);
+}
+
+.natal-houses-empty {
+  margin: 0;
+  font-size: .82rem;
+  color: var(--text-dim);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: none; }
@@ -740,14 +1134,15 @@ main {
 /* ── Reservation Section ── */
 .reservation-section {
   max-width: 520px;
-  margin: 3em auto;
-  background: linear-gradient(170deg, rgba(201,169,110,.04) 0%, var(--surface) 40%, rgba(201,169,110,.02) 100%);
-  border: 1px solid var(--surface-border);
+  margin: 3.5em auto;
+  background: linear-gradient(170deg, rgba(255,122,47,.06) 0%, var(--surface) 40%, rgba(255,122,47,.03) 100%);
+  border: 2px solid rgba(255,122,47,.2);
   border-radius: var(--radius-lg);
-  padding: 2em 1.5em;
+  padding: 2.5em 1.5em;
   text-align: center;
   animation: fadeIn .8s .1s ease both;
   scroll-margin-top: 80px;
+  box-shadow: 0 2px 16px rgba(255,122,47,.06);
 }
 
 .reservation-title {
@@ -909,8 +1304,8 @@ main {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(201,169,110,.15);
-  border: 1px solid rgba(201,169,110,.2);
+  background: rgba(255,122,47,.15);
+  border: 1px solid rgba(255,122,47,.2);
   display: grid;
   place-items: center;
   color: var(--gold);
@@ -974,9 +1369,9 @@ main {
 }
 .faq-category.active,
 .faq-category:hover {
-  background: rgba(201,169,110,.08);
+  background: rgba(255,122,47,.08);
   color: var(--gold);
-  border-color: rgba(201,169,110,.2);
+  border-color: rgba(255,122,47,.2);
 }
 
 .faq-container { max-width: 660px; margin: 0 auto; }
@@ -990,7 +1385,7 @@ main {
   transition: border-color var(--transition);
 }
 .faq-item.active {
-  border-color: rgba(201,169,110,.15);
+  border-color: rgba(255,122,47,.15);
 }
 
 .faq-question {
@@ -1030,7 +1425,7 @@ main {
 .consultation-focus { animation: consultationPulse 2s ease-in-out; position: relative; }
 @keyframes consultationPulse {
   0%   { border-color: var(--surface-border); }
-  50%  { border-color: rgba(201,169,110,.3); }
+  50%  { border-color: rgba(255,122,47,.3); }
   100% { border-color: var(--surface-border); }
 }
 
@@ -1123,8 +1518,8 @@ main {
   100% { opacity: 1; transform: scale(1) rotateY(0deg); filter: blur(0); }
 }
 @keyframes cardGlow {
-  0%, 100% { box-shadow: 0 0 4px rgba(201,169,110,.2); }
-  50%      { box-shadow: 0 0 16px rgba(201,169,110,.4); }
+  0%, 100% { box-shadow: 0 0 4px rgba(255,122,47,.2); }
+  50%      { box-shadow: 0 0 16px rgba(255,122,47,.4); }
 }
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -1212,6 +1607,93 @@ main {
   }
   .nav a.highlight:hover { color: var(--gold-soft); }
 
+  .nav-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 100001;
+  }
+
+  .nav-dropdown:hover,
+  .nav-dropdown:focus-within {
+    z-index: 100004;
+  }
+
+  .nav-dropdown-trigger {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: .05em;
+    padding: 8px 0;
+    color: var(--text-dim);
+    transition: color var(--transition);
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-dropdown-trigger:hover {
+    color: var(--text);
+  }
+
+  .nav-dropdown-trigger::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width .3s;
+  }
+
+  .nav-dropdown-trigger:hover::after {
+    width: 100%;
+  }
+
+  .nav-dropdown:hover .nav-dropdown-trigger {
+    color: var(--text);
+  }
+
+  .nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background: rgba(10,21,40,.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,245,235,.22);
+    border-radius: var(--radius-md);
+    margin-top: 8px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100005;
+  }
+
+  .nav-dropdown:hover .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-dropdown-item {
+    display: block;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color var(--transition), background-color var(--transition);
+  }
+
+  .nav-dropdown-item:hover {
+    color: var(--gold);
+    background-color: rgba(255, 122, 47, 0.08);
+  }
+
   .social-icons {
     display: flex;
     align-items: center;
@@ -1236,6 +1718,24 @@ main {
   .offres-tarifs-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.2em;
+  }
+
+  .horoscope-signs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .55em;
+  }
+
+  .horoscope-sign {
+    padding: .6em .8em;
+    font-size: .82rem;
+  }
+
+  .natal-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .natal-houses-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   .newsletter-form { flex-direction: row; gap: .7em; }
@@ -1295,7 +1795,7 @@ main {
     grid-column: 2; grid-row: 1 / 3;
     width: 90px; max-width: 90px;
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(201,169,110,.2);
+    box-shadow: 0 6px 20px rgba(255,122,47,.2);
   }
   .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(4) { grid-column: 1; grid-row: 2; }
   .interpretation-popup .cards-container[style*="relative"] .card-image:nth-child(5) { grid-column: 3; grid-row: 2; }
@@ -1401,3 +1901,4 @@ main {
   .tarot-popup { max-width: 550px; }
   .interpretation-popup { max-width: 700px; width: 90vw; }
 }
+
