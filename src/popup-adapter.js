@@ -136,7 +136,7 @@
     container.appendChild(title);
 
     const disclaimer = document.createElement('p');
-    disclaimer.style.cssText = 'font-size:12px;color:rgba(201,169,110,.5);font-style:italic;margin:4px 0 10px;line-height:1.4;font-family:"Quicksand",sans-serif';
+    disclaimer.style.cssText = 'font-size:12px;color:rgba(255,122,47,.5);font-style:italic;margin:4px 0 10px;line-height:1.4;font-family:"Quicksand",sans-serif';
     disclaimer.textContent = 'Ce tirage est généré par intelligence artificielle à titre indicatif. Il ne remplace pas une consultation personnalisée.';
     container.appendChild(disclaimer);
 
@@ -350,7 +350,7 @@
             // Add a heading for the choice screen
             const choiceTitle = document.createElement('h3');
             choiceTitle.textContent = 'Choisissez votre tirage';
-            Object.assign(choiceTitle.style, { textAlign: 'center', color: '#c9a96e', fontFamily: '"Cinzel", serif', fontSize: '1.2rem', margin: '8px 0 16px', letterSpacing: '0.04em' });
+            Object.assign(choiceTitle.style, { textAlign: 'center', color: '#ff7a2f', fontFamily: '"Cinzel", serif', fontSize: '1.2rem', margin: '8px 0 16px', letterSpacing: '0.04em' });
             box.appendChild(choiceTitle);
             // create container
             const grid = document.createElement('div');
@@ -425,24 +425,24 @@
             Object.assign(panelThree.style, {
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
               flex: '1 1 260px', minWidth: '220px', maxWidth: '380px',
-              background: 'linear-gradient(180deg, rgba(20,16,14,0.92), rgba(12,10,9,0.88))',
+              background: 'linear-gradient(180deg, rgba(6,13,26,0.92), rgba(4,9,20,0.88))',
               borderRadius: '12px', padding: '20px 18px', boxSizing: 'border-box',
-              color: '#ede8e3', border: '1px solid rgba(201,169,110,0.12)',
+              color: '#e8f4ff', border: '1px solid rgba(255,122,47,0.12)',
               boxShadow: '0 8px 22px rgba(0,0,0,0.5)', textAlign: 'center'
             });
             const p3icon = document.createElement('div');
             p3icon.innerHTML = '&#x2728;&#x2728;&#x2728;';
             Object.assign(p3icon.style, { fontSize: '24px', marginBottom: '10px', letterSpacing: '6px' });
             const p3h = document.createElement('h4'); p3h.textContent = 'Tirage 3 cartes';
-            Object.assign(p3h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#c9a96e', letterSpacing: '0.04em' });
+            Object.assign(p3h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#ff7a2f', letterSpacing: '0.04em' });
             const p3para = document.createElement('div');
-            p3para.innerHTML = '<span style="color:rgba(237,232,227,0.65)">Pass\u00e9 \u00b7 Pr\u00e9sent \u00b7 Futur</span><br>Rapide et \u00e9clairant \u2014 id\u00e9al pour une question pr\u00e9cise.';
-            Object.assign(p3para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(237,232,227,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
+            p3para.innerHTML = '<span style="color:rgba(232,244,255,0.65)">Pass\u00e9 \u00b7 Pr\u00e9sent \u00b7 Futur</span><br>Rapide et \u00e9clairant \u2014 id\u00e9al pour une question pr\u00e9cise.';
+            Object.assign(p3para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(232,244,255,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p3btn = document.createElement('button'); p3btn.textContent = '\u2726  3 cartes';
             try { p3btn.setAttribute('data-pa-choose', '3'); } catch (e) { console.warn('[PA]', e); }
-            Object.assign(p3btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(201,169,110,0.3)', background: 'rgba(201,169,110,0.1)', color: '#c9a96e', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
-            p3btn.addEventListener('mouseenter', function(){ try { this.style.background = '#c9a96e'; this.style.color = '#0c0a09'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(201,169,110,0.3)'; } catch (e) { console.warn('[PA]', e); } });
-            p3btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(201,169,110,0.1)'; this.style.color = '#c9a96e'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            Object.assign(p3btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(255,122,47,0.3)', background: 'rgba(255,122,47,0.1)', color: '#ff7a2f', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
+            p3btn.addEventListener('mouseenter', function(){ try { this.style.background = '#ff7a2f'; this.style.color = '#060d1a'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(255,122,47,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            p3btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(255,122,47,0.1)'; this.style.color = '#ff7a2f'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
             p3btn.addEventListener('click', function () { try {
                 // Close the theme popup entirely before opening the deck
                 try { if (window.PopupAdapter && window.PopupAdapter._lastThemePopupHandle) { var h = window.PopupAdapter._lastThemePopupHandle; if (h.close) h.close(); else if (typeof PopupManager !== 'undefined' && PopupManager.close) PopupManager.close(h); else { var overlay = (h.el || h).closest && (h.el || h).closest('.pm-overlay'); if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); else if (h.el && h.el.parentNode) h.el.parentNode.removeChild(h.el); else if (h.parentNode) h.parentNode.removeChild(h); } window.PopupAdapter._lastThemePopupHandle = null; } } catch (e) { console.warn('close theme popup failed', e); }
@@ -454,24 +454,24 @@
             Object.assign(panelFive.style, {
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center',
               flex: '1 1 260px', minWidth: '220px', maxWidth: '380px',
-              background: 'linear-gradient(180deg, rgba(20,16,14,0.92), rgba(12,10,9,0.88))',
+              background: 'linear-gradient(180deg, rgba(6,13,26,0.92), rgba(4,9,20,0.88))',
               borderRadius: '12px', padding: '20px 18px', boxSizing: 'border-box',
-              color: '#ede8e3', border: '1px solid rgba(201,169,110,0.12)',
+              color: '#e8f4ff', border: '1px solid rgba(255,122,47,0.12)',
               boxShadow: '0 8px 22px rgba(0,0,0,0.5)', textAlign: 'center'
             });
             const p5icon = document.createElement('div');
             p5icon.innerHTML = '&#x2728;&#x2728;&#x2728;&#x2728;&#x2728;';
             Object.assign(p5icon.style, { fontSize: '24px', marginBottom: '10px', letterSpacing: '6px' });
             const p5h = document.createElement('h4'); p5h.textContent = 'Tirage 5 cartes';
-            Object.assign(p5h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#c9a96e', letterSpacing: '0.04em' });
+            Object.assign(p5h.style, { margin: '0 0 10px 0', fontSize: '17px', fontFamily: '"Cinzel", serif', fontWeight: '600', color: '#ff7a2f', letterSpacing: '0.04em' });
             const p5para = document.createElement('div');
-            p5para.innerHTML = '<span style="color:rgba(237,232,227,0.65)">Forces \u00b7 Obstacles \u00b7 Conseil \u00b7 \u00c9volution \u00b7 Synth\u00e8se</span><br>Approfondi et strat\u00e9gique \u2014 pour une vision compl\u00e8te.';
-            Object.assign(p5para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(237,232,227,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
+            p5para.innerHTML = '<span style="color:rgba(232,244,255,0.65)">Forces \u00b7 Obstacles \u00b7 Conseil \u00b7 \u00c9volution \u00b7 Synth\u00e8se</span><br>Approfondi et strat\u00e9gique \u2014 pour une vision compl\u00e8te.';
+            Object.assign(p5para.style, { fontSize: '13.5px', marginBottom: '16px', color: 'rgba(232,244,255,0.88)', lineHeight: '1.55', fontFamily: '"Quicksand", "Inter", Arial, sans-serif' });
             const p5btn = document.createElement('button'); p5btn.textContent = '\u2726  5 cartes';
             try { p5btn.setAttribute('data-pa-choose', '5'); } catch (e) { console.warn('[PA]', e); }
-            Object.assign(p5btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(201,169,110,0.3)', background: 'rgba(201,169,110,0.1)', color: '#c9a96e', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
-            p5btn.addEventListener('mouseenter', function(){ try { this.style.background = '#c9a96e'; this.style.color = '#0c0a09'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(201,169,110,0.3)'; } catch (e) { console.warn('[PA]', e); } });
-            p5btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(201,169,110,0.1)'; this.style.color = '#c9a96e'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            Object.assign(p5btn.style, { padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', border: '1px solid rgba(255,122,47,0.3)', background: 'rgba(255,122,47,0.1)', color: '#ff7a2f', fontWeight: '600', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', transition: 'all 180ms ease', fontFamily: '"Quicksand", "Inter", Arial, sans-serif', fontSize: '0.9rem', display: 'inline-block', whiteSpace: 'nowrap' });
+            p5btn.addEventListener('mouseenter', function(){ try { this.style.background = '#ff7a2f'; this.style.color = '#060d1a'; this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 8px 24px rgba(255,122,47,0.3)'; } catch (e) { console.warn('[PA]', e); } });
+            p5btn.addEventListener('mouseleave', function(){ try { this.style.background = 'rgba(255,122,47,0.1)'; this.style.color = '#ff7a2f'; this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)'; } catch (e) { console.warn('[PA]', e); } });
             p5btn.addEventListener('click', function () { try {
                 // Close the theme popup entirely before opening the deck
                 try { if (window.PopupAdapter && window.PopupAdapter._lastThemePopupHandle) { var h = window.PopupAdapter._lastThemePopupHandle; if (h.close) h.close(); else if (typeof PopupManager !== 'undefined' && PopupManager.close) PopupManager.close(h); else { var overlay = (h.el || h).closest && (h.el || h).closest('.pm-overlay'); if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); else if (h.el && h.el.parentNode) h.el.parentNode.removeChild(h.el); else if (h.parentNode) h.parentNode.removeChild(h); } window.PopupAdapter._lastThemePopupHandle = null; } } catch (e) { console.warn('close theme popup failed', e); }
@@ -724,7 +724,7 @@
         if (!document.getElementById('pa-remaining-styles')) {
           const st = document.createElement('style');
           st.id = 'pa-remaining-styles';
-          st.textContent = '.pa-remaining-num { font-weight: 700; color: #c9a96e; margin: 0 4px; display: inline-block; transition: transform 220ms ease; } .pa-remaining-pulse { transform: scale(1.3); } @media (prefers-reduced-motion: reduce) { .pa-remaining-num, .pa-remaining-pulse { transition: none !important; transform: none !important; } }';
+          st.textContent = '.pa-remaining-num { font-weight: 700; color: #ff7a2f; margin: 0 4px; display: inline-block; transition: transform 220ms ease; } .pa-remaining-pulse { transform: scale(1.3); } @media (prefers-reduced-motion: reduce) { .pa-remaining-num, .pa-remaining-pulse { transition: none !important; transform: none !important; } }';
           (document.head || document.documentElement).appendChild(st);
         }
       } catch (e) { console.warn('[PA]', e); }
@@ -964,12 +964,18 @@
 
             // payload expected by the worker: { cartes: [...], theme: '', question: '' }
             const payload = {
-              cartes: cards.map(c => {
+              cards: cards.map(c => {
                 const name = (c && c.src) ? c.src.split('/').pop() : (typeof c === 'string' ? c.split('/').pop() : c.name || c.id || c);
-                return (c && c.reversed) ? name + ' (invers\u00e9e)' : name;
+                return (c && c.reversed) ? name + ' (inversée)' : name;
               }),
+              nbCards: cards.length,
               theme: (window.PopupAdapter && window.PopupAdapter.currentTheme) ? window.PopupAdapter.currentTheme : '',
-              question: (window.PopupAdapter && window.PopupAdapter.currentQuestion) ? window.PopupAdapter.currentQuestion : ''
+              question: (window.PopupAdapter && window.PopupAdapter.currentQuestion) ? window.PopupAdapter.currentQuestion : '',
+              userAgent: navigator.userAgent || '',
+              language: navigator.language || '',
+              screen: (window.screen ? window.screen.width + 'x' + window.screen.height : ''),
+              timezone: (typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : ''),
+              referrer: document.referrer || ''
             };
 
             // create a content container inside the frame for scrollable results
@@ -988,23 +994,75 @@
             btnRow.appendChild(btnTirage); btnRow.appendChild(btnSave); btnRow.appendChild(btnBack);
             btnRow.appendChild(audioBtn);
 
+            // ── Bloc témoignage + CTA consultation ────────────────────────────
+            const conversionBlock = document.createElement('div');
+            conversionBlock.className = 'pa-conversion-block';
+            conversionBlock.innerHTML = `
+              <a class="pa-cta-consultation" href="#reservation" onclick="event.preventDefault();(function(){try{var overlay=document.querySelector('.pa-interpretation-overlay');var backdrop=document.querySelector('.pa-interpretation-backdrop');if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);if(backdrop&&backdrop.parentNode)backdrop.parentNode.removeChild(backdrop);try{document.body.style.overflow='';document.body.style.overflowX='';}catch(e){}}catch(e){}setTimeout(function(){var el=document.getElementById('reservation');if(el){var top=window.pageYOffset+el.getBoundingClientRect().top-60;window.scrollTo({top:top,behavior:'smooth'});}},200);})();">
+                ✦ Approfondir avec Manon
+              </a>
+            `;
+            interp.appendChild(conversionBlock);
+            // inject styles once
+            if (!document.getElementById('pa-conversion-styles')) {
+              const cs = document.createElement('style');
+              cs.id = 'pa-conversion-styles';
+              cs.textContent = `
+                .pa-conversion-block {
+                  margin: 18px 12px 8px;
+                  padding: 16px;
+                  border-top: 1px solid rgba(255,122,47,.2);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 14px;
+                }
+                .pa-testimonial {
+                  margin: 0;
+                  text-align: center;
+                  font-style: italic;
+                  color: rgba(232,244,255,.65);
+                  font-size: 13px;
+                  line-height: 1.55;
+                }
+                .pa-testimonial p { margin: 0 0 4px; }
+                .pa-testimonial cite { font-size: 11px; color: rgba(255,122,47,.6); font-style: normal; }
+                .pa-cta-consultation {
+                  display: inline-block;
+                  padding: 10px 24px;
+                  background: #ff7a2f;
+                  color: #060d1a;
+                  font-family: 'Cinzel', serif;
+                  font-size: 13px;
+                  font-weight: 600;
+                  letter-spacing: .05em;
+                  border-radius: 6px;
+                  text-decoration: none;
+                  transition: opacity .2s, transform .2s;
+                }
+                .pa-cta-consultation:hover { opacity: .88; transform: translateY(-1px); }
+              `;
+              (document.head || document.documentElement).appendChild(cs);
+            }
+            // ──────────────────────────────────────────────────────────────────
+
             // inject small stylesheet for interpretation frame (once)
             try {
               if (!document.getElementById('pa-interpretation-styles')) {
                 const st = document.createElement('style');
                 st.id = 'pa-interpretation-styles';
                 st.textContent = `
-                  #ia-interpretation-content { font-family: 'Quicksand', 'Inter', Arial, sans-serif; color: #ede8e3; font-size: 14px; line-height: 1.65; padding: 8px; }
+                  #ia-interpretation-content { font-family: 'Quicksand', 'Inter', Arial, sans-serif; color: #e8f4ff; font-size: 14px; line-height: 1.65; padding: 8px; }
                   #ia-interpretation-content p { margin: 0 0 0.8em 0; }
                   .pa-interpretation-viewport { overflow-y: auto; position: relative; }
                   #ia-interpretation-content { overflow: visible !important; }
                   
                   .pa-interpretation-viewport::-webkit-scrollbar { width: 5px !important; display: block !important; }
                   .pa-interpretation-viewport::-webkit-scrollbar-track { background: transparent; }
-                  .pa-interpretation-viewport::-webkit-scrollbar-thumb { background: rgba(201,169,110,.25); border-radius: 4px; }
+                  .pa-interpretation-viewport::-webkit-scrollbar-thumb { background: rgba(255,122,47,.25); border-radius: 4px; }
                   #ia-interpretation-content::-webkit-scrollbar { display: none !important; width: 0 !important; }
-                  .pa-interpret-line { transition: transform 260ms ease, opacity 220ms ease; white-space: pre-wrap; color: rgba(237,232,227,.88); }
-                  .pa-interpretation-skeleton { background: linear-gradient(90deg, rgba(201,169,110,.06), rgba(201,169,110,.12), rgba(201,169,110,.06)); height:14px; border-radius:6px; margin-bottom:8px; background-size:400px 100%; animation: pa-skel 1.4s linear infinite }
+                  .pa-interpret-line { transition: transform 260ms ease, opacity 220ms ease; white-space: pre-wrap; color: rgba(232,244,255,.88); }
+                  .pa-interpretation-skeleton { background: linear-gradient(90deg, rgba(255,122,47,.06), rgba(255,122,47,.12), rgba(255,122,47,.06)); height:14px; border-radius:6px; margin-bottom:8px; background-size:400px 100%; animation: pa-skel 1.4s linear infinite }
                   @keyframes pa-skel { 0% { background-position: -200px 0 } 100% { background-position: 200px 0 } }
                   .pa-interpretation-fadein { animation: pa-fade-in 320ms ease both }
                   @keyframes pa-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity:1; transform:none } }
@@ -1283,7 +1341,7 @@
                       // allow scroll within viewport (no credits animation)
                       viewport.style.overflowY = 'auto';
                       viewport.style.scrollbarWidth = 'thin';
-                      viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                      viewport.style.scrollbarColor = 'rgba(255,122,47,.25) transparent';
                       return;
                     }
 
@@ -1316,7 +1374,7 @@
                         queue.style.transform = 'none';
                         viewport.style.overflowY = 'auto';
                         viewport.style.scrollbarWidth = 'thin';
-                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                        viewport.style.scrollbarColor = 'rgba(255,122,47,.25) transparent';
                       };
                       queue.addEventListener('transitionend', _scrollDone, { once: true });
                       setTimeout(function() { _scrollDone(); }, durationMs + 500);
@@ -1374,7 +1432,7 @@
                         // switch viewport to scrollable after credits finish
                         viewport.style.overflowY = 'auto';
                         viewport.style.scrollbarWidth = 'thin';
-                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                        viewport.style.scrollbarColor = 'rgba(255,122,47,.25) transparent';
                       } catch (e) { console.warn('[PA]', e); }
                     };
                     const onEndHandler = () => { onEnd(); queue.removeEventListener('transitionend', onEndHandler); };
@@ -1385,7 +1443,7 @@
                         queue.style.transition = ''; queue.style.transform = ''; _creditsRunning = false; _creditsCancel = null;
                         viewport.style.overflowY = 'auto';
                         viewport.style.scrollbarWidth = 'thin';
-                        viewport.style.scrollbarColor = 'rgba(201,169,110,.25) transparent';
+                        viewport.style.scrollbarColor = 'rgba(255,122,47,.25) transparent';
                       } catch (e) { console.warn('[PA]', e); }
                     };
                     // fallback guard
@@ -1525,8 +1583,20 @@
             try {
               // stop audio before leaving
               try { stopPlayback(); } catch (e) { console.warn('[PA]', e); }
-              // reopen a new deck with the same initial chosen count (if available)
-              try { if (typeof showDeckPopup === 'function') showDeckPopup(initialRemaining || 3, { fan: true }); else if (window.PopupAdapter && typeof window.PopupAdapter.showDeckPopup === 'function') window.PopupAdapter.showDeckPopup(initialRemaining || 3, { fan: true }); } catch (e) { console.warn('[PA]', e); }
+              // fermer le popup d'interprétation courant
+              try {
+                const overlay = interp.closest('.pa-interpretation-overlay');
+                const backdrop = document.querySelector('.pa-interpretation-backdrop');
+                if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+                else if (interp && interp.parentNode) interp.parentNode.removeChild(interp);
+                try { setGlobalNoScroll(false); } catch (e) {}
+              } catch (e) { console.warn('[PA]', e); }
+              // rouvrir un nouveau tirage
+              try {
+                if (typeof showThemeChoice === 'function') showThemeChoice();
+                else if (window.triggerTirageIA) window.triggerTirageIA();
+              } catch (e) { console.warn('[PA]', e); }
             } catch (e) { console.warn('[PA]', e); }
           });
           // Ensure the Back button removes our overlay (if we used it) and stops audio
@@ -1557,15 +1627,15 @@
               overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:2147483647;display:flex;align-items:center;justify-content:center;';
 
               var box = document.createElement('div');
-              box.style.cssText = 'background:#1a1614;border:1px solid rgba(201,169,110,.3);border-radius:12px;padding:28px;max-width:380px;width:90%;text-align:center;font-family:Quicksand,Inter,sans-serif;';
-              box.innerHTML = '<div style="font-family:Cinzel,serif;font-size:18px;color:#c9a96e;margin-bottom:12px;">Recevoir par email</div>' +
-                '<p style="color:rgba(237,232,227,.7);font-size:14px;margin:0 0 16px;">Entrez votre adresse email pour recevoir votre tirage complet.</p>' +
-                '<input id="pa-email-input" type="email" placeholder="votre@email.com" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(201,169,110,.3);background:rgba(255,255,255,.08);color:#ede8e3;font-size:15px;box-sizing:border-box;outline:none;margin-bottom:12px;" />' +
+              box.style.cssText = 'background:#1a1614;border:1px solid rgba(255,122,47,.3);border-radius:12px;padding:28px;max-width:380px;width:90%;text-align:center;font-family:Quicksand,Inter,sans-serif;';
+              box.innerHTML = '<div style="font-family:Cinzel,serif;font-size:18px;color:#ff7a2f;margin-bottom:12px;">Recevoir par email</div>' +
+                '<p style="color:rgba(232,244,255,.7);font-size:14px;margin:0 0 16px;">Entrez votre adresse email pour recevoir votre tirage complet.</p>' +
+                '<input id="pa-email-input" type="email" placeholder="votre@email.com" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,122,47,.3);background:rgba(255,255,255,.08);color:#e8f4ff;font-size:15px;box-sizing:border-box;outline:none;margin-bottom:12px;" />' +
                 '<div style="display:flex;gap:10px;justify-content:center;">' +
-                '<button id="pa-email-send" style="padding:10px 24px;background:#c9a96e;color:#110e0c;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">Envoyer</button>' +
-                '<button id="pa-email-cancel" style="padding:10px 24px;background:transparent;color:#c9a96e;border:1px solid rgba(201,169,110,.3);border-radius:8px;cursor:pointer;font-size:14px;">Annuler</button>' +
+                '<button id="pa-email-send" style="padding:10px 24px;background:#ff7a2f;color:#110e0c;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">Envoyer</button>' +
+                '<button id="pa-email-cancel" style="padding:10px 24px;background:transparent;color:#ff7a2f;border:1px solid rgba(255,122,47,.3);border-radius:8px;cursor:pointer;font-size:14px;">Annuler</button>' +
                 '</div>' +
-                '<div id="pa-email-status" style="margin-top:12px;font-size:13px;color:#c9a96e;"></div>';
+                '<div id="pa-email-status" style="margin-top:12px;font-size:13px;color:#ff7a2f;"></div>';
 
               overlay.appendChild(box);
               document.body.appendChild(overlay);
@@ -1583,7 +1653,7 @@
                   return;
                 }
                 status.textContent = 'Envoi en cours...';
-                status.style.color = '#c9a96e';
+                status.style.color = '#ff7a2f';
                 this.disabled = true;
 
                 // Get interpretation text
@@ -2263,6 +2333,44 @@
             Array.prototype.forEach.call(slotsAll, function (s) { try { const im = s.querySelector('img.pa-deck-entrance'); if (im) im.classList.add('pa-deck-entrance--visible'); } catch (e) { console.warn('[PA]', e); } });
           }
         } catch (e) { console.warn('[PA]', e); }
+        // helper: affiche un zoom plein écran pour la carte révélée
+        function showCardZoom(imgEl) {
+          try {
+            const existing = document.querySelector('.pa-deck-zoom-overlay');
+            if (existing) { try { existing.parentNode.removeChild(existing); } catch (e) {} }
+            if (!imgEl) return;
+            const overlay = document.createElement('div');
+            overlay.className = 'pa-deck-zoom-overlay';
+            const clone = document.createElement('img');
+            clone.src = imgEl.src;
+            clone.alt = imgEl.alt;
+            clone.className = 'pa-deck-zoom-img';
+            const isReversed = imgEl.style.transform && imgEl.style.transform.includes('rotate(180deg)');
+            if (isReversed) clone.dataset.reversed = '1';
+            overlay.appendChild(clone);
+            function closeZoom() { try { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); } catch (e) {} }
+            overlay.addEventListener('click', closeZoom);
+            clone.addEventListener('click', function(e) { e.stopPropagation(); closeZoom(); });
+            document.body.appendChild(overlay);
+            // fermeture automatique après 1 seconde si l'utilisateur ne clique pas
+            const autoCloseTimer = setTimeout(closeZoom, 2000);
+            overlay.addEventListener('click', function() { clearTimeout(autoCloseTimer); }, { once: true });
+            if (!document.getElementById('pa-deck-zoom-styles')) {
+              const st = document.createElement('style');
+              st.id = 'pa-deck-zoom-styles';
+              st.textContent = [
+                '.pa-deck-zoom-overlay{position:fixed;inset:0;z-index:99999;background:rgba(6,13,26,.85);cursor:zoom-out;animation:pa-zoom-bg-in 200ms ease both}',
+                '@keyframes pa-zoom-bg-in{from{opacity:0}to{opacity:1}}',
+                '.pa-deck-zoom-img{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-height:80vh;max-width:80vw;width:auto;height:auto;border-radius:12px;box-shadow:0 8px 48px rgba(0,0,0,.7);cursor:zoom-out;animation:pa-zoom-card-in 300ms cubic-bezier(.2,.9,.3,1) both}',
+                '.pa-deck-zoom-img[data-reversed="1"]{animation:pa-zoom-card-in-rev 300ms cubic-bezier(.2,.9,.3,1) both}',
+                '@keyframes pa-zoom-card-in{from{opacity:0;transform:translate(-50%,-50%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}',
+                '@keyframes pa-zoom-card-in-rev{from{opacity:0;transform:translate(-50%,-50%) rotate(180deg) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) rotate(180deg) scale(1)}}'
+              ].join('\n');
+              document.head.appendChild(st);
+            }
+          } catch (e) { console.warn('[PA]', e); }
+        }
+
         slotsAll.forEach((slot, si) => {
           slot.dataset.revealed = '0';
           slot.style.cursor = 'pointer';
@@ -2339,6 +2447,8 @@
                     setTimeout(function() { try { img.style.transform = 'rotate(180deg)'; } catch (e) { console.warn('[PA]', e); } }, 300);
                   } catch (e) { console.warn('[PA]', e); }
                 }
+                // zoom automatique après le flip (+ rotation si inversée)
+                setTimeout(function() { try { showCardZoom(img); } catch (e) {} }, reversed ? 720 : 560);
                 try { window.PopupAdapter = window.PopupAdapter || {}; window.PopupAdapter._lastSelectedCards = selectedCards.slice(); } catch (e) { console.warn('[PA]', e); }
               } catch (e) { console.warn('[PA]', e); }
               // when remaining is zero, open the interpretation popup showing chosen cards
@@ -2346,8 +2456,10 @@
                 if (typeof remaining !== 'undefined' && remaining === 0) {
                   try {
                     const delay = (opts && typeof opts.interpretationDelay === 'number' && isFinite(opts.interpretationDelay)) ? Math.max(0, Number(opts.interpretationDelay)) : 1200;
-                    // keep the deck visible for a short display duration so users can see the final revealed cards
-                    const displayMs = Math.max(600, Math.min(1800, delay || 1200));
+                    // keep the deck visible until the zoom has had time to show and auto-close
+                    const lastCard = selectedCards[selectedCards.length - 1];
+                    const zoomOpenDelay = (lastCard && lastCard.reversed) ? 720 : 560;
+                    const displayMs = zoomOpenDelay + 2000 + 350; // zoom open delay + zoom duration + buffer
                     setTimeout(() => {
                       try {
                         // remove the deck popup/fallback overlay so it disappears before interpretation opens
@@ -2368,6 +2480,8 @@
                             try { if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch (e) { console.warn('[PA]', e); }
                           }
                         } catch (e) { console.warn('[PA]', e); }
+                        // fermer le zoom avant d'ouvrir l'interprétation
+                        try { const z = document.querySelector('.pa-deck-zoom-overlay'); if (z && z.parentNode) z.parentNode.removeChild(z); } catch (e) {}
                         // small gap to let layout settle visually, then open interpretation
                         setTimeout(() => { try { showInterpretationPopup(selectedCards.slice()); } catch (e) { console.warn('[PA]', e); } }, 220);
                       } catch (e) { console.warn('[PA]', e); }

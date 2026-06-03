@@ -345,35 +345,6 @@ function initFaq() {
   });
 }
 
-// ── Trigger Tirage IA ─────────────────────────────────────────────────────────
-function initTirageIA() {
-  function triggerTirageIA() {
-    try {
-      if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-        window.PopupAdapter.showThemeChoice();
-        return;
-      }
-    } catch (_e) {}
-    let attempts = 0;
-    const poll = setInterval(() => {
-      attempts++;
-      try {
-        if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-          clearInterval(poll);
-          window.PopupAdapter.showThemeChoice();
-          return;
-        }
-      } catch (_e) {}
-      if (attempts >= 20) {
-        clearInterval(poll);
-        const btn = document.querySelector('.header-btn-ia');
-        if (btn) try { btn.click(); } catch (_e) {}
-      }
-    }, 250);
-  }
-  window.triggerTirageIA = triggerTirageIA;
-}
-
 // ── Export init ───────────────────────────────────────────────────────────────
 export function initUI() {
   initBio();
@@ -383,5 +354,5 @@ export function initUI() {
   initNewsletter();
   initTemoignages();
   initFaq();
-  initTirageIA();
+  // triggerTirageIA est défini dans le head de index.html (attend popup.js + popup-adapter.js)
 }

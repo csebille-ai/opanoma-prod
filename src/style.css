@@ -206,6 +206,25 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .btn-ia:hover { transform: translateY(-1px); opacity: .9; }
 
+/* ── CTA Button (Consultation) ── */
+.btn-consultation {
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--gold);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--gold);
+  white-space: nowrap;
+  transition: transform var(--transition), background var(--transition), color var(--transition);
+  letter-spacing: .03em;
+}
+.btn-consultation:hover {
+  background: var(--gold);
+  color: var(--bg);
+  transform: translateY(-1px);
+}
+
 .btn-ia small {
   display: inline-flex;
   align-items: center;
@@ -1702,6 +1721,11 @@ main {
   }
 
   .btn-ia {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+
+  .btn-consultation {
     font-size: 12px;
     padding: 7px 14px;
   }

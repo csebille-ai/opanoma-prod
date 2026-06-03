@@ -85,60 +85,22 @@
 </head>
 <body>
   <a href="#main-content" class="skip-to-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:999999;padding:8px 16px;background:#ff7a2f;color:#060d1a;font-weight:600;text-decoration:none;border-radius:4px;" onfocus="this.style.cssText='position:fixed;left:16px;top:16px;width:auto;height:auto;overflow:visible;z-index:999999;padding:8px 16px;background:#ff7a2f;color:#060d1a;font-weight:600;text-decoration:none;border-radius:4px;'" onblur="this.style.cssText='position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;'">Aller au contenu principal</a>
-  <script>window.PopupAdapter = window.PopupAdapter || {};</script>
-  <!-- Preload popup adapter early to ensure triggerTirageIA can call it synchronously -->
-  <script src="./src/popup-adapter.js"></script>
+  <!-- triggerTirageIA : attend que popup.js + popup-adapter.js soient chargés (fin de body) -->
   <script>
-    // Resilient trigger used by header/button to open the Tirage IA flow.
-    // It will call PopupAdapter.showThemeChoice() if available, otherwise poll briefly
-    // and finally attempt to dynamically load the adapter script and call it.
-    (function () {
-      function loadAdapterOnce(cb) {
-        if (window.__popupAdapterLoading) return;
-        window.__popupAdapterLoading = true;
+    window.triggerTirageIA = function () {
+      var args = arguments;
+      var tries = 0;
+      var iv = setInterval(function () {
+        tries++;
         try {
-          var s = document.createElement('script');
-          s.src = './src/popup-adapter.js?_=' + Date.now();
-          s.async = false;
-          s.onload = function () { window.__popupAdapterLoading = false; try { cb && cb(); } catch (e) {} };
-          s.onerror = function () { window.__popupAdapterLoading = false; console.warn('Failed to load popup-adapter.js'); };
-          document.head.appendChild(s);
-        } catch (e) { window.__popupAdapterLoading = false; }
-      }
-
-      window.triggerTirageIA = function () {
-        var args = arguments;
-        function tryCall() {
-          try {
-            if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
-              try { window.PopupAdapter.showThemeChoice.apply(window.PopupAdapter, args); } catch (e) { console.warn('PopupAdapter.showThemeChoice failed', e); }
-              return true;
-            }
-          } catch (e) {}
-          return false;
-        }
-
-        if (tryCall()) return;
-
-        // Poll for short duration (max ~5s) then fallback to dynamic load.
-        var tries = 0;
-        var maxTries = 100; // 100 * 50ms = 5s
-        var iv = setInterval(function () {
-          tries++;
-          if (tryCall()) {
+          if (window.PopupAdapter && typeof window.PopupAdapter.showThemeChoice === 'function') {
             clearInterval(iv);
-            return;
+            window.PopupAdapter.showThemeChoice.apply(window.PopupAdapter, args);
           }
-          if (tries >= maxTries) {
-            clearInterval(iv);
-            // attempt to load adapter and call on load
-            loadAdapterOnce(function () {
-              tryCall();
-            });
-          }
-        }, 50);
-      };
-    })();
+        } catch (e) { clearInterval(iv); console.warn('PopupAdapter.showThemeChoice failed', e); }
+        if (tries >= 100) clearInterval(iv); // timeout 5s
+      }, 50);
+    };
   </script>
   <div class="background-video">
     <video class="hero-video" playsinline webkit-playsinline autoplay muted loop preload="metadata">
@@ -178,10 +140,6 @@
     <div class="container">
       <a class="brand" href="#accueil" aria-label="Accueil Opanoma">
         <img src="/img/opalogo.png" alt="Logo l'Œil d'Opanoma" class="brand-logo-img" width="48" height="48" />
-        <div class="brand-text">
-          <div class="brand-title">l'Œil d'Opanoma</div>
-          <div class="brand-sub">Guidance professionnelle authentique</div>
-        </div>
       </a>
 
   <nav class="nav" aria-label="Menu professionnel" style="pointer-events:auto;">
@@ -222,8 +180,11 @@
             </svg>
           </a>
         </div>
-        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Découvrir le tirage guidé par IA">
+        <a class="btn-ia" href="#" onclick="triggerTirageIA(); return false;" aria-label="Tirage guidé par IA">
           Tirage Guidé
+        </a>
+        <a class="btn-consultation" href="#reservation" onclick="event.preventDefault();scrollToReservation();" aria-label="Réserver une consultation">
+          Consultation
         </a>
         <button class="burger" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1110,24 +1071,22 @@
   <!-- Script d'animations pour les cartes -->
   <script src="./src/card-animations.js"></script>
 
-  <!-- PopupManager includes (feature/popup-rewrite) -->
+  <!-- Popup : popup.js (PopupManager) puis popup-adapter.js — chargement unique ordonné -->
   <script>
-    (function(){
-      function loadScript(src, cb){
-        var s = document.createElement('script'); s.src = src; s.async = false; s.onload = cb; s.onerror = function(){ console.warn('failed to load', src); cb && cb(); };
+    (function () {
+      function loadScript(src, cb) {
+        var s = document.createElement('script');
+        s.src = src; s.async = false;
+        s.onload = function () { try { cb && cb(); } catch (e) {} };
+        s.onerror = function () { console.warn('failed to load', src); };
         document.head.appendChild(s);
       }
-      window.addEventListener('load', function(){
-        try {
-          loadScript('./src/popup.js', function(){
-            // append a cache-busting query so we force the browser to fetch latest during testing
-            try {
-              loadScript('./src/popup-adapter.js?_=' + Date.now(), function(){
-                console.log('PopupManager and PopupAdapter loaded (adapter cache-busted)');
-              });
-            } catch(e) { loadScript('./src/popup-adapter.js', function(){ console.log('PopupAdapter loaded (fallback)'); }); }
+      window.addEventListener('load', function () {
+        loadScript('./src/popup.js?v=3', function () {
+          loadScript('./src/popup-adapter.js?v=3', function () {
+            console.log('[Popup] PopupManager + PopupAdapter prêts');
           });
-        } catch(e){ console.warn('popup loader error', e); }
+        });
       });
     })();
   </script>
